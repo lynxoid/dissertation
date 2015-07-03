@@ -29,8 +29,8 @@
 %\usepackage[T1]{fontenc}
 
 %\usepackage[sfdefault,light]{roboto}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
-\usepackage{libertine}
-\usepackage[T1]{fontenc}
+% \usepackage{libertine}
+% \usepackage[T1]{fontenc}
 
 \usepackage{fullpage}
 \usepackage{graphicx}
@@ -45,6 +45,7 @@
 \usepackage{booktabs}
 \usepackage{xspace}
 \usepackage{hyperref}
+\usepackage[english]{babel} % proper English hyphenation
 
 % \usepackage[all]{nowidow}
 
@@ -1677,41 +1678,48 @@ The work described in this chapter has been presented at Workshop for Algorithms
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %%
 %% Huffmer and Referee -- compression projects
 %%
 %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Compression of sequencing and sequence alignment data}
 
-With increasing amounts of sequencing data being generated, the problem of storing, transmitting, and analyzing such data at scale becomes a bottleneck. Various compression methods design for sequencing data can significantly reduce the size of data, alleviating the storage burden and making transmission times faster. %with some methods enabling faster downstream analyses.
+Previous chapters address visualization and analysis challenges presented by data that has already been processed: networks constructed from raw data, annotations, and quantified abundances of histone modifications. However, as we go back to the tasks involving raw data, the data size and complexity increase to the extent that not only visualization, but even storage, dissemination, and basic analysis of such data become a computational challenge. For example, chromosome conformation data for a human chromosome 1 in the embryonic stem cell fits on disk withing 134Mb, however, to separate data for a single chromosome researchers had to merge and align sequencing data from several replicates that adds up to almost 70Gb. 
+% The amount of sequencing data stored in the Short Read Archive (SRA) is 775337Gb and growing~\cite{SRA}. 
+Large sequencing data warehouses, e.g. Sequence Read Archive (SRA)~\cite{SRA}, and labs with modest computational resources alike face these computational challenges due to the explosion in the amount of generated sequencing data.
 
-(abstract from Referee)
+Commonplace compression tools like gzip and bzip based on Lempel-Ziv original paper~\cite{LempelZiv} are used often to compress large read datasets, however, they do not exploit the specific nature of sequencing reads: its small alphabet, highly repetitive subsequences, and the fact that sequence may originate from a well-annotated known genome. SRA data format is commonly used to store FASTQ files which include the reads themselves and additional base quality information, however, even the most naive compression methods easily outperform this compression technique~\cite{CompressionSqueezeCompetition}.
 
-Continued growth of generated sequencing data demands novel scalable approaches to its storage and transmission. It is also crucial that analyses could be run on the dataset in its compressed format without having to fully reconstruct it. We propose a novel approach to compression of sequence alignment data, a well established data format that is used for a variety of tasks ranging from genome assembly to variant calling. Such alignment files may exceed the size of the original sequence by an order of magnitude, however, \refer, our tool implementing the approach, is able to compress alignment files to $1/10$ of the original SAM file size and is twice as efficient as SAM's binary BAM variant. \refer is fast, highly parallelizable, and outperforms state of the art tools by an average of 8.1\% while enabling a variety of sequence-related tasks that require only a partial decompression. Computations like depth of sequencing that involve seeking through all alignments take from 8 to 44 seconds for \refer as opposed to tens of minutes with \texttt{samtools}. \refer uses a lightweight streaming clustering algorithm to improve quality values compression and encodes sequence information very efficiently, with compression rates as low as 0.06 bits per base. Its modular structure allows one to omit extraneous alignment information from the download reducing sequencing data from many gigabytes to under a hundred megabytes.
-
-
-Work presented in this chapter was submitted for publication~\cite{Referee_draft} and Referee, the software implementing the ideas, is available for download at \url{https://github.com/Kingsford-Group/referee}.
+In this chapter, we explore compression techniques for collections of raw sequences as well as highly structure sequence alignment data. The work presented in this chapter was submitted for publication~\cite{Referee_draft} and Referee, the software implementing the ideas, is available for download at \url{https://github.com/Kingsford-Group/referee}.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 
-  \textit{De novo} compression methods accept raw sequencing reads, FASTA, or FASTQ files as input and focus on ways to compress sequence~\cite{Mince,PathEncode,Rozov2014}, quality values~\cite{SeqSqueeze,KmerQuals,JaninQuals}, or both~\cite{GSQZ,Sahinalp2012}. Tools like SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} take the approach of grouping the reads based on their similarity allowing the downstream general-purpose compression tools to build better dictionary encodings. Rozov \etal~\cite{Rozov2014} and recent work by Kingsford and Patro~\cite{PathEncode} use an available reference sequence to inform their compression algorithm without explicitly aligning reads to it. Quip~\cite{Jones2012} takes a step closer to reference-based approach by creating contigs based on the subset of data and encoding the rest of the reads relative to their lightweight assembly. De novo compression tools compress sequence down to 3-10\% of its original size at reasonable speeds~\cite{Deorowicz2013}, however, most tools require that the dataset is completely decompressed before it could be used for analysis.
+  The amount of sequencing data stored in the Sequence Read Archive (SRA) is 775337Gb and growing~\cite{SRA} --- this growth of generated data demands novel scalable approaches to its storage and transmission. It is also crucial compression approaches are \textit{functional}, i.e.\@that analyses could be run on the dataset in its compressed format without having to fully reconstruct it. 
 
-  A process of mapping reads to a known reference sequence is often a prerequisite for many downstream tasks like assembly~\cite{Assembly}, expression estimation~\cite{Cufflinks,RSEM}, or variant calling~\cite{GATK}, however, alignment files stored in a popular SAM format~\cite{SamTools} occupy orders of magnitude more space than the original sequencing reads themselves. A commonly used approach is to convert SAM files to its block-compressed equivalent, BAM, offers a significant improvement in the used disk space while offering the same set of analyses at a low computational cost. Later approaches improve the compression ratio by sacrificing the ability to run analyses without full decompression~\cite{Goby,Jones2012}, by turning to lossy compression, or by doing without certain sequence data~\cite{SlimGene,CRAM}. More recently, Hach \etal introduced a more efficient block-wise BAM/SAM compressor that allows for block-wise decompression while offering savings of up to 44\% over BAM~\cite{Sahinalp2015}.
+  % We propose a novel approach to compression of sequence alignment data, a well established data format that is used for a variety of tasks ranging from genome assembly to variant calling. Such alignment files may exceed the size of the original sequence by an order of magnitude, however, \refer, our tool implementing the approach, is able to compress alignment files to $1/10$ of the original SAM file size and is twice as efficient as SAM's binary BAM variant. \refer is fast, highly parallelizable, and outperforms state of the art tools by an average of 8.1\% while enabling a variety of sequence-related tasks that require only a partial decompression. Computations like depth of sequencing that involve seeking through all alignments take from 8 to 44 seconds for \refer as opposed to tens of minutes with \texttt{samtools}. \refer uses a lightweight streaming clustering algorithm to improve quality values compression and encodes sequence information very efficiently, with compression rates as low as 0.06 bits per base. Its modular structure allows one to omit extraneous alignment information from the download reducing sequencing data from many gigabytes to under a hundred megabytes.
+
+  % (intro)
+
+  In the area of sequence compression, two prevalent approaches exist: the \textit{reference-based} and \textit{reference-free}, or \textit{de novo}, methods. \textit{De novo} compression operates on raw sequencing reads, FASTA, or FASTQ files as input and focuses on ways to compress sequence~\cite{Mince,PathEncode,Rozov2014}, quality values~\cite{SeqSqueeze,KmerQuals,JaninQuals}, or both~\cite{GSQZ,Sahinalp2012}. Tools like SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} take the approach of grouping the reads based on their similarity allowing the downstream general-purpose compression tools to build better dictionary encodings. Rozov \etal~\cite{Rozov2014} and recent work by Kingsford and Patro~\cite{PathEncode} use an available reference sequence to inform their compression algorithm without explicitly aligning reads to it. Quip~\cite{Jones2012} takes a step closer to reference-based approach by creating contigs from a subset of data and encoding the rest of the reads relative to that lightweight assembly. De novo compression tools compress sequence down to 3-10\% of its original size at reasonable speeds~\cite{Deorowicz2013}, however, most tools require that the dataset is completely decompressed before it could be used for downstream analyses.
+
+  \textit{Reference-based} compression techniques first map the sequencing reads to a predefined reference sequence --- a genome, transcriptome, or a set of contigs --- and encode the reads relative to the reference. The only information required to reconstruct the reads is their position in the reference, read length, and a set of point differences between the read and the reference sequence. The process of mapping reads to a known reference sequence is often a prerequisite for many downstream tasks like assembly~\cite{Assembly}, expression estimation~\cite{Cufflinks,RSEM}, or variant calling~\cite{GATK}. Until recently, alignment step was computationally expensive and reference-based approaches, although quite promising, were practically infeasible. However, recent advances in alignment algorithms resulted in efficient mapping software like STAR~\cite{STAR} and Subjunc~\cite{Subjunc} that can process tens of millions of reads in under 10 minutes.Now that mapping time got reduced drastically, reference-based compression becomes an appealing option, especially for sequence from well-studied organisms for which annotated genomes are available.
+
+  Alignment files generated by the mapping sortware are stored in a popular SAM format~\cite{SamTools} and usually occupy orders of magnitude more space than the original sequencing reads themselves. A commonly used approach is to convert SAM files to its block-compressed equivalent, BAM, offers a significant improvement in the used disk space while offering the same set of analyses at a low computational cost. Later approaches improve the compression ratio by sacrificing the ability to run analyses without full decompression~\cite{Goby,Jones2012}, by turning to lossy compression, or by doing without certain sequence data~\cite{SlimGene,CRAM}. More recently, Hach \etal introduced a more efficient block-wise BAM/SAM compressor that allows for block-wise decompression while offering savings of up to 44\% over BAM~\cite{Sahinalp2015}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{De novo sequence compression}
 
   \subsection{Using standard command-line tools}
 
-  Gzip, bzip, plzip
+  The repetitive nature of sequencing data suggests that dictionary-based coders, like the commonplace command-line tools \texttt{gzip}, \texttt{bzip}, and \texttt{plzip}, should be able compress collections of reads reasonably well.
 
   Reordering reads
 
@@ -1721,7 +1729,7 @@ Work presented in this chapter was submitted for publication~\cite{Referee_draft
 
   XXX
 
-  \subsection{Buliding efficient dictionaries}
+  \subsection{Builiding efficient dictionaries}
 
   XXX
 
@@ -1863,7 +1871,7 @@ Work presented in this chapter was submitted for publication~\cite{Referee_draft
     \centering
     \begin{tabular}{l l r r r}
     \toprule
-    File 			& Type 		& |r| & Alignments & Unalign. \\
+    File 			& Type 		& $|r|$ & Alignments & Unalign. \\
     \midrule
     % SRR445718 		& RNA-seq 	& 100 & 31892550 & 5677563 \\
     SRR445718, I		& RNA-seq & 100 & 35677496 & 5677563 \\
