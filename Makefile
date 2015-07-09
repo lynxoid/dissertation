@@ -8,12 +8,12 @@ all:
 quick:
 	pdflatex DFilippova_thesis
 clean:
-	rm *.bbl
-	rm *.aux
-	rm *.blg
-	rm *.brf
-	rm *.log
-	rm *.log
-	rm *.lot
-	rm *.out
-	rm *.toc
+	rm -f *.bbl
+	rm -f *.aux
+	rm -f *.blg
+	rm -f *.brf
+	rm -f *.log
+	rm -f *.lot
+	rm -f *.lof
+	rm -f *.out
+	rm -f *.toc

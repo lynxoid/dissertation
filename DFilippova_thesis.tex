@@ -34,8 +34,13 @@
 
 \usepackage{fullpage}
 \usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{lscape}
+\usepackage{rotating}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{algorithm2e}
 % \usepackage{mathtools}
 \usepackage[numbers,sort]{natbib}
 \usepackage[backref,pageanchor=true,plainpages=false, pdfpagelabels, bookmarks,bookmarksnumbered,
@@ -46,6 +51,7 @@
 \usepackage{xspace}
 \usepackage{hyperref}
 \usepackage[english]{babel} % proper English hyphenation
+% \usepackage{subfig}
 
 % \usepackage[all]{nowidow}
 
@@ -190,14 +196,18 @@ These new data provided a first glimpse into how organisms operate on a molecula
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.8\linewidth]{anscombes_quartet}
-  \caption{\textbf{Anscombe's quartet.} Statistician F. Anscombe constructed these four data series to stress the importance of plotting the data before computing its summary statistics. These four sets of data points are indistringuishable when considering their $x$ and $y$ mean, variance, correlation, and linear regression, yet are strickingly different when visualized.}
+  \includegraphics[width=0.8\linewidth]{figures/anscombes_quartet}
+  \caption{\textbf{Anscombe's quartet.} Statistician F. Anscombe constructed these four data series to stress the importance of plotting the data before computing its summary statistics. These four sets of data points are indistringuishable when considering their $x$ and $y$ mean, variance, correlation, and linear regression, yet are strickingly different when visualized. Data from original paper, plots made in Keynote.}
   \label{fig:intro:anscombe}
 \end{figure}
 
 Visualization is an important first step when working with a new set of data as it provides the means to assess the overall shape of the data, its distribution, and to detect outliers. Anscombe's quartet~\cite{anscombe} succinctly demonstrates the importance of plotting the data before analyzing it: four datasets have the same $x$ and $y$ mean and variance, Pearson's correlation and fit the same regression line, yet are strickingly different (Figure~\ref{fig:intro:anscombe}). Simiarly, complex high-dimensional biological data requires novel visualization approaches that provide an overview of the data along with more detailed and focused displays.
 
 Large data volumes resulting from high-throughput experiments present yet another challenge. To maintain interactivity and to provide useful insights, the software must offer ways to aggregate data and generate an overview without oversimplifying or obscuring the underlying patterns. Since manual inspection is infeasible for large data, the software should offser ways to extract meaningful higher-order motifs. Aggregate structure may speed up  computation as in functional compression XXX
+
+XXX make more of an effort to make a transition from vis to algoirthms
+
+XXX introduce compression and problems
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -261,7 +271,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 
   Clustering has become a standard analysis step for many types of biological data, \eg~interaction networks, gene expression, and metagenomic abundance. In practice, it is possible to obtain a large number of contradictory clusterings by varying which clustering algorithm is used, which data attributes are considered, how algorithmic parameters are set, and  which near-optimal clusterings are chosen. It is a difficult task to sift though such a large collection of varied clusterings to determine which clustering features are affected by parameter settings or are artifacts of particular algorithms and which represent meaningful patterns. Knowing which items are often clustered together helps to improve our understanding of the underlying data and to increase our confidence about generated modules.
 
-  In this chapter, we discuss design decisions and implementation of \Coral, an application for interactive exploration of ensembles of clusterings. We discuss how each visual component in \Coral tackles a specific question related to clustering comparison and provide examples of their use. We also show how \Coral could be used to visually and quantitatively compare clusterings with a ground truth clustering. 
+  In this chapter, we discuss the design decisions and the implementation of \Coral, an application for interactive exploration of ensembles of clusterings. We discuss how each visual component in \Coral tackles a specific question related to clustering comparison and provide examples of their use. We also show how \Coral could be used to visually and quantitatively compare clusterings with a ground truth clustering. 
 
   We showcase how to use \Coral on a collection of clusterings for a protein interaction network of \textit{Arabidopsis thaliana}. We find that the clusterings vary significantly and that few proteins are consistently co-clustered in all clusterings, and use \Coral's core identification to identify these consistent protein subgroups. Our case study shows that several clusterings should typically be considered when evaluating clusters of genes, proteins, or sequences, and Coral can be used to perform a comprehensive analysis of these clustering ensembles.
 
@@ -272,9 +282,10 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 
 
 
-
   Collections of protein interactions, gene expression vectors, metagenomic samples, and gene sequences containing thousands to hundreds-of-thousands of elements are now being analyzed routinely. 
+
   XXX more detail on the size of the problem. 
+
   Clustering is often used to condense such large datasets into an understandable form: it has been successfully used on protein-protein interaction (PPI) networks to discover protein complexes and predict protein function, \eg~\cite{Sharan2007}; on gene expression data to find patterns in gene regulation and essential cell processes, \eg~\cite{Ulitsky2010}; and on metagenomic samples to identify new species, compare them to existing clades, evaluate the diversity of a population, and suggest interdependencies between them~\cite{Chatterji2007, White2010}. In other words, clustering has become a ubiquitous part of analysis for large biological datasets.
 
   % Introduce the problem.
@@ -292,7 +303,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 % overview -- shows Coral layout
   \begin{figure}[htb!]
     \centering
-    \includegraphics[width=\linewidth]{coral_overview.png}
+    \includegraphics[width=\linewidth]{figures/coral_overview.png}
     \caption{\textbf{Coral overview.} Coral views in a clockwise direction: co-cluster matrix (1), pairs table (2), parallel partitions plot (3), module-to-module table (4), ladder (5), overview statistics (6). Users may rearrange the individual views or close them to focus on fewer visualizations at a time. Data: \Athal clusterings.}
     \label{fig:coral:overview}
   \end{figure}
@@ -321,15 +332,14 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.60\linewidth]{coral_ladder}
+    \includegraphics[width=0.60\linewidth]{figures/coral_ladder}
     \caption{\textbf{All-to-all clustering comparison in a ladder widget.} The ladder represents  a lower triangle of an all-to-all matrix where each cell $(i, j)$ holds a score for similarity between clusterings $K_{i}$ and $K_{j}$. Users can choose between several comparison metrics by toggling a dropdown above the ladder. Every cell is color-coded, with darker colors indicating more similarity between the pair} 
     \label{fig:coral:ladder}
   \end{figure}
 
 
-
   %
-  To gain a quick overview of their collection of clusterings, \Coral users may start the analysis by reviewing basic statistics about their data: number of modules per clustering, average module size, module coverage, clustering entropy~\cite{Meila2003}:
+  To gain a quick overview of their collection of clusterings, \Coral users may start the analysis by reviewing basic statistics about their data (Figure~\ref{fig:coral:overview}, area 6): number of modules per clustering, average module size, module coverage, clustering entropy~\cite{Meila2003}:
   %
   \[
   H(K) = - \sum_{m_i \in K} p_i \log_2 p_i,
@@ -348,7 +358,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   \Coral computes similarity scores between all clusterings and visualizes the lower triangle of the similarity matrix in a ladder widget (Figure~\ref{fig:coral:ladder}). The ladder compactly displays similarity scores for every pair of clusterings in the ensemble allowing for precise comparisons. The ladder is color-coded as a heatmap with more intense blue cells corresponding to higher similarity scores and paler cells corresponding to low scores. Clicking a cell updates the contents of a module-to-module comparison widget (see next subsection).
 
 
-  \Coral offers several choices of similarity measures to compare partitions. Four of the measures are based on the pair counting, two measures use information theory to quantify diversity of the clusterings, and the remaining measures rely on set matching to produce a score. Pair counting measures use the following four quantities to compute a score:
+  \Coral offers several choices of similarity measures to compare partitions. Four of the measures are based on pair counting, two measures use information theory to quantify diversity of the clusterings, and the remaining measures rely on set matching to produce a score. Pair counting measures use the following four quantities to compute a score:
 
   % pair counting quantities
   \begin{itemize}
@@ -450,7 +460,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   % module to module comparison table
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\linewidth]{coral_modules}
+    \includegraphics[width=0.8\linewidth]{figures/coral_modules}
     \caption{\textbf{Module-to-module comparison for two clusterings.} When users decide to focus on a pair of clusterings, they may explore all pairs
     of modules in a sortable table. Each module pair is shown against its Jaccard
     score, and lists of items in the module intersection, left and right
@@ -473,7 +483,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   % parallel partitions figure
   \begin{figure}[htb!]
     \centering
-    \includegraphics[width=\linewidth]{coral_parsets}
+    \includegraphics[width=\linewidth]{figures/coral_parsets}
     \caption{\textbf{Parallel partitions maps modules between clusterings.} Horizontal bands represent partitions, and modules are separated by blank spaces. Semi-transparent bands connect the same items from different
    clusterings. Red traces highlight selected items across all partitions and show how modules split and merge. Here, the user has selected a group of 215 proteins that belong to the largest core in the ensemble of clusterings for \Athal PPI network. The \texttt{Louvaine}, \texttt{Clauset}, \texttt{MCL}, and \texttt{MCODE.F} clusterings assign all of the selected proteins to a single
    module. For other clusterings, most of the selected proteins are placed in a
@@ -486,7 +496,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   % co-occurrence matrixes
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\linewidth]{coral_matrices}
+    \includegraphics[width=0.7\linewidth]{figures/coral_matrices}
     \caption{\textbf{Co-cluster matrices.} (a) A co-cluster matrix of three identical decompositions forms blocks on
     the diagonal with only red cells indicating that all three clsuterings agreed
     (synthetic data). (b) Big modules were broken up into smaller modules to form
@@ -550,12 +560,12 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 
   % reordering, core extraction
 
-  The co-cluster matrix is hard to read unless similar rows and columns are placed near each other. Reordering the rows and columns of \Mplus brings non-zero entries closer to the diagonal and exposes any modular structure. When clusterings are highly similar, the reordered matrix will consist of blocks along the diagonal with high $a_{ij}^{+}$ values (Figure~\ref{fig:coral:matrices}). Clusterings that are very dissimilar produce reorderings similar to Figure~\ref{fig:coral:big_matrix} --- the diagonal blocks mostly contain low $a_{ij}^{+}$ values (colored white or light pink) with many entries away from the diagonal.
+  The co-cluster matrix is hard to read unless similar rows and columns are placed near each other. Reordering the rows and columns of \Mplus brings non-zero entries closer to the diagonal and exposes any modular structure (see Section~\ref{sec:coral:reordering}). When clusterings are highly similar, the reordered matrix will consist of blocks along the diagonal with high $a_{ij}^{+}$ values (Figure~\ref{fig:coral:matrices}). Clusterings that are very dissimilar produce reorderings similar to Figure~\ref{fig:coral:big_matrix} --- the diagonal blocks mostly contain low $a_{ij}^{+}$ values (colored white or light pink) with many entries away from the diagonal.
 
   % big reordered matrix w/ corresponding network vis
   \begin{figure}[htb!]
     \centering
-    \includegraphics[width=0.6\linewidth]{coral_vidal_matrix}
+    \includegraphics[width=0.6\linewidth]{figures/coral_vidal_matrix}
     \caption{\textbf{Reordered co-cluster matrix reveals co-clustering patterns.} (a) Values in the co-cluster matrix range from 1 (light pink) to 9 (red) for nine clusterings of the \Athal PPI network with 2402 proteins from~\cite{Vidal2011}. Pink regions represent item pairs that were placed in the same module by very few clusterings while regions of more saturated red represent proteins that co-clustered in most clusterings. Black indicates that the items never co-clustered. On the inset matrix, the matrix items under the green square formed a core. A large blue square overlay suggests that the core was tightly integrated into the rest of the network. (b) Left: nodes that formed a core in (a) are colored green, the edges between the nodes within the core are colored blue. The inset to the right shows an isolated view of the core nodes (green), edges between core nodes (blue), and nodes one hop away from the core nodes (gray). Green nodes share many edges with nodes outside of the core which resulted in the core's low cohesion.}
     \label{fig:coral:big_matrix}
   \end{figure}
@@ -569,9 +579,9 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   \subsection{Subset persistence across clusterings}
   \label{sec:cores}
 
-  Groups of items that end up in the same module across many clusterings are of a particular interest because they represent the robust subclusters in the data. Such commonly co-clustered sets are called \textit{cores}. Items in cores form the most trustworthy modules and indicate particularly strong ties between data items, increasing, for example, the confidence in protein complex identification~\cite{Luo2009} and gene annotation~\cite{Saha}.
+  Groups of items that end up in the same module across many clusterings are of a particular interest because they represent the robust subclusters in the data. We call these commonly co-clustered sets \textit{cores}. Items in cores form the most trustworthy modules and indicate particularly strong ties between data items, increasing, for example, the confidence in protein complex identification~\cite{Luo2009} and gene annotation~\cite{Saha}.
 
-  In a co-cluster matrix, cores translate to contiguous blocks of high-value entries. \Coral finds the cores using a fast dynamic programming algorithm and highlights them within the co-cluster matrix (inset, Figure~\ref{fig:coral:big_matrix}a). When users provide clusterings derived from a network, \Coral can augment cores with an overlay showing each core's cohesion --- the ratio $E_\textrm{in} / E_\textrm{out}$ where $E_\textrm{in}$ is the number of edges within the core and $E_\textrm{out}$ is the number of edges that have one endpoint inside the core and another endpoint outside of it~\cite{Bailey1982}. When a core's cohesion is low, the blue overlay is smaller indicating that the core shares many connections with the rest of the network (Figure~\ref{fig:coral:big_matrix}b). Cores for which cohesion is high are more isolated from the rest of the network --- these cores are distinguishable by the blue overlays that almost cover the core.
+  In a co-cluster matrix, most cores appear as contiguous blocks of high-value entries, although cores could ``wrap around'' being a two-dimensional projection of an $n$-dimensional data. \Coral finds the cores using a fast dynamic programming algorithm and highlights them within the co-cluster matrix (inset, Figure~\ref{fig:coral:big_matrix}a). When users provide clusterings derived from a network, \Coral can augment cores with an overlay showing each core's cohesion --- the ratio $E_\textrm{in} / E_\textrm{out}$ where $E_\textrm{in}$ is the number of edges within the core and $E_\textrm{out}$ is the number of edges that have one endpoint inside the core and another endpoint outside of it~\cite{Bailey1982}. When a core's cohesion is low, the blue overlay is smaller indicating that the core shares many connections with the rest of the network (Figure~\ref{fig:coral:big_matrix}b). Cores for which cohesion is high are more isolated from the rest of the network --- these cores are distinguishable by the blue overlays that almost cover the core.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%
@@ -586,7 +596,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   % showcasing base clustering feature
   \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.7\linewidth]{coral_base_matrix}
+    \includegraphics[width=0.7\linewidth]{figures/coral_base_matrix}
     \caption{\textbf{Base clustering mode for the co-cluster matrix.} The base clustering highlights only the item pairs that co-clustered within the selected clustering graying out the rest of the matrix. Base clustering helps users focus on comparisons with the selected clustering. In this figure, the colored areas represent the original 26 \Athal modules; their mostly pink hue indicates that their item pairs co-clustered in few clusterings. Large areas of gray indicate that many novel modules found by other clusterings were not found by the link clustering algorithm~\cite{Ahn2010}.}
     \label{fig:coral:base_clust}
   \end{figure}
@@ -607,7 +617,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   %co-clustering signatures
   \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.4\linewidth]{coral_item_pair}
+    \includegraphics[width=0.4\linewidth]{figures/coral_item_pair}
     \caption{\textbf{Co-cluster signatures help track where two items have co-clustered.} Two rows from the pairs table for the \Athal dataset: each row starts with the two item IDs (here: \Athal proteins), followed by the number of times these two proteins were co-clustered, followed by a co-cluster signature that tells in which clusterings the two proteins were co-clustered. Clusterings order for this example: \Athal, \texttt{Clauset}, \texttt{CFinder}, \texttt{Louvain}, \texttt{MCL}, \texttt{MCODE.F}, \texttt{MCODE}, \texttt{MINE}, \texttt{SPICi}. Proteins AT1G04100 and AT1G51950 co-clustered in 8 clusterings. The two share many specific GO annotations: both are involved in auxin stimulus, localize to the nucleus, and participate in protein binding and sequence-specific DNA binding transcription factor activity. AT1G04100 and AT1G50900 were in the same module just once and shared no GO annotations suggesting that the relationship between these two proteins was of a more tenuous nature.}
     \label{fig:coral:signature}
   \end{figure}
@@ -620,7 +630,7 @@ Large data volumes resulting from high-throughput experiments present yet anothe
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Reordering the co-cluster matrix}
-  \label{sec:reordering}
+  \label{sec:coral:reordering}
 
   The order of rows and columns in the co-cluster matrix is critical to extracting meaningful information from it. Finding an optimal matrix reordering is NP-complete for almost any interesting objective. Algorithms for the optimal linear arrangement~\cite{Mueller} and bandwidth minimization~\cite{Lai1982} problems have been used to reorder matrices with considerable success; however, both approaches perform poorly for matrices that have many off-diagonal elements. After comparing several reordering algorithms using the bandwidth and envelope metrics, we have chosen the SPIN~\cite{Tsafrir2005} approach that consistently produced better results on a wide range of matrices.
 
@@ -839,43 +849,43 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Augmenting search for high-throughput sequencing metadata}
+% \chapter{Augmenting search for high-throughput sequencing metadata}
 
 % XXX merge into Coral chapter
 
-SHARQ is available at http://sharq.compbio.cs.cmu.edu/.
+% SHARQ is available at http://sharq.compbio.cs.cmu.edu/.
 
-SHARQ~\cite{SHARQwebsite}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Background}
-
-The Sequence Read Archive (SRA)~\cite{kodama2012sequence} is a central resource for high-throughput sequencing data produced by a variety of sequencing technologies. As part of an international effort to make data generated using public funds accessible to researchers and the rest of the world, SRA's goal is to maintain the data and make is easily searchable to aid in reproducibility efforts and allow for new discoveries. The database contains nearly 2000 terabases of open access data of which recent human RNA-seq expression amounts to about 10\%. RNA-seq is a way to gauge the expression of genes and individual isoforms and holds a lot of promise XXX as a fast and inexpensive genetic diagnostic tool XXX any citation?. Sample comparisons between and across tissue and cell types are essential for establishing the common baselines, however, the manual annotations of tissue and cell types for experiments submitted to the SRA are often inconsistent or completely missing. The variability of submissions to SRA and the lack of any consistent vocabulary for cell and tissue types results in searches through the existing tools (through web interface or database) to miss relevant experiments and to return false positives.
+% SHARQ~\cite{SHARQwebsite}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Annotation for tissue and cell types}
+% \section{Background}
 
-XXX
+% The Sequence Read Archive (SRA)~\cite{kodama2012sequence} is a central resource for high-throughput sequencing data produced by a variety of sequencing technologies. As part of an international effort to make data generated using public funds accessible to researchers and the rest of the world, SRA's goal is to maintain the data and make is easily searchable to aid in reproducibility efforts and allow for new discoveries. The database contains nearly 2000 terabases of open access data of which recent human RNA-seq expression amounts to about 10\%. RNA-seq is a way to gauge the expression of genes and individual isoforms and holds a lot of promise XXX as a fast and inexpensive genetic diagnostic tool XXX any citation?. Sample comparisons between and across tissue and cell types are essential for establishing the common baselines, however, the manual annotations of tissue and cell types for experiments submitted to the SRA are often inconsistent or completely missing. The variability of submissions to SRA and the lack of any consistent vocabulary for cell and tissue types results in searches through the existing tools (through web interface or database) to miss relevant experiments and to return false positives.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Interface}
 
-\begin{figure}[ht]
-  \includegraphics[width=\linewidth]{sharq-ui.png}
-  \caption{\textbf{Overview of SHARQ interface.} The interface offers a variety of controls to search by multiple tissues, cell types, read length, or date of submission. Text search (not shown) scans through the PubMed abstracts and other text fields describing each sequencing run.}
-  \label{fig:sharq:interface}
-\end{figure}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Annotation for tissue and cell types}
 
-SHARQ is implemented as an lightweight web-based interactive tool using open source Javascript packages \texttt{crossfilter}~\cite{crossfilter} and \texttt{dc.js}~\cite{dcjs} (Figure~\ref{fig:sharq-ui}). It offers a way to quickly assess metadata for thousands of records and use visual cues to narrow the search down to a set of sequencing runs of interest. Users can start by selecting several tissue types, then refine the search by specifying  specific cell types or by restricting their search to runs that have a particular read length. Additionally, users can provide a date range that dictates the date of initial submission to SRA. As a special case, the user may choose to only focus on data associated with cancers or data associated with non-differentiated cells, since these samples may originate from any tissue. In addition to selecting parameters of interest, users may search across all text fields, such as study summaries, including tissue and cell type annotations. For example, searching for `blood' will bring select all sequencing runs that were annotated as coming from blood as all other runs that have a mention of `blood' in their annotations, title, abstracts, and summaries.\\
+% XXX
 
-Once users are satisfied with their query, they can download all matching sequencing run IDs in a single file for further processing --- these could be used, for example, for a batch download through SRA Toolkit \cite{leinonen2010sequence}. Alternatively, users can download full records for the matched runs that include FTP links for direct download.\\
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Interface}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Discussion and conclusions}
+% \begin{figure}[ht]
+%   \includegraphics[width=\linewidth]{figures/sharq-ui.png}
+%   \caption{\textbf{Overview of SHARQ interface.} The interface offers a variety of controls to search by multiple tissues, cell types, read length, or date of submission. Text search (not shown) scans through the PubMed abstracts and other text fields describing each sequencing run.}
+%   \label{fig:sharq:interface}
+% \end{figure}
 
-XXX
+% SHARQ is implemented as an lightweight web-based interactive tool using open source Javascript packages \texttt{crossfilter}~\cite{crossfilter} and \texttt{dc.js}~\cite{dcjs} (Figure~\ref{fig:sharq-ui}). It offers a way to quickly assess metadata for thousands of records and use visual cues to narrow the search down to a set of sequencing runs of interest. Users can start by selecting several tissue types, then refine the search by specifying  specific cell types or by restricting their search to runs that have a particular read length. Additionally, users can provide a date range that dictates the date of initial submission to SRA. As a special case, the user may choose to only focus on data associated with cancers or data associated with non-differentiated cells, since these samples may originate from any tissue. In addition to selecting parameters of interest, users may search across all text fields, such as study summaries, including tissue and cell type annotations. For example, searching for `blood' will bring select all sequencing runs that were annotated as coming from blood as all other runs that have a mention of `blood' in their annotations, title, abstracts, and summaries.\\
+
+% Once users are satisfied with their query, they can download all matching sequencing run IDs in a single file for further processing --- these could be used, for example, for a batch download through SRA Toolkit \cite{leinonen2010sequence}. Alternatively, users can download full records for the matched runs that include FTP links for direct download.\\
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Discussion and conclusions}
+
+% XXX
 
 
 
@@ -896,9 +906,11 @@ Relationships between people, cooperation between genes in a cell, co-dependence
 
 The amount of information that changes between any two consequitive timepoints is often too great to comprehend even for small networks making visualization of such networks a challenging problem. We explore a setting in which the user focuses on a single node (e.g., a gene of interest) and its immediate neighborhood over time (ego-network). The main challenge is to maintain user's mental model of the ego-network between differnt time steps while allowing changes to propagate through the viusalization. We model the amount of ``influence'' shared between the main node and its peripheral connections at any given time and develop an algorithm that assigns unique positions to the peripheral nodes according to the amount of shared influence. We suggest novel widgets to inform the user of general patterns of interaction between the main node and its neighbors.
 
-In this capter, we discuss a new system for exploring, in an intuitive and interactive way, a large compendium of collaboration data between jazz musicians. The system consists of an easy-to-use web application that marries an ego-network view of collaborations with an interactive timeline.  We develop a new measure of collaboration strength that is used to highlight strong and weak collaborations in the network view. The ego-network is arranged using a novel algorithm for ordering nodes that avoids occlusion even when the network is frequently changing. We build the system around a large, unique, hand-curated data set of recorded jazz collaborations.
+In this chapter, we discuss a new system for exploring, in an intuitive and interactive way, a large compendium of collaboration data between jazz musicians. The system consists of an easy-to-use web application that marries an ego-network view of collaborations with an interactive timeline.  We develop a new measure of collaboration strength that is used to highlight strong and weak collaborations in the network view. The ego-network is arranged using a novel algorithm for ordering nodes that avoids occlusion even when the network is frequently changing. We build the system around a large, unique, hand-curated data set of recorded jazz collaborations.
 
-The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJazz}. The system can be accessed at \url{http://mapofjazz.com/socialcom}.
+XXX relate to biology here
+
+The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippova2012moj}. The system can be accessed at \url{http://mapofjazz.com/socialcom}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
@@ -932,7 +944,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Circular and ego-network layouts}
 
-  As early as 1990, circular layouts were used for organizing trees by placing the root in the center and assigning the child nodes to concentric circles with increasing radii~\cite{North1997}, with nodes at the same level of a tree assigned to the same circle. Six et al.~\cite{Six1999} extended the technique to work for more general graphs by connecting multiple circular structures. Yee and colleagues~\cite{Yee2001} have developed the technique further to support nodes of different sizes (where node size is proportional to some node attribute). They adapted their layout to handle dynamic graphs by showing animations of nodes traveling on a smooth trajectory from old locations to the new ones.
+  Circular layouts have been used for organizing trees by placing the root in the center and assigning the child nodes to concentric circles with increasing radii~\cite{North1997}, with nodes at the same level of a tree assigned to the same circle. Six et al.~\cite{Six1999} extended the technique to work for more general graphs by connecting multiple circular structures. Yee and colleagues~\cite{Yee2001} have developed the technique further to support nodes of different sizes (where node size is proportional to some node attribute). They adapted their layout to handle dynamic graphs by showing animations of nodes traveling on a smooth trajectory from old locations to the new ones.
 
   Wang, Shi, and Wen~\cite{Wang2011a} experiment with a dynamic ego-network design where the central node and all of its connections are shown at the same time. The main node has several copies with each one representing the node at a specific point in time and linked only to those nodes with which it was associated during that period. This approach is not feasible if the central node has many collaborators over his or her career. Gansner and Koren~\cite{Gansner2006} develop heuristics that order nodes on a circle's periphery in a way that minimizes the edge crossovers and reroutes some of the links to go outside the circle's circumference. These authors suggest edge bundling for the links inside the circle to reduce clutter further. Their work does not consider dynamically changing links.
 
@@ -984,14 +996,14 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{full_network_cropped.png}
+    \includegraphics[width=\linewidth]{figures/full_network_cropped.png}
     \caption{\textbf{Map of Jazz network of collaborations} visualized with Cytoscape~\cite{Cytoscape}. Individual nodes represent jazz musicians, node size corresponds to node degree, and the opacity of the edges between nodes corresponds to the frequency of collaboration over time.}
     \label{fig:moj:fullnetwork}
   \end{figure}
 
 
 
-  At the time of publication, the database contained information on 11824 musicians and a total of 13873 recording sessions (see Figure~\ref{fig:moj:fullnetowrk} for an overview of the collaboration graph). The average number of people per recording session was 7.39 with the smallest sessions having just one performer, and the largest session having 72 people (not including the members of symphony orchestras). Network diameter (the longest among all shortest paths between all pairs of vertices) was equal to 8, and the average (\emph{characteristic}) shortest path was equal to 3.24. As with many social networks, very few musicians have a high number of connections, with an overall average node degree of 33.68 (see Fig.~\ref{tab:high_degree} for the top 5 artists by degree). However, the network does not pass the test for scale-freeness according to the test developed by Clauset et al.~\cite{Clauset2009b} suggesting that the network has evolved by processes other than the well-studied ``rich get richer"mechanism.
+  At the time of publication, the database contained information on 11824 musicians and a total of 13873 recording sessions (see Figure~\ref{fig:moj:fullnetwork} for an overview of the collaboration graph). The average number of people per recording session was 7.39 with the smallest sessions having just one performer, and the largest session having 72 people (not including the members of symphony orchestras). Network diameter (the longest among all shortest paths between all pairs of vertices) was equal to 8, and the average (\emph{characteristic}) shortest path was equal to 3.24. As with many social networks, very few musicians have a high number of connections, with an overall average node degree of 33.68 (see Fig.~\ref{tab:high_degree} for the top 5 artists by degree). However, the network does not pass the test for scale-freeness according to the test developed by Clauset et al.~\cite{Clauset2009b} suggesting that the network has evolved by processes other than the well-studied ``rich get richer"mechanism.
 
 
 
@@ -1004,7 +1016,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   \begin{figure}[tb!]
     \centering
-    \includegraphics[width=\linewidth]{moj_overview.png}
+    \includegraphics[width=\linewidth]{figures/moj_overview.png}
     \caption{\textbf{Overview of the Map of Jazz web application.} XXX more details}
     \label{fig:moj:overview}
   \end{figure}
@@ -1031,7 +1043,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   %
   \begin{figure}[ht]
-    \includegraphics[width=\linewidth]{timeline}
+    \includegraphics[width=\linewidth]{figures/timeline}
     \caption{\textbf{A timeline augmented with a session similarity graph.} Triangles represent the individual recording sessions. Most sessions on the timeline have a high pairwise similarity indicating that session memberships changed only slightly.}
     \label{fig:moj:timeline}
   \end{figure}
@@ -1041,7 +1053,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
   \textbf{Augmented timeline.} To aid users in focusing on a specific time period of interest, the Map of Jazz offers several basic metrics to be overlaid on top of the timeline. These include: 
   %
   \begin{itemize}
-    \item the number of collaborators per session,
+    \item the number of collaborators per session, XXXX -- where is this displayed
     \item the number of unique musicians the person collaborated with up to this date,
     \item the Jaccard similarity between the members of the current session and the previous session.
   \end{itemize}
@@ -1081,7 +1093,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\linewidth]{influence_plot.png}
+    \includegraphics[width=0.6\linewidth]{figures/influence_plot.png}
     \caption{\textbf{The collaboration strength function} (red) is a combination of two functions: one for which  the value grows fast as $t$ gets closer to the session (blue) and another one for which the change in value is much smoother (green). Here, two hypothetical musicians played together in 1925, 1930, and 1932 (blue dots). Their relationship is strongest when several sessions occur within a short period of time such as in 1930--1932. The collaboration strength drops slightly between 1925 and 1930 and declines rapidly after the last session in 1932.}
     \label{fig:moj:infl_func}
   \end{figure}
@@ -1150,7 +1162,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
   %
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\linewidth]{ordering}
+    \includegraphics[width=0.6\linewidth]{figures/ordering}
     \caption{\textbf{Assigning angular positions for the nodes.} Starting with the largest cluster, performers from the same cluster get assigned sectors of the circle that are far from each other. Here, \emph{a} is assigned to the $1^\textrm{st}$ sector, \emph{b} is $\left\lfloor \frac{12}{5} \right\rfloor = 2$ sectors away, and so on.}
     \label{fig:moj:ordering}
   \end{figure}
@@ -1186,12 +1198,12 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   \begin{figure}[ht]
     \centering
-    \includegraphics[height=100px]{node-glyph}
-    \caption{\textbf{Node glyph.} The inner-most circle of the node glyph encodes the number of times the musician played in \emph{some} session in the past. The middle circle (blue) represents the number of sessions the musician played with the main musician within the current time frame. The radius of the outer largest circle encodes the total number of sessions the musician played throughout his/her career with or without the main musician.}
+    \includegraphics[height=100px]{figures/node-glyph}
+    \caption{\textbf{Node glyph.} The radius of the inner-most circle of the node glyph is a function of the number of times the musician played in \emph{some} session in the past. We use square root as the function here since it results in noticable differences for small values and does not unexpectedly explode in size for high values. The middle circle (blue) represents the number of sessions the musician played with the main musician within the current time frame. The radius of the outer largest circle encodes the total number of sessions the musician played throughout his/her career with or without the main musician.}
     \label{fig:moj:node_glyphs}
   \end{figure}
 
-  Node glyphs (Fig.~\ref{fig:node_glyphs}) consist of three concentric circles.
+  Node glyphs (Fig.~\ref{fig:moj:node_glyphs}) consist of three concentric circles.
   The inner circle's radius is proportional to the square root of the count of
   sessions this musician played in the past, i.e. before the sessions currently
   visible on the timeline. The second circle's radius represents the square root
@@ -1205,23 +1217,11 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
   visible on the timeline. The radius of the outer circle, i.e. the square root of
   a total number of sessions recorded, does not change.
 
-  Edge glyphs encode information about the overall count of recording sessions in
-  which both the main musician and the collaborator participated
-  (Fig.~\ref{fig:edge_glyphs} and~\ref{fig:duke-ell}). Edges are colored in varying shades of gray with
-  the inner edge representing collaborations in the ``past'' and its thickness
-  proportional to the square root of the number of sessions he or she shared with
-  the main musician in the past. The thickness of the middle part is proportional
-  to the root of the number of sessions for that collaborator currently visible on
-  the timeline. Finally, the total edge thickness represents the number of
-  sessions the two musicians played together overall.
-   As users interact with the timeline, the thickness of the
-  inner edges may change depending on the number of shared sessions in the past or
-  currently visible on the timeline; however, the total thickness of an edge would
-  not change.
+  Edge glyphs encode information about the overall count of recording sessions in which both the main musician and the collaborator participated (Fig.~\ref{fig:moj:edge_glyphs} and~\ref{fig:moj:duke-ell}). Edges are colored in varying shades of gray with the inner edge representing collaborations in the ``past'' and its thickness proportional to the square root of the number of sessions he or she shared with the main musician in the past. The thickness of the middle part is a function of the square root of the number of sessions for that collaborator currently visible on the timeline. Finally, the total edge thickness represents the number of sessions the two musicians played together overall. As users interact with the timeline, the thickness of the inner edges may change depending on the number of shared sessions in the past or currently visible on the timeline; however, the total thickness of an edge would not change.
 
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\linewidth]{edge-glyph}
+    \includegraphics[width=0.5\linewidth]{figures/edge-glyph}
     \caption{\textbf{Edge glyph.} The thickness of the inner-most inset in the edge glyph
   is proportional to the number of sessions the main musician and their
   collaborator played in the past, and the thickness of the "present" inset
@@ -1231,20 +1231,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
     \label{fig:moj:edge_glyphs}
   \end{figure}
 
-  Various combinations of node and edge thicknesses should alert the users to
-  different modes of collaboration. A combination of a large peripheral node and a
-  narrow edge connecting it to the center indicates that while the collaborator
-  has played many sessions overall, they played very few with the main musician
-  (for example, Don Redman in Fig.~\ref{fig:moj:duke-ell}).
-  Further, if the node's inner ``past'' circle is large, such combination then
-  indicates that the collaborator is an established musician who is sharing their
-  skills with the up and coming musician at the center of the ego-network. On the
-  contrary, if the inner ``past'' circle is small and the majority of sessions are
-  in the ``future'', such behavior may indicate that the collaborator has joined
-  the main musician briefly and later went on to form an active career of their
-  own. A case where both the node and the edge are thick indicates that the two
-  musicians have recorded many sessions together and, therefore, share a strong
-  tie.
+  Various combinations of node and edge thicknesses should alert the users to different modes of collaboration. A combination of a large peripheral node and a narrow edge connecting it to the center indicates that while the collaborator has played many sessions overall, they played very few with the main musician (for example, Don Redman in Fig.~\ref{fig:moj:duke-ell}). Further, if the node's inner ``past'' circle is large, such combination then indicates that the collaborator is an established musician who is sharing their skills with the up and coming musician at the center of the ego-network. On the contrary, if the inner ``past'' circle is small and the majority of sessions are in the ``future'', such behavior may indicate that the collaborator has joined the main musician briefly and later went on to form an active career of their own. A case where both the node and the edge are thick indicates that the two musicians have recorded many sessions together and, therefore, share a strong tie.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -1254,20 +1241,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   \subsection{Exploring collaborators' connectivity}
 
-  An ego-network allows users to focus on the dynamics of a few collaborations at
-  the expense of hiding all other topological information. Knowing which, if any,
-  peripheral nodes collaborate with each other helps to understand the communities
-  that form in the immediate neighborhood of the main musician. The Map of Jazz
-  provides such details on demand: when users hover over a collaborator's node $v$,
-  the Map renders additional edges that connect $v$ to the collaborators it shares
-  with the central node (Fig.~\ref{fig:young}). The thickness of the edges
-  corresponds to the number of
-  sessions the two musicians played in the past (including those they played
-  with the main musician). When the edges connecting the main node and the
-  performers on the periphery are thin indicating few collaborations, it would be
-  noteworthy to see thick edges between those performers. Such a situation would
-  imply that those artists form a strong community, or a band, outside of the main
-  musician's neighborhood.
+  An ego-network allows users to focus on the dynamics of a few collaborations at the expense of hiding all other topological information. Knowing which, if any, peripheral nodes collaborate with each other helps to understand the communities that form in the immediate neighborhood of the main musician. The Map of Jazz provides such details on demand: when users hover over a collaborator's node $v$, the Map renders additional edges that connect $v$ to the collaborators it shares with the central node (Fig.~\ref{fig:moj:young}). The thickness of the edges corresponds to the number of sessions the two musicians played in the past (including those they played with the main musician). When the edges connecting the main node and the performers on the periphery are thin indicating few collaborations, it would be noteworthy to see thick edges between those performers. Such a situation would imply that those artists form a strong community, or a band, outside of the main musician's neighborhood.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -1276,14 +1250,14 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %\section{Evaluation}
-\section{Example Analysis with the Map of Jazz}
+\section{Example analysis with the Map of Jazz}
 
-  \textbf{Duke Ellington}'s career spanned more than half a century from the early twenties to his death in 1974. The first record on the Map's timeline dates back to July of 1923 with Ellington playing piano and Elmer Snowden as the band leader --- Ellington was yet to form his own band. Ellington's egonet for the period of 1923--1928 has several prominent performer nodes: Harry Carney, Otto Hardwick, Sonny Greer, Fred Guy,  Barney Bigard, Joe Nanton, and Wellman Braud (see Fig.~\ref{fig:duke-ell}). The size of Harry Carney's node, for example, indicates that he participated in a significant number of recording sessions throughout his career (1487 sessions), and the thickness of the edge connecting him to Duke Ellington reveals that most of those sessions were recorded with Ellington (1480 sessions). The same holds for others in the list above: their careers were tightly knit with Ellington's.
+  \textbf{Duke Ellington}'s career spanned more than half a century from the early twenties to his death in 1974. The first record on the Map's timeline dates back to July of 1923 with Ellington playing piano and Elmer Snowden as the band leader --- Ellington was yet to form his own band. Ellington's egonet for the period of 1923--1928 has several prominent performer nodes: Harry Carney, Otto Hardwick, Sonny Greer, Fred Guy,  Barney Bigard, Joe Nanton, and Wellman Braud (see Fig.~\ref{fig:moj:duke-ell}). The size of Harry Carney's node, for example, indicates that he participated in a significant number of recording sessions throughout his career (1487 sessions), and the thickness of the edge connecting him to Duke Ellington reveals that most of those sessions were recorded with Ellington (1480 sessions). The same holds for others in the list above: their careers were tightly knit with Ellington's.
 
 
   \begin{figure}[tb!]
     \centering
-    \includegraphics[width=0.7\linewidth]{duke-ellington-1925-1928}
+    \includegraphics[width=0.7\linewidth]{figures/duke-ellington-1925-1928}
     \caption{\textbf{Ego network.} Duke Ellington's ego-network during 1925--1928. His prominent collaborators, Otto Hardwick, Fred Guy, Sonny Greer, Johnny Hodges, and Harry Carney, can be easily identified by the thick edges.}
     \label{fig:moj:duke-ell}
   \end{figure}
@@ -1305,7 +1279,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 
   \begin{figure}[htb!]
     \centering
-    \includegraphics[width=0.8\linewidth]{lester-young}
+    \includegraphics[width=0.8\linewidth]{figures/lester-young}
     \caption{\textbf{Hops reveal ego network connectivity.} Additional "hops" edges show past collaborations between periphery nodes that did not include the main musician. Here, Buck Clayton had recorded with Rodney Richardson and Al Killian numerous times prior to working with Lester Young.}
     \label{fig:moj:young}
   \end{figure}
@@ -1345,6 +1319,8 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{MapOfJa
 % algorithms for managing biological data
 \chapter{Identifying high-level structure in DNA conformation data}
 
+XXX need transition here -- from coral to domains, i suppose
+
 
 Recent chromatin conformation capture (3C) experiments provide indirect measurement of spatial proximity between genomically disjoint parts of folded nuclear DNA. A prominent feature of 3C experimental results are genomically contiguous regions of dense 3C interactions --- the so-called topological domains --- that affect accessibility of certain regions of DNA and are associated with long-range gene regulation. These megabase-sized topological domains are similar across cell types and are conserved across species. Topological domains are strongly correlated with a number of chromatin markers and have been included in a number of analyses since their discovery. However, visual analyses suggests that functionally-relevant domains may exist at multiple length scales. We adapt the core finding algorithm discussed in the ealier chapter (Coral) to identify novel domain structures.
 
@@ -1372,14 +1348,14 @@ The work described in this chapter has been presented at Workshop for Algorithms
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{figure}[t!]
     \begin{center}
-      \includegraphics[width=3in]{HeatMapFig}
+      \includegraphics[width=3in]{figures/HeatMapFig}
     \end{center}
     \caption{\textbf{Interaction matrix for a portion of human chromosome 1} from a recent Hi-C experiment by Dixon et al.~\cite{Dixon2012}. Each axis represents a location on the chromosome (40kbp bins).  Densely interacting domains identified by the method of Dixon et al. (red boxes).  Alternative domains are shown as dotted black lines on the upper triangular portion of the matrix.  Visual inspection of the lower triangular portion suggests domains could be completely nested within another and highly overlapping when compared to Dixon et al.'s domains. This motivates the problem of identifying alternative domains across length scales.}
     \label{armatus:heatmap}
   \end{figure}
 
 
-  3C experiments result in matrices of counts that represent the frequency of cross-linking between restriction fragments of DNA that are spatially near one another (see Figure~\ref{armatus:heatmap} for an example matrix). The original identification of domains in Dixon et al.~\cite{Dixon2012} employed a Hidden Markov Model (HMM) on these interaction matrices to identify regions initiated by significant downstream chromatin interactions and terminated by a sequence of significant upstream interactions.  A defining characteristic of the domains resulting from their analysis is that higher frequency 3C interactions tend to occur within domains as opposed to across domain. This aspect of domains is also reflected in the block-diagonal structure of 3C interaction matrices as shown in Fig.~\ref{heatmap}. In this sense, domains can be interpreted as contiguous genomic regions that self-interact frequently and are more spatially compact than their surrounding regions.
+  3C experiments result in matrices of counts that represent the frequency of cross-linking between restriction fragments of DNA that are spatially near one another (see Figure~\ref{armatus:heatmap} for an example matrix). The original identification of domains in Dixon et al.~\cite{Dixon2012} employed a Hidden Markov Model (HMM) on these interaction matrices to identify regions initiated by significant downstream chromatin interactions and terminated by a sequence of significant upstream interactions.  A defining characteristic of the domains resulting from their analysis is that higher frequency 3C interactions tend to occur within domains as opposed to across domain. This aspect of domains is also reflected in the block-diagonal structure of 3C interaction matrices as shown in Fig.~\ref{armatus:heatmap}. In this sense, domains can be interpreted as contiguous genomic regions that self-interact frequently and are more spatially compact than their surrounding regions.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Topological domains and their significance}
@@ -1508,21 +1484,21 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \begin{figure}[t]
     \begin{center}
     \subfigure[Domain size vs. frequency]{
-      \includegraphics[width=0.45\linewidth]{imr90-inter-intra-all-chromos}
+      \includegraphics[width=0.45\linewidth]{figures/imr90-inter-intra-all-chromos}
       \label{subfig:size-freq}
     }
     \subfigure[Mean frequency distr.]{
-      \includegraphics[width=0.45\linewidth]{mean-freq-distr}
+      \includegraphics[width=0.45\linewidth]{figures/mean-freq-distr}
       \label{subfig:freq-distr}
     }
-    \caption{~\subref{subfig:size-freq} Our algorithm discovers domains with mean frequency value for inter- and intra-domain interactions (solid lines) at or better than that of Dixon et al. domains (dotted lines). Each solid line represents domains at different resolution $\gamma$ in human fibroblast cells. \subref{subfig:freq-distr}~Multiscale domains identified in human fibroblast cells by our dynamic program tend to have higher mean frequency than those of Dixon et al.
+    \caption{~\subref{subfig:size-freq} XXX make plots bigger, separate into 2 figures. Our algorithm discovers domains with mean frequency value for inter- and intra-domain interactions (solid lines) at or better than that of Dixon et al.\@ domains (dotted lines). Each solid line represents domains at different resolution $\gamma$ in human fibroblast cells. \subref{subfig:freq-distr}~Multiscale domains identified in human fibroblast cells by our dynamic program tend to have higher mean frequency than those of Dixon et al.
     (distributions are plotted after outliers $> \mu+4\sigma$ were removed).}
 
     \label{fig:mi_jacc}
     \end{center}
   \end{figure}
 
-  Multiresolution domains successfully capture high frequency interactions and leave interactions of lower mean frequency outside of the domains. We compute the mean interaction frequency for all intra- and inter-domain interactions at various genomic lengths and plot the distribution of means for multiple resolutions (Fig.~\ref{subfig:size-freq}). The mean intra-domain interaction frequency (blue) is consistently higher (up to two times) than the mean frequency for interactions that cross domains (red). Compared to the domains reported by Dixon et al., our domains tend to aggregate interactions of higher mean frequency, especially at larger $\gamma$. The distribution of mean intra-domain frequencies for Dixon et al. is skewed more to the left than that of the multiscale domains (Fig.~\ref{subfig:freq-distr}). This difference can be partially explained by the fact that multiscale domains on average are smaller in size ($\mu=0.2$Mb, $\sigma=1.2$Mb) than domains reported by Dixon et al. ($\mu=1.2$Mb, $\sigma=0.9$Mb).
+  Multiresolution domains successfully capture high frequency interactions and leave interactions of lower mean frequency outside of the domains. We compute the mean interaction frequency for all intra- and inter-domain interactions at various genomic lengths and plot the distribution of means for multiple resolutions (Fig.~\ref{subfig:size-freq}). The mean intra-domain interaction frequency (blue) is consistently higher (up to two times) than the mean frequency for interactions that cross domains (red). Compared to the domains reported by Dixon et al., our domains tend to aggregate interactions of higher mean frequency, especially at larger $\gamma$. The distribution of mean intra-domain frequencies for Dixon et al.\@ is skewed more to the left than that of the multiscale domains (Fig.~\ref{subfig:freq-distr}). This difference can be partially explained by the fact that multiscale domains on average are smaller in size ($\mu=0.2$Mb, $\sigma=1.2$Mb) than domains reported by Dixon et al.\@ ($\mu=1.2$Mb, $\sigma=0.9$Mb).
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1539,11 +1515,11 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \begin{figure}[t]
     \centering
     \subfigure[domain size \& count vs. $\gamma$]{
-        \includegraphics[width=0.46\linewidth]{domain_sizes_all_IMR90.pdf}
+        \includegraphics[width=0.46\linewidth]{figures/domain_sizes_all_IMR90.pdf}
         \label{subfig:sizeCount}
     }
     \subfigure[similarity to Dixon et al. domains]{
-      \includegraphics[width=0.43\linewidth]{overlap_br_ours_chr1.pdf}
+      \includegraphics[width=0.43\linewidth]{figures/overlap_br_ours_chr1.pdf}
       \label{subfig:dixonSim}
     }
     \caption{~\subref{subfig:sizeCount} The domain sizes increase and the domain count decreases as the resolution parameter drops. Above: plotted are maximum (red), average (blue), and minimum (green) domain size averaged over all chromosomes for the domains on human fibroblasts. The magenta line shows the average domain size for domains reported by Dixon et al. Below: the number of domains increases for higher values of resolution parameter. The magenta line displays domain count for Dixon et al.~\subref{subfig:dixonSim} According to the Jaccard metric, the similarity between multiresolution domains and domains reported by Dixon et al. increases as the resolution parameter goes to zero.}%, however, the variation of information suggests that the two sets of domains are most similar around $\gamma=0.25$.}
@@ -1561,11 +1537,11 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \begin{figure}[t]
     \begin{center}
     \subfigure[domains across resolutions]{
-      \includegraphics[width=0.55\linewidth]{domains_long_chr1}
+      \includegraphics[width=0.55\linewidth]{figures/domains_long_chr1}
       \label{subfig:multiresDomains}
     }
     \subfigure[VI across resolutions]{
-      \includegraphics[width=0.366\linewidth]{vi_chr1}
+      \includegraphics[width=0.366\linewidth]{figures/vi_chr1}
       \label{subfig:multiresVI}
     }
     \end{center}
@@ -1578,7 +1554,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
 
   \begin{figure}[t!]
     \begin{center}
-      \includegraphics[width=.9\linewidth]{UsVsBingVI}
+      \includegraphics[width=.9\linewidth]{figures/UsVsBingVI}
     \end{center}
     \caption{\textbf{Comparison of Dixon et al.'s domain set} with the multiscale consensus set for chromosomes 1--22 ($x$-axis). We used the variation of information (VI) ($y$-axis) to compute distances between domain sets for the multiscale consensus set vs. Dixon et al (blue dots) and the multiscale consensus vs. randomly shuffled domains (red diamonds).}
     \label{fig:consensus_agreement}
@@ -1604,7 +1580,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \begin{figure}[ht]
   %
   \begin{center}
-  \includegraphics[width=0.73\textwidth]{fig6_combined_rotated}
+  \includegraphics[width=0.73\textwidth]{figures/fig6_combined_rotated}
   % \subfigure[IMR90: CTCF]{
   % \includegraphics[width=2.1in]{IMR90_CTCF_Ours}
   % \includegraphics[width=2.1in]{IMR90_CTCF_Bingy}
@@ -1663,7 +1639,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
 
 \section{Discussion and Conclusions}
 
-  In this paper, we introduce an algorithm to identify topological domains in chromatin using interaction matrices from recent high-throughput chromosome conformation capture experiments.  Our algorithm produces domains that display much higher interaction frequencies within the domains than in-between domains (Fig.~\ref{fig:mi_jacc}) and for which the boundaries between these domains exhibit substantial enrichment for several known insulator and barrier-like elements (Fig.~\ref{fig:enrichment}).  To identify these domains, we use a multiscale approach which finds domains at various size scales.  %To obtain a single set of domains from this rich ensemble, e extract a non-overlapping set of consensus domains that are most persistent across multiple length scales.
+  In this chapter, we introduce an algorithm to identify topological domains in chromatin using interaction matrices from recent high-throughput chromosome conformation capture experiments.  Our algorithm produces domains that display much higher interaction frequencies within the domains than in-between domains (Fig.~\ref{fig:mi_jacc}) and for which the boundaries between these domains exhibit substantial enrichment for several known insulator and barrier-like elements (Fig.~\ref{fig:enrichment}).  To identify these domains, we use a multiscale approach which finds domains at various size scales.  %To obtain a single set of domains from this rich ensemble, e extract a non-overlapping set of consensus domains that are most persistent across multiple length scales.
   We define a consensus set to be a set of domains that persist across multiple resolutions and give an efficient algorithm that finds such a set optimally.
 
   % -- Practical running time
@@ -1675,6 +1651,477 @@ The work described in this chapter has been presented at Workshop for Algorithms
   The dense, functionally-enriched domains discovered by our algorithm provide strong evidence that alternative chromatin domains exist and that a single length scale is insufficient to capture the hierarchical and overlapping domain structure visible in heat maps of 3C interaction matrices. Our method explicitly incorporates the desirable properties of domain density and persistence across scales into objectives that maximize each and uncovers a new view of domain organization in mammalian genomes that warrants further investigation.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+% de novo sequence compression
+
+%   -- can compress similar genomes against each other (\cite{reference})
+%   -- suggests there might be a grammar describing sequence
+
+%   -- used grammar finder on concatenated reads -- results not promising. grammar size XXXX, compressed size XXX
+
+%   -- using kmer dictionaries
+%     -- building kmer dictionaries: single K
+%     -- multiple K
+%     -- mixing various K lengths
+
+%   -- optimal string parsing given a dictionary
+%     -- filling in the gaps
+%     -- allowing up to 2 substitutions
+
+%   -- performance on some related data: 
+%     -- size of dictionary
+%     -- encoding self with your dictionary
+%     -- cross-encoding related data
+
+%     -- dictionary size on the single cell RNA-seq
+%       -- dicitonary size keeps growing
+%       -- kmer set overlaps between the sets is small
+%       -- most kmers are not even in the transcriptome
+%       -- but they do align well to the genome
+%       -- CONCLUSION: too much variability, a single error , plus read boundaries matter
+
+%   -- conclusions
+%     -- dictionary coders like SCALCE and MINCE replace whole swathes of seuqence
+%     -- kmer dictionary will always spend bits when seeing the same kmer
+%     -- error rates and read boundaries do no allow for efficient shared dictionary construction based on kmers
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%% Huffmer and Referee -- compression projects
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{De novo sequence compression with shared dictionaries}
+
+XXX: intro is a duplicate of the reference-based chapter's intro
+
+
+Previous chapters address visualization and analysis challenges presented by data that has already been processed: networks constructed from raw data, annotations, and quantified abundances of histone modifications. However, as we go back to the tasks involving raw data, the data size and complexity increase to the extent that not only visualization, but even storage, dissemination, and basic analysis of such data become a computational challenge. For example, chromosome conformation data for a human chromosome 1 in the embryonic stem cell fits on disk withing 134Mb, however, to separate data for a single chromosome researchers had to merge and align sequencing data from several replicates that adds up to almost 70Gb. 
+% The amount of sequencing data stored in the Short Read Archive (SRA) is 775337Gb and growing~\cite{SRA}. 
+Large sequencing data warehouses, e.g. Sequence Read Archive (SRA)~\cite{SRA}, and labs with modest computational resources alike face these computational challenges due to the explosion in the amount of generated sequencing data.
+
+Commonplace compression tools like gzip that is based on Lempel-Ziv original paper~\cite{LempelZiv77}, and bzip2 that leverages Burrow-Wheeler transform~\cite{BWTransform} are used often to compress large read datasets, however, they do not exploit the specific nature of sequencing reads: its small alphabet, highly repetitive subsequences, higher error rates when compared to natural language, reverse comlpimentarity, and the fact that sequence may originate from a well-annotated known genome. SRA data format is commonly used to store FASTQ files which include the reads themselves and additional base quality information, however, even the most naive compression methods easily outperform this compression technique~\cite{SeqSqueeze}.
+
+XXX what we discuss in this chapter
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background}
+
+
+The amount of sequencing data stored in the Sequence Read Archive (SRA) is currently at 775337Gb and growing~\cite{SRA} --- this growth of generated data demands novel scalable approaches to its storage and transmission. It is also crucial that compression approaches are \textit{functional}, i.e.\@ that analyses could be run on the dataset in its compressed format without having to fully reconstruct it. 
+
+
+In the area of sequence compression, two prevalent approaches exist: the \textit{reference-based} (discussed in the next chapter) and \textit{reference-free}, or \textit{de novo}, methods. \textit{De novo} compression operates on raw sequencing reads, FASTA, or FASTQ files as input and focuses on ways to compress sequence~\cite{Mince,PathEncode,Rozov2014}, quality values~\cite{SeqSqueeze,KmerQuals,JaninQuals}, or both~\cite{GSQZ,Sahinalp2012}. Tools like SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} take the approach of grouping the reads based on their similarity allowing the downstream general-purpose compression tools to build better dictionary encodings. Rozov \etal~\cite{Rozov2014} and recent work by Kingsford and Patro~\cite{PathEncode} use an available reference sequence to inform their compression algorithm without explicitly aligning reads to it. Quip~\cite{Jones2012} takes a step closer to reference-based approach by creating contigs from a subset of data and encoding the rest of the reads relative to that lightweight assembly. De novo compression tools compress sequence down to 3-10\% of its original size at reasonable speeds~\cite{Deorowicz2013}, however, most tools require that the dataset is completely decompressed before it could be used for downstream analyses.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Compressing sequence with standard command-line tools}
+
+  The repetitive nature of sequencing data suggests that dictionary-based coders, like the commonplace command-line tools \texttt{gzip}, \texttt{bzip}, and \texttt{plzip}, should be able to compress collections of reads reasonably well. However, just simply reordering the reads improves compression ratios vastly: for data shown in Table~\ref{tab:compression:clt}, the size of compressed data was reduced by up to 5 times after running \texttt{sort} utility on the original reads. Additionally, since reads are derived from DNA and could represent the sequence in the forward or the reverse direction, the read and its reverse compliment are considered equivalent. Choosing to reverse complement some reads to increase read homogeneity can further improve compression, but finding an optimal read ordering and directionality turns out to be a hard problem~\cite{PatroLCPRC}.
+
+  \begin{table}[ht]
+    \centering
+    \subfigure[Reads]{
+      \begin{tabular}{l r r r r}
+      \toprule
+      Dataset & Seq. size & gzip & bzip & plzip \\
+      \midrule
+      % SRR635193\_1 & 448028499 & 388127969 & 298812728 \\
+      % SRR519063\_1 & 275904124 & 171751232 & 149554794 \\
+      % ERR233214\_1 & 208082597 & 189126709 & 119758802 \\
+      SRR635193\_1 & 1430 & 427 & 370 & 284 \\
+      SRR519063\_1 & 1338 & 263 & 163 & 142 \\
+      ERR233214\_1 & 673 & 198 & 180 & 114 \\
+      \bottomrule
+      \end{tabular}
+      \label{fig:compression:unordered}
+    }
+    \subfigure[Reordered reads]{
+      \begin{tabular}{l r r r}
+      \toprule
+      Dataset & gzip & bzip & plzip \\
+      \midrule
+      SRR635193\_1 & 166 & 195 & 128 \\
+      SRR519063\_1 & 43 & 48 & 28 \\
+      ERR233214\_1 & 95 & 121 & 64 \\
+      \bottomrule
+      \end{tabular}
+      \label{fig:compression:reordered}
+    }
+    \caption{\textbf{Performance of command-line compression tools on sequencing reads.} Reordering the reads improves reads compression by up to XXX times. Sizes shown are in megabytes.}
+    \label{tab:compression:clt}
+  \end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Applying grammar-based sequence encoding to reads}
+
+    % -- can compress similar genomes against each other (\cite{reference})
+
+    % -- suggests there might be a grammar describing sequence
+
+    % -- used grammar finder on concatenated reads -- results not promising. grammar size XXXX, compressed size XXX
+
+    % XXX what if trained the grammar on the genome, then used the learned grammar to compress reads for that organism?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Using information shared across sets of sequencing reads}
+
+  % additional definitions
+  \newcommand{\seq}{\mathcal{S}\xspace}
+  \newcommand{\compseq}{\widetilde{\mathcal{S}}\xspace}
+
+  XXX what is shared informations.
+  
+
+  We investigated compression methods that relied on a paradigm of \textit{shared information}. For example, given multiple human RNA-seq datasets $\mathcal{ S}_1, \mathcal{ S}_2, \ldots$, the information encoded in the sequencing reads of each $\mathcal{ S}_i$ is highly redundant across all $\mathcal{S}_i$.  These datasets would only differ due to genomic variations between individuals and the number of copies for the expressed genes, however, most of the sequence data would be repeated. We seek a method that can identify and efficiently compress data shared across multiple datasets. When a large genomic center distributes compressed data $\mathcal{\widetilde S}_i$, the dictionary $D$ of information shared among all $\mathcal{S}_i$ need only be downloaded once and its cost would be amortized over multiple transmissions of $\mathcal{\widetilde S}_1$, $\mathcal{\widetilde S}_2$, \ldots.
+
+  Given the input datasets $\mathcal{ S}_1, \mathcal{ S}_2, \ldots$, we seek such dictionary $D$ that compression ratio $(\sum_i |\compseq_i| + D) / \sum_i |\seq_i|$ is minimized over multiple transmissions of the compressed sequences $\compseq_i$. Alternatively, we may want to construct multiple dictionaries $D_1, \ldots, D_\delta$ such that for each $\seq_i$, parts of the original sequence are best compressed by one of these dicitonaries $D_j$. We will then seek a collection of dictionaries $D_1, \ldots, D_\delta$ and amatching function $f(\seq_i \to D_j)$ such that the compression ratio $(\sum_i |\compseq_i| + \sum_j D_j) / \sum_i |\seq_i|$ is minimized and the function $f(D_j) \to s$ efficiently maps parts of the original sequence $\seq_i$ to dictionary $D_j$ that would provide the best compression.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Building efficient kmer-based dictionaries}
+
+We assume that original sequence $\seq$ is a concatenation of reads $\seq = \{s_1, s_2, \ldots \}$, that sequencing reads in $\seq$ can only contain four distinct symbols representing nucleotides (A, C, T, G) and that all reads in $\seq$ have the same length. A \textit{kmer} $d$ of length $k$ is a sequence of $k$ nucleotides that appears somewhere in $\seq$. 
+% Kmer composition can be seen as a footprint of a specific collection of reads: distribution of 24-mers for RNA-seq dataset is qualitatively different from a distribution of 24-mers for a DNA dataset; kmers can be used to distinguish between coding and non-coding DNA~\cite{genes}... 
+Certain kmers tend appear much more frequently in $\seq$ making a distribution of kmer occurrences highly skewed and amenable to efficient entropy-based encodings, \eg~with Huffman codes.
+
+Huffman coding~\cite{Huffman1952} is a lossless data compression technique that assigns shorter codes to symbols with higher frequency and guarantees that codes are prefix-free (no codeword is a prefix of some other codeword) allowing for unambigous decoding. 
+Usually, Huffman coding is applied to compress natural text where the codes are built for individual letters of an alphabet or words. Here, we propose to use kmers as input symbols for Huffman coding.
+
+Since Huffman codes assume that symbols $d_i$ do not overlap, we count non-overlapping kmers of length $k$ to encode sequence $\seq$. Kmer counting produces a distribution $\mathcal{F} = \{(f_1, d_1), (f_2, d_2), \ldots \}$ where $f_i \in \mathbb{N}$ represents the number of times a kmer $d_i$ was seen in $\seq$. We then generate Huffman codes $C = \{ c_i | d_i \in D \}$ based on $\mathcal{F}$ and substitute kmers $d_i$ in $\seq$ with their corresponding binary codes $c_i$. 
+This approach was able to reduce the file size to a factor of 1/7th of the original size and, in certain instances, even outperformed state of the art tools (see Fig.~\ref{fig:denovocompr:varyK}).
+
+
+  \subsection{Building dictionaries to maximize coverage}
+
+  We first build the dictionary on a sequence $\seq$ by concatenating the reads and then counting non-overlapping kmers of uniform length $k$ on $\seq$. Such dictionary construction procedure guarantees that every base in $\seq$ is covered by a kmer in $D$ and ensures that $D$ is optimal for a given ordering of reads in $\seq$.
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/vary-k-fullfile-singleline}
+    \caption{\textbf{Optimal dictionary construction on a string of concatenated reads.} Increasing kmer length improves compression performance. Dictionary size not included in the size of the compressed data. Dashed lines represent the size of the file compressed with Quip~\cite{Jones2012} and dotted lines represent the size of the file compressed with SCALCE~\cite{Sahinalp2012}.}
+    \label{fig:denovocompr:varyK}
+  \end{figure}
+
+  We evaluate this strategy on three diverse datasets: human RNA-seq (SRR635193), \textit{P. aeruginosa} RNA-seq (SRR519063), and whole genome sequenceing of the same bacterium (see Figure~\ref{fig:denovocompr:varyK}). We observe that as $k$ increases, naive dictionary encoding improves and even outperformes the competing tools in two cases.
+
+  % XXX find dictionary sizes.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Buliding dictionaries to maximize entropy}
+  % \subsection{Selecting kmers based on their frequencies in the de Bruijn graph}
+
+  XXX discuss entropy mearues
+
+  Counting non-overlapping kmers in $\seq$ produces a frequency distribution $\mathcal{F}$ that is a good indicator of which kmers will occur more frequently and thus, should have a shorter code in order to achieve better compression. However, it is conceivable that instead of counting kmers starting at $k, 2k, 3k, \ldots, mk$ nucleotides, it may be beneficial to consider kmer occurrences that are not necessarily aligned with $k, 2k, 3k, \ldots$ boundaries. Allowing arbitrarily placed kmers may introduce subsequences in $\seq$ that are not covered by any kmer of length $k$ (``holes''), however, if we allow $|d_i| \leq k$, then we can cover the whole $\seq$ using variable length kmers. We will call a decomposition of $\seq$ into $d_i$s a \textit{parse} $P$ and will require that:
+  %
+  \begin{align}
+  \label{eqn:constraints}
+  \sum_{d_i \in D} f_i |d_i| = |\seq|~\textrm{and}~P(\seq, D) = \seq,
+  \end{align}
+  %
+  in other words, we require that we can recover the original sequence $\seq$ using the parse $P$ and we use no more $d_i$s than are necessary.
+  Due to these constraints, a common approach of counting kmers using a sliding window of length $k$ over the sequence $\seq$ will always result in a dictionary $D$ such that $\sum_{i} f_i |d_i| \geq |\seq|$ and worse compression ratios (data not shown).
+
+  % XXX: plot of non-overlapping vs overlapping kmer frequency distributions
+
+  For example, consider the following string $\seq$ and its kmer dictionaries:
+  %
+  \begin{align*}
+    \seq &= \textrm{\underline{GATC}GA\underline{GATC}TCAA\underline{GATC}\underline{GATC}TC\underline{GATC}} \\
+    % D_2 &= \{ GA: 6, TC: 7, AA: 1 \} \\
+    % D_4 &= \{ GATC: 2, GAGA: 1, TCTC: 2, AAGA: 1, TCGA: 1\} \\
+    D_{2,4} &= \{GATC: 5, GA: 1, TCAA: 1, TC: 1\}
+  \end{align*}
+  %
+  Encoding the string using a dicitonary $D_2$ of non-overlapping 2-mers results in $\compseq = 0010000111010010011001$ 21 bits long. If we consider a set of non-overlapping 4-mers $D_4$, we 
+  % obtain Huffman codes $\{ GATC=00, GAGA=10, TCTC=01, AAGA=111, TCGA=110\}$ resulting in a 
+  can compress the string down to 16 bits. However, \texttt{GATC} occurs 5 times within the string. By selecting \texttt{GATC} as one of the 4-mers and adding \texttt{TCAA}, \texttt{GA} and \texttt{TC} to the dictionary $D_{2,4}$, we are able to compress $\seq$ down to 13 bits while satisfying the covering constraint. This example shows that there are instances when mixing kmers of different lengths and selecting kmers at positions other than those that align with the $k$-induced boundaries may result in a better compression.
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/huffmer_node_neighborhoods}
+    \caption{\textbf{De Bruijn graph with multi-edges allows to build dictionaries that preferentially select high-frequency substrings.} The greedy algorithm would select \texttt{GATC} node due to its high degree and will update edge weights in its neighborhoods up to $k-1$ edges away.}
+    \label{fig:denovo:debruijn}
+  \end{figure}
+
+  To construct such mixed dictionaries, we need an algorithm that would allow us to select non-overlapping high-frequency kmers. De Bruijn graph over $\seq$ explicitly encodes overlaps between consecutive kmers. We propose to enhance the graph with edge weights where $e(u,v)$ has a weight $w$ if kmer $d_u$'s $(k-1)$ long suffix is $d_v$'s $(k-1)$ long prefix, and a subsequence $d_u + d_v[k]$ (or, equivalently, $d_u[1] + d_v$) was observed in $\seq$ $w$ times (see Figure~\ref{fig:denovo:debruijn}). Given such graph $G_k(\seq)$, the weighted in-degree of a vertex $indeg(u)$ is equivalent to the number of times kmer $d_u$ appeared in $\seq$. Node $u$'s immediate neighborhood $N_1(u)$ represents all nodes $v_1, v_2, \ldots$ such that $d_u$ overlaps with any of the $d_v$ kmers by $(k-1)$ nucleotides. Similarly, nodes in the neighborhoods $N_2, N_3, \ldots, N_{k-1}$ represent kmers that share $(k-2), (k-3), \ldots, 1$ nucleotides with $d_u$. Selecting $d_u$ to be in $D$ implies that no kmer instances that overlap with any of the copies of $d_u$ in $\seq$ can be added to $D$. To reflect this fact, we have to progressively prune edges in neighborhoods $N_1(u), N_2(u), \ldots, N_{k-1}(u)$ thus decreasing the in- and out-degrees of the vertices in $N_1(u), N_2(u), \ldots, N_{k-1}(u)$. 
+
+  We believe that in general this problem is similar to set cover~\cite{SetCoverIsHard} and might be hard. Therefore, based on the above observations, we propose a greedy algorithm to build a dictionary $D$ from the de Bruijn graph $G_k(\seq)$:
+  
+  \begin{algorithm}[H]
+   \KwData{Sequence $\seq$, $k$ -- kmer length}
+   \KwResult{$D$ -- a dicitonary of frequent kmers that cover $\seq$ }
+   build de Bruijn graph $G(\seq)$\;
+   pick $u$ -- highest degree vertex, add $d_u$ to $D$\;
+   \While{$\textrm{deg}(u) > 1$}{
+    \For{$i \leftarrow 1$ \KwTo $k-1$}{
+      \For{$v  \in N_i(u)$}{
+        remove edge
+      }
+    }
+    pick $u$ -- highest degree vertex\;
+   }
+   \While{$\textrm{deg}(u) > 1$}{
+    collapse path $\mathcal{P} \ni u$ to $d_{\mathcal{P}}$\;
+    add $d_{\mathcal{P}}$ to $D$\;
+   }
+   \caption{Greedy kmer selection}
+   \label{algo:greedy}
+  \end{algorithm}
+  %
+  Unlike the dictionary built to cover the whole input string $\seq$, building a dictionary by preferentially selecting high-frequency kmers does not guarantee that words in $D$ will cover $\seq$. In the worst case, kmers could be selected in a way that any two kmers are separated by $(k-1)$ nucleotides (\ie~``holes'') resulting in less that $|\seq| / 2$ being covered. It is feasible that such adversarial string could be contructed, however, given that DNA sequence has a limited alphabet and its kmer distribution is highly skewed, we expect the words from such dictionary to cover most of the string. Our preliminary tests using a variant of Alg.~\ref{algo:greedy} show that kmers in the dictionary will usually cover over $80\%$ of $\seq$.
+
+  \subsection{Building a shared dictionary across multiple datasets}
+
+
+    -- strategies for building a dictionary across datasets (kmer union, kmer intersection)
+
+  XXX kmer union
+
+  XXX exclude kmers w/ low counts -- too many of them and they are most likely the sequence errors
+
+  % We will implement and investigate the performance of this algorithm and establish its relationship to vertex and set cover problems. 
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % \subsection{Building a dictionary with kmers of mixed lengths}
+
+  % To ensure that mixed-length kmers are selected into $D$, we can maintain several graphs $G_{k-1}(\seq), G_{k-2}(\seq), \ldots$ and prune them in a manner consistent with pruning in $G_{k}(\seq)$.
+
+  % XXX more detail here
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optimal string parsing given a dictionary with codes}
+
+  % additional definitions
+  \newcommand{\esc}{\texttt{ESC}\xspace}
+  \newcommand{\escremap}{\texttt{ESCR}\xspace}
+
+
+  There are two challenges to using a dictionary $D$ created by the above scheme when compressing a new string $\seq$. First, there may be many parses of $\seq$ into substrings from $D$ some of which are better than others, and, second, $\seq$ may contain substrings that cannot be covered by $D$. We propose a dynamic programming approach to solving the parse problem and explore two ways of handling novel substrings of $\seq$: two-bit encoding and remapping.
+
+  More specifically, to handle parts of $\seq$ not covered by $D$ (so-called ``holes''), we include an $\esc$ symbol in $D$ with some high frequency $f_{\esc}$ that we estimate from the experimental data. To encode a substring $h \in \seq$ that can not be covered by $D$, we write out a Huffman code for $\esc$, followed by the length of $h$, followed by the two-bit encoding of $h$. Using $\esc$ code allows to unambigously differentiate a two-bit encoded substring from a Huffman code for a substring in $D$.
+
+  When a substring $h$ has a string $d_i \in D$ such that Hamming distance between $h$ and $d_i$ is one (a substitution), it may be beneficial to use the Huffman code for $d_i$ in combination with a short edit script to encode $h$. To distinguish between two-bit encoded substrings and substrings with edit scripts, we introduce a second escape symbol $\escremap$. When encoding $h$, we write out a binary code for $\escremap$, followed by the $c_i = D[d_i]$, followed by $\lceil \log_2 k \rceil$ bits describing the position $1 \leq p \leq k$ of the substitution, followed by two bits encoding the character in $h$ in position $p$.
+
+  % ***(C) It's unclear if this is a good way to do this; the other option is to always include ‘A’ ‘C’ ‘G’ and ’T’ in D.***
+
+  We use a dynamic programming approach to find a parse of $\seq$ where most of the string is covered by $D$. More formally, given a string $\seq$, we seek an encoding $\compseq$ of the original string with codes from $D$ such that the length of encoding is minimized. For such substrings of $\seq$ that can not be covered with any $d_i$, we assign a penalty, $d_{\mathrm{esc}}$ and encode this gap with two bit encoding. For each character $i$ of $\seq$, we decide whether it is more beneficial to replace the last $k$ characters with a code from $D$, i.e. use an existing code for $h = \seq[i-k,i]$ kmer (handled by $\mathrm{OPT_{kmer}}$ case), or to incur the penalty for two-bit encoding the substring. If there is no code for $h$ in the dictionary, we choose to start a new hole or extend a previously opened hole (handled by $\mathrm{OPT_{hole}}$ case):
+  %
+  \begin{align}
+  \mathrm{OPT_{kmer}}(i) & = \left \{
+      \begin{array}{l l}
+        %first choice
+        + \infty \\
+        % second choice
+        |D(h)| + \mathrm{OPT_{kmer}}(i-k-1) \\
+        |D(h)| + \mathrm{OPT_{hole}}(i-k-1) \\
+      \end{array} \right. \\
+  %
+  \mathrm{OPT_{hole}}(i) & = \left \{
+      \begin{array}{l l}
+        %first choice
+        |\esc| + |\mathrm{pos}| + 2 + \mathrm{OPT_{kmer}}(i-1) \\
+        % second choice
+        2 + \mathrm{OPT_{hole}}(i-1) \\
+      \end{array} \right.
+    \label{eqn:denovo:twobit}
+  \end{align}
+  %
+
+  When we use a remapping strategy for encoding parts of $\seq$ not covered by $D$, we modify the dynamic programming formulation for $\mathrm{OPT_{kmer}}$ only slightly:
+  %
+  \begin{align}
+  \mathrm{OPT_{kmer}}(i) & = \left \{
+      \begin{array}{l l}
+        %first choice
+        + \infty \\
+        % second choice
+        |D(h)| + \mathrm{OPT_{kmer}}(i-k-1) \\
+        |D(h)| + \mathrm{OPT_{hole}}(i-k-1) \\
+        |\escremap| + |D(h^*)| + \lceil \log_2 k \rceil + 2~+ \mathrm{OPT_{kmer}(i-k-1)} \\
+        |\escremap| + |D(h^*)| + \lceil \log_2 k \rceil + 2~+ \mathrm{OPT_{hole}(i-k-1)} \\
+        \label{eqn:denovo:remap}
+      \end{array} \right. \\
+  \end{align}
+  %
+  Two new cases in the $\mathrm{OPT_{kmer}}(i)$ handle the alternative of remapping the observed subsequence $h$ onto a known kmer $h^*$ that is already in $D$. First, we search $D$ for a kmer $h^*$ that is within distance 1 of $h$. If such kmer is found, then we spell out the binary escape code $\escremap$ indicating that the kmer was remapped, followed by the binary code for the matching kmer $D(h^*)$, followed by an encoding of the difference(s) between $h$ and $h^*$. We allow for a single mismatch between $h$ and $h^*$ in the Equation~\ref{eqn:denovo:remap}, which we can encode by spending $\lceil \log_2 k \rceil$ bits to encode the mismatch's position within $h^*$ and additional 2 bits to encode what the letter in $h^*$ should be replaced with when decoding the compressed stream.
+
+  % remapping
+  To efficiently find $h^* \in D$ that is only a Hamming distance one away from $h$, we explore all possible kmers that have only a single mismatch with $h$. To do so, we iterate through every nucleotide in $h$ and test if $D$ contains a kmer with either of the 3 alternative bases in that position. For a kmer of length $k$, that amounts to going through and validating $3k$ kmers. Among the remapped kmers that are present in $D$, we pick the one with the shortest binary code. Generating these $3k$ kmers is much faster than going through every kmer in $D$ and computing the Hamming distance between $h$ and every $d_i$ and we are able to perform the remapping without a significant increasing the running time. Similar thinking can be extended to handling more mismatched between $h$ and $h^*$, however, in practice, we  observe that increasing the number of allowed mismatches does not improve $\seq$ coverage or compression ratio in a significant way.
+
+  The proposed dynamic programs run in the time linear to the length of the input string $\seq$. Indeed, at every step $i$ we only need to evaluate a constant number of choices (3, 2, or 5 --- see Equations~\ref{eqn:denovo:twobit} -- \ref{eqn:denovo:remap}) each of which takes constant time. At the same time, we will have to maintain two arrays to store the values for $\mathrm{OPT_{kmer}}(i)$ and $\mathrm{OPT_{hole}}(i)$. However, further analysis shows that we only ever consider a single previous solution to either of the optimal values, so instead of maintaining two arrays of size $|\seq|$, we can simply maintain two variables holding the optimal values for at the previous step for $mathrm{OPT_{kmer}}(i)$ and $\mathrm{OPT_{hole}}(i)$ respectively. This results in $O(|\seq|)$ runtime algorithm with $O(1)$ memory requirements.
+
+\section{Compressing the dictionary for transmission}
+
+To encode the dictionary, we only need to efficiently encode kmers and frequencies associated with them, and the Huffmer codes can be restored unambiguosly on the receiver's side. A straighforward way of encoding the kmers is to write out their two-bit representations along with frequencies. However, a bit tree~\cite{PathEncode} is a more efficient way of encoding strings of the same length given that the set of strings is sparse and their distribution uneven across an alphebetic order. Bit tree performs significantly better than general-purpose compression tools applied to kmer strings and better than the commonly used 2-bit encoding of sequencing data (Table~\ref{fig:denovo:bittree}). Bit tree achieves compression ratios as low as 0.09 bit per kmer ($k=10$) and makes it possible to reconstruct the initial kmer set --- unlike bloom filters, which allow queries for set membership, but are unable to reconstruct the initial set.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{c r r r}
+  \toprule
+  K & lz & bit tree & bit tree + lz \\
+  \midrule
+  10 & 1,267,692 & 157,377 & 6,083 \\
+  12 & 16,768,251 &  2,497,689 & 285,137 \\
+  14 & 209,338,609 & 27,138,873 &  20,177,568 \\
+  16 & 460,208,443 & 102,499,425 & 86,198,199 \\
+  18 & 549,068,270 & 195,150,889 & 158,596,795 \\
+  20 & 578,979,167 & 277,692,945 & 217,172,798 \\
+  22 & 583,681,685 & 342,331,145 & 258,201,259 \\
+  24 & 566,885,773 & 385,700,657 & 282,575,128 \\
+  \bottomrule
+  \end{tabular}
+  \caption{ \textbf{Bit tree outperforms plzip on sets of kmers.} Bit tree is highly amenable to dictionary compression and can achieve over 900x compression for dense kmers sets ($k=10,12$). Showing performance on human RNA-seq file with canonical kmer counts obtained by Jellyfish~\cite{Jellyfish}.}
+  \label{fig:denovo:bittree}
+\end{table}
+
+Bit tree stores the input sequences in their alphabetic order, so the associated frequencies have to be reordered to match kmer order when sending the dictionary over the network. Encoding the kmers and the frequencies separately improves homogeneity within these two sets and results in better dictionary compression rates.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Performance when building the dictionary and encoding one the same dataset}
+
+  We achieve good compression performance when the dictionary $D$ is built on the same dataset that we used to construct $D$ (Figure~\ref{fig:denovocompr:varyK}), and performance improves as we increase the kmer length $k$. At higher $k$, performance is comparable of better than other de novo compression tools (SCALCE, Quip). The number of kmers in the dictionary grows as $k$ increases, which results in the dictionary size growth (XXX show data). Optimizing the dictionary for coverage produces better compressed files when compared to using a dictionary that sacrificed coverage for the kmer frequency (XXX show data).
+  
+  % performance on some self-similar data:
+
+    % -- size of dictionary
+
+    % -- encoding self with your dictionary
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Performance when building the dictionary and compressing across related datasets}
+
+    The ultimate test for the generalizability of the shared dictionary scheme is to learn the dicitonary on one set of data and evaluate its performance on another set. For this task, we have selected a set of highly related sequencing datasets: human single cell RNA-seq experiments on embryonic cells done by a single laboratory (SRA study ID: \texttt{SRP011546}). XXX continue
+
+
+    XXX -- cross-encoding related data
+
+
+    % XXX dictionary size on the single cell RNA-seq
+
+    %   -- dicitonary size keeps growing
+
+    %   -- kmer set overlaps between the sets is small
+
+    %   -- most kmers are not even in the transcriptome
+
+    %   -- but the reads do align well to the genome
+
+    %   -- CONCLUSION: too much variability, a single error , plus read boundaries matter
+
+    However, the size of the kmer union keeps growing as we add more of the frequent kmers without an indication that it is going to level off (Figure~\ref{fig:denovo:rnaseq}). We further examined the overlap between kmers observed in the human transcriptome and kmers in the individual RNA-seq files (Table~\ref{tab:denovo:transciptome_overlap}). Surprizingly, we found that across various read lengths and sequencing depth, the amount of kmers shared between the dataset and the transcriptom is highly variable. For example, kmers from an RNA-seq on a human placenta sample shared only 2mln kmers with the transcriptome and contained 246mln kmers not found in $T$. Higher read counts and longer read lengths were correlated with larger intersections between $D$ and $T$ (except for the ENCODE placenta sample).
+
+    
+
+    % \begin{figure}[ht]
+    %   \centering
+    %   \includegraphics[width=\linewidth]{figures/huffmer-rnaseq-experiment-cells}
+    %   \caption{XXX}
+    %   \label{fig:denovo:rnaseq}
+    % \end{figure}
+
+    \begin{sidewaysfigure}[ht]
+      \includegraphics[width=\linewidth]{figures/huffmer-rnaseq-experiment-cells}
+      \caption{XXX}
+      \label{fig:denovo:rnaseq}
+    \end{sidewaysfigure}
+
+
+    \begin{table}
+      \centering
+      \begin{tabular}{l c r r r r r}
+          \toprule
+          *  & Cell type & Read count & $|r|$ & $D \cap T$ & $D \backslash T$ & $T \backslash D$ \\
+          \midrule
+          SRR037452 & RNA-seq, brain & 13552276 & 35 & 18513744 & 59214972 & 94883622 \\
+          SRR1294122  & RNA-seq, CD34+ & 39666314 & 101 & 58694264 & 408807236 & 54703102 \\
+          SRR034940 & WGS & 72795628 & 100 & 28697479 & 916749539 & 84699887 \\
+          SRR553463  & RNA-seq, neutrophil & 49771919 & 49 & 34291992 & 118624324 & 79105374 \\
+          SRR553460 & RNA-seq, neutrophil & 66552453 & 49 & 35242903 & 119608311 & 78154463 \\
+          SRR527697 & RNA-seq, placenta & 169606661 & 101 & 2053392 & 246196849 & 111343974 \\
+          SRR445718 & RNA-seq, oocyte & 32943665& 101 & 32051874 & 246196849 & 81345492 \\
+          \bottomrule
+      \end{tabular}
+      \caption{\textbf{Number of kmers shared between human RNA-seq experiments and annotated human transcriptome.} Here, $D$ is the set of kmers counted on the corresponding dataset, $T$ -- kmers from the transcriptome. Transcriptome XXX version had a total of 115mln kmers.}
+      \label{tab:denovo:transciptome_overlap}
+    \end{table}
+
+
+    Finally, we constructed a small matrix of shared kmer counts across five datasets (Table~\ref{tab:denovo:kmer_overlap}). We observe that across five human RNA-seq datasets, the kmer set similarity is very low with highest Jaccard similarity at 0.27. Our intuition was that sequencing error rate contributed to both the number of unique kmers not share with the transcriptome and to the dissimilarity across seemingly related sets. To test this assumption, we aligned RNA-seq reads from \texttt{SRR037452} and \texttt{SRR1294122} to the human transcriptome allowing at most two edits and saw 65\% and 80\% of reads aligning. 
+
+
+    \begin{table}
+      \centering
+      \begin{tabular}{l c c c c c}
+          \toprule
+          & SRR037452 & SRR1294122 & SRR527697 & SRR553460 & SRR553463 \\
+          \midrule
+          SRR037452 & 1.000 & 0.040 & 0.003 & 0.061 & 0.058 \\
+          SRR1294122 & 0.040 & 1.000 & 0.005 & 0.077 & 0.075 \\
+          SRR527697 & 0.003 & 0.005 & 1.000 & 0.005 & 0.005  \\
+          SRR553460 & 0.061 & 0.077 & 0.005 & 1.000 & 0.270  \\
+          SRR553463 & 0.058 & 0.075 & 0.005 & 0.270 & 1.000 \\
+          \bottomrule
+      \end{tabular}
+      \caption{\textbf{Jaccard similarity between pairs of kmer sets.} Jaccard similarity $J = |D_1 \cap D_2 |/ |D_1 \cup D_2| $ between kmer sets in human RNA-seq datasets did not exceed 0.27.}
+      \label{tab:denovo:kmer_overlap}
+    \end{table}
+  
+
+\section{Discussion and conclusions}
+
+  Using kmer collections as dictionaries offers an novel compression solution that breaks the middle ground between \textit{de novo} and reference-based compression techniques. It is competitive with state of the art tools, yet does not leverage the repetitive nature of the sequence enough to provide a significant advance.
+
+  The problems of building the most efficient dictionary that both covers most of the reference sequence while capturing most frequent substrings is of general interest: XXX is it?
+  
+  - we developed a framework for building shared dict and optimally encoding strings with it
+
+- defined different objectives for shared inform dictionaries
+
+- defined an optimal parse of a string given a dictionary that take O(n) to run
+
+- performed tests showing that despite sequence aligning well to the transcript one, kmer sets are too different
+
+- requiring the presence of the same exact kmers is too strict. dictionary coders like SCALCE and MINCE get an edge by replacing whole swathes of sequence
+
+-- kmer dictionary will always spend bits when seeing the same kmer again and again, other dictionaries will use this to their advantage
+
+
+-in addition, Huffman approach will always code according to the frequencies in the training data, but test data could be highly scewed
+
+-- error rates and read boundaries do no allow for efficient shared dictionary construction based on kmers
+
+
+  \subsubsection{Computing on compressed data}
+
+  % \todo assume Huffman encoding
+
+  The Huffman-based dictionaries can be extended in a way that woudl allow for computing on the compressed streams. To allow partial decompression, $\compseq$ can be enhanced by storing several pointers into the compressed stream that align with kmer boundaries. The shared dictionary itself can be used as a search index: given a search subsequence $s$, we can query $D_k$ for all $k$-long kmers in $s$ to be able to tell if $s$ may occur in $\seq$. If $D$ contains at least some kmers from $s$, we would perform a direct search in $\compseq$ for a bit subsequence $c(s_k)$ where $s_k$ is the matched kmer that aligns with the kmer boundaries.
+
+  \subsubsection{Using grammar as shared information for de novo sequence compression}
+
+  Sequences of nucleotides are in no way a random sequence of four characters. Huffman coding exploits this fact by assigning frequently appearing kmers shorter codes. However, it is conceivable that higher-order organization exists within the sequence, akin to a language grammar. Our initial experiments with Sequitur~\cite{Sequitur}, a compression algorithm based on inferring grammars in text, show that a grammar-based approach is competitive with specialized sequence compression tools like SCALCE~\cite{Sahinalp2012}. Changes to Sequitur's algorithm, such as only considering subsequences of a given minimum length $k$, may further improve its performance. However, sequencing errors have to be explicitly taken into account since they will not adhere to the grammar learned on a reference genome or a different set of reads. Additionally, a grammar learned on one set of reads (or on a reference genome) would have to be able to handle the fact that read boudaries may be different in another read set and the rules learned originally may cross these boundaries. Lastly, seqeuncing reads may not be drawn from a reference genome uniformly at random, but rather can be  more in certain areas (consider non-uniformity of RNA-seq read data, for example). The following tests would help decide whether a grammar-based compression can be successfully used on sequencing reads:
+  %
+  \begin{enumerate}
+    \item \textbf{Read length effect.} Learn a grammar $G$ on a long reference sequence $\seq$. Randomly sample reads of length $l$ from $\seq$. Evaluate performance of the Sequitur's grammar-based compression technique for reads at different $l$. Our hypothesis is that the algorithm would perofrm better on longer reads and may result in little to no benefit over the competing tools for shorter sequences (say, 30bp).
+
+    \item \textbf{Effect of sequencing errors.} Learn a grammar $G$ as before. Now, when sampling reads at random, introduce sequencing errors to the reads. Evaluate compression performance at different error rates at the optimal read length (see previous item).
+
+    \item \textbf{Effect of non-uniform read distribution.} Learn a grammar $G$ as before. Now sample reads uniformly at random from a small substring of $\seq$ and test the performance of $G$ on such read set.
+  \end{enumerate}
 
 
 
@@ -1687,13 +2134,10 @@ The work described in this chapter has been presented at Workshop for Algorithms
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Compression of sequencing and sequence alignment data}
+\chapter{Using a reference sequence for read and sequence alignment compression}
 
-Previous chapters address visualization and analysis challenges presented by data that has already been processed: networks constructed from raw data, annotations, and quantified abundances of histone modifications. However, as we go back to the tasks involving raw data, the data size and complexity increase to the extent that not only visualization, but even storage, dissemination, and basic analysis of such data become a computational challenge. For example, chromosome conformation data for a human chromosome 1 in the embryonic stem cell fits on disk withing 134Mb, however, to separate data for a single chromosome researchers had to merge and align sequencing data from several replicates that adds up to almost 70Gb. 
-% The amount of sequencing data stored in the Short Read Archive (SRA) is 775337Gb and growing~\cite{SRA}. 
-Large sequencing data warehouses, e.g. Sequence Read Archive (SRA)~\cite{SRA}, and labs with modest computational resources alike face these computational challenges due to the explosion in the amount of generated sequencing data.
+XXX this intro is a duplicate of the de novo chapter intro
 
-Commonplace compression tools like gzip and bzip based on Lempel-Ziv original paper~\cite{LempelZiv} are used often to compress large read datasets, however, they do not exploit the specific nature of sequencing reads: its small alphabet, highly repetitive subsequences, and the fact that sequence may originate from a well-annotated known genome. SRA data format is commonly used to store FASTQ files which include the reads themselves and additional base quality information, however, even the most naive compression methods easily outperform this compression technique~\cite{CompressionSqueezeCompetition}.
 
 In this chapter, we explore compression techniques for collections of raw sequences as well as highly structure sequence alignment data. The work presented in this chapter was submitted for publication~\cite{Referee_draft} and Referee, the software implementing the ideas, is available for download at \url{https://github.com/Kingsford-Group/referee}.
 
@@ -1702,50 +2146,39 @@ In this chapter, we explore compression techniques for collections of raw sequen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 
-  The amount of sequencing data stored in the Sequence Read Archive (SRA) is 775337Gb and growing~\cite{SRA} --- this growth of generated data demands novel scalable approaches to its storage and transmission. It is also crucial compression approaches are \textit{functional}, i.e.\@that analyses could be run on the dataset in its compressed format without having to fully reconstruct it. 
+  % (abstract)  
 
   % We propose a novel approach to compression of sequence alignment data, a well established data format that is used for a variety of tasks ranging from genome assembly to variant calling. Such alignment files may exceed the size of the original sequence by an order of magnitude, however, \refer, our tool implementing the approach, is able to compress alignment files to $1/10$ of the original SAM file size and is twice as efficient as SAM's binary BAM variant. \refer is fast, highly parallelizable, and outperforms state of the art tools by an average of 8.1\% while enabling a variety of sequence-related tasks that require only a partial decompression. Computations like depth of sequencing that involve seeking through all alignments take from 8 to 44 seconds for \refer as opposed to tens of minutes with \texttt{samtools}. \refer uses a lightweight streaming clustering algorithm to improve quality values compression and encodes sequence information very efficiently, with compression rates as low as 0.06 bits per base. Its modular structure allows one to omit extraneous alignment information from the download reducing sequencing data from many gigabytes to under a hundred megabytes.
 
   % (intro)
 
-  In the area of sequence compression, two prevalent approaches exist: the \textit{reference-based} and \textit{reference-free}, or \textit{de novo}, methods. \textit{De novo} compression operates on raw sequencing reads, FASTA, or FASTQ files as input and focuses on ways to compress sequence~\cite{Mince,PathEncode,Rozov2014}, quality values~\cite{SeqSqueeze,KmerQuals,JaninQuals}, or both~\cite{GSQZ,Sahinalp2012}. Tools like SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} take the approach of grouping the reads based on their similarity allowing the downstream general-purpose compression tools to build better dictionary encodings. Rozov \etal~\cite{Rozov2014} and recent work by Kingsford and Patro~\cite{PathEncode} use an available reference sequence to inform their compression algorithm without explicitly aligning reads to it. Quip~\cite{Jones2012} takes a step closer to reference-based approach by creating contigs from a subset of data and encoding the rest of the reads relative to that lightweight assembly. De novo compression tools compress sequence down to 3-10\% of its original size at reasonable speeds~\cite{Deorowicz2013}, however, most tools require that the dataset is completely decompressed before it could be used for downstream analyses.
 
-  \textit{Reference-based} compression techniques first map the sequencing reads to a predefined reference sequence --- a genome, transcriptome, or a set of contigs --- and encode the reads relative to the reference. The only information required to reconstruct the reads is their position in the reference, read length, and a set of point differences between the read and the reference sequence. The process of mapping reads to a known reference sequence is often a prerequisite for many downstream tasks like assembly~\cite{Assembly}, expression estimation~\cite{Cufflinks,RSEM}, or variant calling~\cite{GATK}. Until recently, alignment step was computationally expensive and reference-based approaches, although quite promising, were practically infeasible. However, recent advances in alignment algorithms resulted in efficient mapping software like STAR~\cite{STAR} and Subjunc~\cite{Subjunc} that can process tens of millions of reads in under 10 minutes.Now that mapping time got reduced drastically, reference-based compression becomes an appealing option, especially for sequence from well-studied organisms for which annotated genomes are available.
+  \textit{Reference-based} compression techniques first map the sequencing reads to a predefined reference sequence --- a genome, transcriptome, or a set of contigs --- and encode the reads relative to the reference. The only information required to reconstruct the reads is their position in the reference, read length, and a set of point differences between the read and the reference sequence. The process of mapping reads to a known reference sequence is often a prerequisite for many downstream tasks like assembly~\cite{Assembly}, expression estimation~\cite{Cufflinks,RSEM}, or variant calling~\cite{GATK}. Until recently, the alignment step was computationally expensive and reference-based approaches, although quite promising, were practically infeasible. However, recent advances in alignment algorithms resulted in efficient mapping software like STAR~\cite{DobinSTAR} and Subjunc~\cite{Subread} that can process tens of millions of reads in under 10 minutes. Now that mapping time got reduced drastically, reference-based compression becomes an appealing option, especially for sequence from well-studied organisms for which annotated genomes are available.
 
   Alignment files generated by the mapping sortware are stored in a popular SAM format~\cite{SamTools} and usually occupy orders of magnitude more space than the original sequencing reads themselves. A commonly used approach is to convert SAM files to its block-compressed equivalent, BAM, offers a significant improvement in the used disk space while offering the same set of analyses at a low computational cost. Later approaches improve the compression ratio by sacrificing the ability to run analyses without full decompression~\cite{Goby,Jones2012}, by turning to lossy compression, or by doing without certain sequence data~\cite{SlimGene,CRAM}. More recently, Hach \etal introduced a more efficient block-wise BAM/SAM compressor that allows for block-wise decompression while offering savings of up to 44\% over BAM~\cite{Sahinalp2015}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{De novo sequence compression}
+\section{Short overview of SAM format}
 
-  \subsection{Using standard command-line tools}
+  SAM file format was developed by XXX to represent sequence alginments in a consistent way. Alignments are represented by 11 mandatory fields and are tab-separated in the text file. An example of a SAM file format is:
 
-  The repetitive nature of sequencing data suggests that dictionary-based coders, like the commonplace command-line tools \texttt{gzip}, \texttt{bzip}, and \texttt{plzip}, should be able compress collections of reads reasonably well.
+  \begin{quotation}
+  
+  SRR445718.19084080  272 10  60065 3 29S71M  * 0 0 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTACTTTGGTGCTCTTTATTTTGCGTATTTAAAACTATTAGATCGTGTGATTATATTTGACAGGTCTTAA  DDDDDDDDDDDDDDBBBDDDBDDDBDFFEHHHEJJIHJJIIGGJJIIGIJJJJJJJJIIJJJIFJJJJIJJIHIGJJJJJIJJJJJJHHHHHFFFFFCCC  MD:Z:71
 
-  Reordering reads
+SRR445718.17061305  256 10  61200 3 1S99M * 0 0 CCAGATGAGGCCTCACTCTGTCACCCAGGTTGGGGTGGAGTGGCACAGTCACAGCTCACTATAACCTCAAGCTCCTGGGCTCAAGTGATCCTGCCACCTC  CCCFFFFFHHHHHJJJIJIGIIJJJJGGGHIIIGJHIGHJGGHIIGIJIIJIIIIHHGHHFFFF>@DEECECDDA;@CDBDBDDDDDDD>CACCBDDDBB  MD:Z:99
 
-  Formulation of the optimal reordering (recently proven to be NP-hard~\cite{RobPAndCo})
+SRR445718.32144891  16  10  61279 255 94M6S * 0 0 TCAAGTGATCCTGCCCCCTCAGCCTCCTAAGTAGCTGGAACTACAGATGTGCACCGCCATGCCAGGCTTGTCTAACATTTTTATGTGTTGCTTCTCCAGT  *  MD:Z:15A78
 
-  \subsection{Grammar-based and dictionary-based encoding}
+SRR445718.32510886  256 10  61390 3 100M  * 0 0 TTTTGGAGATTTCTGTCTTCATTCATGAGGGATAATAGTCTGCACTTTTATTTTCTTGTGATACTTTTGTCTGATTTGTTATCTGGGTAATACTGGCCTT  @CCFFFFFAFHHHJJIJJJJJJJJJJJJJJJHIJIIJJIIJJJJJJJJJHJJJJJJJJGIIIIJJJJJJEHIJJJHIIJIIGHHHHHHFFFFFFECDEDC  MD:Z:100
 
-  XXX
+SRR445718.25235646  272 10  61532 3 100M  * 0 0 TTTGTGAAGGATTGGTTATTCATTAAGTGTTTAATAGAATTCACTAGTGAAGCTATGTGAGCCAGGGCTAGACTGATGAAGAGTTTTCATTAGTCTAATC  BCAECEEEFFFFFHHHHHHJIIIHHFIJIEGGJIIIJIIIGGHJIJJJJJIHEGGIJJIJJJJJIHIJIGJIJIJJJJJJJJJJJJJHHHHHFFFFFCCC  MD:Z:100
+  \end{quotation}
 
-  \subsection{Builiding efficient dictionaries}
-
-  XXX
-
-  \subsection{Optimal string parsing given a dictionary with codes}
-
-  XXX
-
-  \subsection{Results}
-
-  XXX
-
-  mini-conclusion - meh
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Reference-based sequence and alignment compression}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Improving data homogeneity}
 
   \refer uses an approach similar to the one used by Goby~\cite{Goby} where homogeneous data streams are compressed together, however, \refer operates in a lossless mode and structures data in a flat, non-hierarchical manner. We organize and transform the data in a way that either makes the input smaller and/or remaps disparate data points into a smaller, more uniform domain. A downstream general-purpose dictionary coder then is able to capture the exposed redundancy and compress the preprocessed streams more efficiently. A similar strategy has been shown to work well for \textit{de novo} sequence compression in SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} as well as for alignment compression in Deez~\cite{Sahinalp2015}. We use \texttt{plzip} for all downstream compression tasks since it is fast and highly parallelizable in addition to offering a slight compression improvement on most of our inputs. Below, we discuss specific operations applied to sequencing, numerical, and quality values data.
@@ -1796,9 +2229,9 @@ In this chapter, we explore compression techniques for collections of raw sequen
 
   To efficiently encode all differences between the reference sequence and the read, \refer merges edits as represented by CIGAR and MD strings (or obtains mismatch locations by comparing read to the reference genome if MD string is not available) -- this is in contrast to saving edited CIGAR strings as in~\cite{Sahinalp2015}.  When considered on its own, the CIGAR string possesses certain inefficiencies: for example, a single insertion in the middle of a 32bp read would be represented as an 8 byte string \texttt{20M1I11M} where 8 bits would suffice. The same is true for MD strings: matches are explicitly encoded, even in the case when the read and the reference are identical and MD string is redundant. Neither field is needed when sequence matches exactly and a single bit is enough to indicate whether the alignment was exact. Instead of encoding exact matches with CIGAR and/or MD strings, \refer maintains a separate bit vector where $i^{th}$ bit is set to $1$ if $i^{th}$ alignment had any edits and is set to $0$ otherwise. This bit vector itself is amenable to compression: runs of alignments that had edits translate to a series of identical bytes that can be efficiently compressed by the run-length coders.
 
-  For every read that differed from the reference sequence, i.e.\@ that was recorded as a $1$ in the bit vector described above, \refer merges all differences into a single series of edits describing the read completely. Edit positions within the series are ordered and delta encoded relative to the preceding position. The resulting delta encoding is smaller on average than the values in CIGAR or MD strings when considered separately thus minimizing the total entropy of the edits. A list of edits for a single alignment is then appended to the end of an edit stream thus maintaining their original order. The order in which $1$'s were set in the binary vector mentioned earlier corresponds to the order in which edits appear in the edit stream making it easy to match an alignment and its edits when restoring the original sequences. Some biologically meaningful edits, e.g. single nucleotide polymorphisms, would have the same relative encoding from one alignment to another. Storing such edits in a single stream allows the downstream dictionary compressor to pick up on the similarities and to capitalize on such consistent edits.
+  For every read that differed from the reference sequence, i.e.\@ that was recorded as a $1$ in the bit vector described above, \refer merges all differences into a single series of edits describing the read completely. Edit positions within the series are ordered and delta encoded relative to the preceding position. The resulting delta encoding is smaller on average than the values in CIGAR or MD strings when considered separately thus minimizing the total entropy of the edits. A list of edits for a single alignment is then appended to the end of an edit stream thus maintaining their original order. The order in which $1$'s were set in the binary vector mentioned earlier corresponds to the order in which edits appear in the edit stream making it easy to match an alignment and its edits when restoring the original sequences. 
 
-  However, the compression benefits due to such co-located edits would be minor. To estimate the savings from explicitly identifying consistent edits and encoding them via a modified contig as described in~\cite{Sahinalp2015}, we first identified all bases that had at least one read with an edit in that location. We then reasoned that a base had to have over half of all reads aligning to it agree on a single edit for that edit to be beneficial for compression. For example, if a given position in the reference sequence has a `C' and there are 100 reads aligned to it with 40 reads agreeing with the reference, 30 of the reads having an `A' instead of a `C', and the remaining 30 reads having a `G', modifying the reference to contain an `A' or a `C' would result in 70 of the reads differing from the new reference sequence and only 30 reads matching it exactly. However, if the distribution of the read counts was such that only 10 reads were matching the original reference, 60 reads contained an `A' and 30 reads contained a `G', then modifying the reference to contain `A' would result in 60 reads matching the reference and only 40 reads having an edit. Guided by this reasoning, we observe that across all tested datasets less than 10\% of all loci that have mapping errors display a significant agreement. i.e.\@ had a single edit repeated among $>50$\% of all reads mapped to the same locus.
+  Some biologically meaningful edits, e.g. single nucleotide polymorphisms, would have the same relative encoding from one alignment to another. Storing such edits in a single stream allows the downstream dictionary compressor to pick up on the similarities and to capitalize on such consistent edits. However, the compression benefits due to such consistent edits would be minor. To estimate the savings from explicitly identifying consistent edits and encoding them via a modified contig as described in~\cite{Sahinalp2015}, we first identified all bases that had at least one read with an edit in that location. We then reasoned that a base had to have over half of all reads aligning to it agree on a single edit for that edit to be beneficial for compression. For example, if a given position in the reference sequence has a `C' and there are 100 reads aligned to it with 40 reads agreeing with the reference, 30 of the reads having an `A' instead of a `C', and the remaining 30 reads having a `G', modifying the reference to contain an `A' or a `C' would result in 70 of the reads differing from the new reference sequence and only 30 reads matching it exactly. However, if the distribution of the read counts was such that only 10 reads were matching the original reference, 60 reads contained an `A' and 30 reads contained a `G', then modifying the reference to contain `A' would result in 60 reads matching the reference and only 40 reads having an edit. Guided by this reasoning, we observe that across all tested datasets less than 10\% of all loci that have mapping errors display a significant agreement, i.e.\@ had a single edit repeated among $>50$\% of all reads mapped to the same locus.
 
   % since only a fraction of all edit positions have edits that are consistent across more than $50\%$ of the reads in the pileup.
 
@@ -1866,27 +2299,27 @@ In this chapter, we explore compression techniques for collections of raw sequen
   \textit{P. aeruginosa} was available for download alongside with DeeZ~\cite{Sahinalp2015}. All alignment files were sorted and converted into SAM format using \texttt{samtools}~\cite{SamTools}. Experiments were performed on a Dell PowerEdge T620 machine with 256Mb of RAM.
 
   \begin{table}[ht!]
-    \caption{\textbf{Test set of SAM files.} Experiments were performed on human and bacterial RNA-seq as well as human whole genome sequencing data (WGS) for reads of different lengths. All datasets, except K562, had a significant number of unaligned reads, varying in depth of coverage and error rates. Datasets mostly comprised of Illumina (I) sequences with one exception (Solexa, S).}
+    \caption{\textbf{Test set of SAM files.} Experiments were performed on human and bacterial RNA-seq as well as human whole genome sequencing data (WGS) for reads of different lengths. All datasets, except K562, had a significant number of unaligned reads, varying in depth of coverage and error rates. Datasets mostly comprised of Illumina (I) sequences with one exception (Solexa, S). Error rate was calculated as an average number of edits (clipping, indels, splices, and mismatches) over all aligned bases. Sequencing depth was calculated as the average number of aligned reads over the covered bases.}
     \label{tab:datasets}
     \centering
-    \begin{tabular}{l l r r r}
+    \begin{tabular}{l l r r r c r}
     \toprule
-    File 			& Type 		& $|r|$ & Alignments & Unalign. \\
+    File 			& Type 		& $|r|$ & Alignments & Unalign. & Error rate & Depth \\
     \midrule
     % SRR445718 		& RNA-seq 	& 100 & 31892550 & 5677563 \\
-    SRR445718, I		& RNA-seq & 100 & 35677496 & 5677563 \\
-    SRR1294122, I 		& RNA-seq	& 101 & 47933574 & 1859223 \\
-    P. aeruginosa, S 	& RNA-seq	& 51  & 83412201 & 5560731 \\
-    K562, I 			& RNA-seq	& 76  & 246476391 & 0 \\
-    NA12878\_S1, I 	& WGS 	& 101 & 1015694132 & 202874775 \\
+    SRR445718, I		& RNA-seq & 100 & 35677496 & 5677563 & 2.85 & 32.67 \\
+    SRR1294122, I 		& RNA-seq	& 101 & 47933574 & 1859223 & 1.95 & 21.51 \\
+    P. aeruginosa, S 	& RNA-seq	& 51  & 83412201 & 5560731 & 1.04 & 687.19 \\
+    K562, I 			& RNA-seq	& 76  & 246476391 & 0 & 1.20 & 73.53 \\
+    NA12878\_S1, I 	& WGS 	& 101 & 1015694132 & 202874775 & 1.50 & 36.11 \\
     \bottomrule
     \end{tabular}
   \end{table}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{De novo compression performance}
+  % \subsection{De novo compression performance}
 
-  XXX --- need to write this whole thing
+  % XXX --- need to write this whole thing
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Reference-based compression performance}
@@ -1900,10 +2333,10 @@ In this chapter, we explore compression techniques for collections of raw sequen
   % results in the table generated based on run-seq-improvements.sh script
   % use python/parse_seq_logs.py to generate the table
   \begin{table*}[ht!]
-    \caption{\textbf{\refer performance.}\refer can compress sequence very efficiently down to 0.03 bits per base (bpb). Sequence sizes are shown in Megabytes. Error rate was calculated as an average number of edits (clipping, indels, splices, and mismatches) over all aligned bases. Sequencing depth was calculated as the average number of aligned reads over the covered bases.}
+    \caption{\textbf{\refer performance.}\refer can compress sequence very efficiently down to 0.03 bits per base (bpb). Sequence sizes are shown in Megabytes.}
     \label{tab:seq-compression}
     \centering
-    \begin{tabular}{l r r r r c r}
+    \begin{tabular}{l r r r r}
     \toprule
     % May 4
     % File & Total bases & \refer (bpb) & Deez (bpb) & Quip (bpb) & Error rate & Depth \\
@@ -1914,13 +2347,13 @@ In this chapter, we explore compression techniques for collections of raw sequen
     % K562 &  18978688729 & \textbf{57.98 (0.03)} & 258.78 (0.11) & 417.98 (0.19) & 0.92 & 73.53 \\
     % NA12878\_S1 & 99817837824 & \textbf{2730.54 (0.23)} & 4229.62 (0.35) & 5845.28 (0.48) & 1.43 & 36.11 \\
     % May 7th
-    File & Total bases &  Referee & Quip & Deez  & Error rate & Depth \\
+    File & Total bases &  Referee & Quip & Deez \\
     \midrule
-    SRR445718 & 3567749600 & 86.63 (0.20) & 145.34 (0.34) & 298.40 (0.70) & 2.85 & 32.67 \\
-    SRR1294122 & 4841290974 & 84.33 (0.15) & 150.54 (0.26) & 268.47 (0.47) & 1.95 & 21.51 \\
-    P. aeruginosa & 4254022251 & 41.61 (0.08) & 359.75 (0.71) & 59.20 (0.12) & 1.04 & 687.19 \\
-    K562 & 18732205716 & 135.99 (0.06) & 417.98 (0.19) & 258.78 (0.12) & 1.20 & 73.53 \\
-    NA12878\_S1 & 101569413200 & 2940.07 (0.24) & 5845.28 (0.48) & 4229.62 (0.35) & 1.50 & 36.11 \\
+    SRR445718 & 3567749600 & 86.63 (0.20) & 145.34 (0.34) & 298.40 (0.70) \\
+    SRR1294122 & 4841290974 & 84.33 (0.15) & 150.54 (0.26) & 268.47 (0.47) \\
+    P. aeruginosa & 4254022251 & 41.61 (0.08) & 359.75 (0.71) & 59.20 (0.12) \\
+    K562 & 18732205716 & 135.99 (0.06) & 417.98 (0.19) & 258.78 (0.12) \\
+    NA12878\_S1 & 101569413200 & 2940.07 (0.24) & 5845.28 (0.48) & 4229.62 (0.35) \\
     \bottomrule
     \end{tabular}
   \end{table*}
@@ -1930,7 +2363,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   \begin{figure}[ht!]
     \centering
     % \includegraphics[width=\linewidth]{seq_vs_depth_error}
-    \includegraphics[width=0.6\linewidth]{referee_fig1_complete}
+    \includegraphics[width=0.6\linewidth]{figures/referee_fig1_complete}
     \caption{\textbf{\refer outperformed both Quip and Deez in sequence compression}: \refer handles increasing error rates and sequencing depths better than its competitors. Deez's rates deteriorate with increasing error rate and Quip's rates tend to be significantly affected by the sequencing depth. Each line in the plots represents a single file; files correspond to those in Table~\ref{tab:seq-compression}.}
     \label{fig:referee:depth-error}
   \end{figure}
@@ -1940,7 +2373,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   % To demonstrate the efficiency of our sequence encoding scheme, we performed an experiment where we compared SAM and \refer ways of encoding sequence (see Table~\ref{tab:seq_comp}). For two RNA-seq runs, we generated alignments with optional MD string and extracted reference names, offsets, cigar and MD strings for each file --- the four columns that completely represent the read sequence (ignoring the clipped regions). Compressing these four columns resulted in improvement of 83\% and 75\% correspondingly over the 2-bit encoding of the read sequences with \refer's format reducing the compressed size further almost twofold.
 
 
-  The \refer compression rates of bits spent to encode a single base vary from 0.06 to 0.24 --- up to 66 times better than a straightforward 2-bit sequence encoding and up to 8 times better than the two competing methods. In section~\ref{sec:seq-comp-methods}, we discussed how sequence compression quality can be related to read length and should be more effective on longer reads, however, our results show that other factors, like error rate and depth of coverage, can significantly affect the predicted performance (Table~\ref{tab:seq-compression}). We observe that \refer and Deez scale up well with increasing depth of coverage (Figure 1(a)) while Quip's rates drastically go up for the deep sequencing dataset \textit{P. aeruginosa}. \refer achieves best performance for the two datasets with the highest coverage, \texttt{K562} and \textit{P. aeruginosa}, which can be explained by the fact that these also happen to be the two datasets with the lowest error rates. Indeed, compression rates for \refer's and Quip start to decrease slowly as error rates increase --- these two tools are more robust to changes in error rates than Deez for which compression rates quickly deteriorates at higher error rates ((Figure~\ref{fig:referee:depth-error}b).
+  The \refer compression rates of bits spent to encode a single base vary from 0.06 to 0.24 --- up to 66 times better than a straightforward 2-bit sequence encoding and up to 8 times better than the two competing methods. In section~\ref{sec:seq-comp-methods}, we discussed how sequence compression quality can be related to read length and should be more effective on longer reads, however, our results show that other factors, like error rate and depth of coverage, can significantly affect the predicted performance (Table~\ref{tab:seq-compression}). We observe that \refer and Deez scale up well with increasing depth of coverage (Figure 1(a)) while Quip's rates drastically go up for the deep sequencing dataset \textit{P. aeruginosa}. \refer achieves best performance for the two datasets with the highest coverage, \texttt{K562} and \textit{P. aeruginosa}, which can be explained by the fact that these also happen to be the two datasets with the lowest error rates. Indeed, compression rates for \refer's and Quip start to decrease slowly as error rates increase --- these two tools are more robust to changes in error rates than Deez for which compression rates quickly deteriorates at higher error rates (Figure~\ref{fig:referee:depth-error}b).
   %
   % When error rate is at its lowest, bit/base ratio is about half that of the ratio at the highest error rate for the RNA-seq data (Figure~\ref{fig:seq-errors}). For example, the two datasets with the best bit per base ratio are also the ones with the shortest read length (\textit{P. aeruginosa} and K562 RNA-seq data), however, \refer is able to capitalize on their sequencing depth and low error rate.
 
@@ -2050,9 +2483,15 @@ In this chapter, we explore compression techniques for collections of raw sequen
 
   % XXX discuss stream separability; partial decompression/random access. operations can be done on offsets alone; offests and edits. Expect sequence to be of most interest.
 
+  XXX explain how separable streams benefit the user
+
+  XXX explain random access to sequence thanks to the separable streams and indexes
+
   Separability of data streams in \refer allows for field-specific analyses that are order of magnitudes faster than comparable tasks done with, e.g. \texttt{samtools}~\cite{SamTools}. A common task such as computing a dataset's sequencing depth involves going through all alignments recording number of reads aligned to any covered base. \texttt{samtools depth} takes about 19 minutes to compute depth for a modestly sized \texttt{SRR445718} dataset and over 48 minutes for \texttt{K562} while \refer accomplishes that same task in 8 and 44 seconds correspondingly. The difference is explained by the fact that \texttt{samtools} has to scan through all of alignment data, including data unrelated to depth calculation, while \refer accomplishes the same task by  having to go through compressed offsets (about 5\% of the compressed data).
 
-  Likewise, \refer format allows to quickly reconstruct aligned reads originally embedded in SAM file (an equivalent of \texttt{samtools faidx} command) without ever reconstructing the alignments fully. Users can specify a genomic region of interest and \refer can reconstruct alignments from that genomic region without decompressing the whole dataset. The index that \refer constructs to enable partial decompression is lightweights: for example, to index all data blocks for \texttt{NA12878}, \refer uses 1.2Mb which can be further compressed down to 233Kb -- a size negligible when compared to the size of the data itself.
+  XXX how does Refereee reconstruct reads w/o reconstructing the alignments?
+
+  Likewise, \refer format allows one to quickly reconstruct aligned reads originally embedded in SAM file (an equivalent of \texttt{samtools faidx} command) without ever reconstructing the alignments fully. Users can specify a genomic region of interest and \refer can reconstruct alignments from that genomic region without decompressing the whole dataset. The index that \refer constructs to enable partial decompression is lightweights: for example, to index all data blocks for \texttt{NA12878}, \refer uses 1.2Mb which can be further compressed down to 233Kb --- a size negligible when compared to the size of the data itself.
 
   % XXX index for NA128 -- 1.2 Mb
 
@@ -2064,6 +2503,10 @@ In this chapter, we explore compression techniques for collections of raw sequen
   \subsection{Speed and memory demands}
 
   \refer is fast and only requires on the order of 1.5Gb of RAM to run making it usable on even smaller machines (see Table~\ref{tab:runtimes}). \refer streams through the alignments in a sequential fashion only keeping intermediate information in memory before it is passed on to \texttt{lzlib}. \refer launches several threads that each invoke \texttt{lzlib} operations on a single block of data at a time making use of modern multithreading architectures. \refer will run faster if given more processing power, however, \refer can reach a saturation point where data blocks prepared by \refer are compressed at a faster rate than the new blocks are being produced.
+
+  XXX add timing information for when only compressing sequence
+
+  XXX how is referee parallelized
 
   % XXX does it scale up linearly w/ \# CPUs, memory?
 
@@ -2120,7 +2563,7 @@ Many analyses relying on the alignment information do not require original read 
 
 \begin{figure}[ht!]
   \centering
-  \includegraphics[width=0.6\linewidth]{Referee-size-breakdown-May4}
+  \includegraphics[width=0.6\linewidth]{figures/Referee-size-breakdown-May4}
   \caption{\textbf{Compressing streams separately allows to download them independently.} Quality values and read identifiers contribute significantly to the size of the compressed file, however, \refer does not rely on these data to reconstruct sequence alignments. Omitting the non-essential alignment data can reduce the size of the download by up to 93\%.}
   \label{fig:fields}
 \end{figure}
