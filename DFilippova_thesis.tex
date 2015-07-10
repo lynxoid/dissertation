@@ -94,7 +94,7 @@ Russel Schwartz \\
 Liz Marai, University of Illinois, Chicago
 }
 
-\support{This research was supported in part by \ldots}
+\support{This research was supported in part by National Science Foundation [EF-0849899, IIS-0812111, CCF-1256087, EF-0849899, and CCF-1053918 to C.K.], National Institutes of Health [1R21AI085376, R21AI085376, R01HG007104 to CK], National Endowment for the Humanities [HD-51098-10 to Fernando Benadon], and  a University of Maryland Institute for Advanced Studies New Frontiers Award to C.K. C.K. received support as an Alfred P. Sloan Research Fellow. D.F. received support as predoctoral trainee from National Institutes of Health [T32-EB009403] as part of the HHMI-NIBIB Interfaces Initiative. The views and conclusions contained in this document are those of the author and should not be interpreted as representing the official policies, either expressed or implied, of any sponsoring institution, donors or the U.S. Government.}
 \disclaimer{}
 
 % copyright notice generated automatically from Year and author.
@@ -117,15 +117,33 @@ Liz Marai, University of Illinois, Chicago
 \begin{abstract}
 % A short summary -- one page.
 
-% The problem.
-Advances in biological technology over the last decade allow us to capture biologically meaningful data on a scale not possible before. Carefully designed experimental protocols now allow scientists to capture protein-protein interactions, dependencies between genes, their products, and metabolites for tens of thousands of targets at a time. At the same time, rapid evolution of sequencing technologies made whole genome and accurate transcriptome analyses possible. However, large amounts of data generated in these high-throughput biological experiments make data storage, analysis, and visualization difficult.
-% Significant advances and contribute to our understanding and knowledge.
-This dissertation discusses several analysis and visualization challenges in detail, and presents efficient and flexible solutions. %advancing our understanding of the underlying data and adding to existing body of knowledge.
-First part of the dissertation identifies problems of presenting large structured data  and discusses the interfaces and processes designed to address them.
+% recent exciting developments that preclude the problem, making some new  things possible
+Advances in biological technology over the last decade allowed us to capture biologically meaningful data on a scale not possible before. Carefully designed experimental protocols now allow scientists to capture protein-protein interactions (PPI), dependencies between genes, their products, and metabolites for tens of thousands of targets at a time. At the same time, rapid evolution of sequencing technologies made whole genome and transcriptome analyses possible without compromising their accuracy.
+% the problem
+However, large amounts of data generated in these high-throughput biological experiments make data storage and transmission, as well as analyses and visualization of the data, and its high-level structure, difficult. 
+% problem we focus on
+% In this dissertation, we consider the problem of data compression to alleviate storage and transmission burden and the problems of analysing and visualizing large structured data.
+% Significant advances and contribution to our understanding and knowledge.
+In this dissertation, we explore solutions to the data storage problem and suggest approaches to sequence and sequence alignment compression. Specifically, we consider a problem of identifying information shared across multiple related datasets and its applications to sequence compression. We formulate the problem of encoding the data given such shared information and provide an optimal algorithm for doing so. Further, we develop a functional compression scheme for sequence alignments that allows for fast computations on compressed sequence and modular data downloads. 
+% This dissertation discusses several analysis and visualization challenges in detail, and presents efficient and flexible solutions. 
+% nugget of information about how I contributed (by combining BLAH and BLAH)
+% now go over contirbutions specifically 
+%advancing our understanding of the underlying data and adding to existing body of knowledge.
+% coral & jazzmap -- classification, clustering, networks
+Additionally, we investigate the problem of visualizing large multi-dimensional datasets where we are interested in evaluating the robustness of its suggested structure. We develop novel visualizations and processes to evaluate robustness of such annotations and study the example of protein function imputation for a PPI network of an \textit{A. thaliana} plant.
+We also investigate challenges of visualizing such complex data when data is changing over time.
+% domains -- from coral, from visual hypothesis to a quantified truth structure
+After studying robustness of multiple independent annotations, we consider chromosome conformation data and find that it too can be viewed as a large collection of classification results. We apply the strategies for identifying  robust classification subgroups to the problem of inferring stable nuclear DNA conformations (topological). Our approach provides a scalable way to find such topological domains and to walk the space of near-optimal structures giving the first opportunity to evaluate DNA's hierarchical spatial structure.
+% higher order structure in sequence and using it for compression and to enable faster analyses
 % Designed interfaces and explored their usability.
-Designed algorithms and analysis techniques.
+% Designed algorithms and analysis techniques.
+The approaches we developed are scalable and can be applied more broadly to other subject areas. %(XXX horribly general conclusion)
 
-Conclusions and contributions that came out of this work.
+%XXX kinda too specific too fast -- keep it more high level and it will flow better
+
+% I am interested in developing algorithms and extracting insights from next-generation sequencing data, biological networks, and 3D genome structure. I am also interested in functional sequence compression.
+
+% Developed a compression scheme for sequence alignments that allows for fast sequence computations and modular downloads. Collaborated on developing a faster model for finding densely packed regions of nuclear DNA (topological domains). Developed an analysis software for visualization of alternative classifications and inference of the most robust predictions. Contributed to the development of filtering techniques for metric subgraphs, inferring models of graph growth.
 
 \end{abstract}
 
@@ -190,9 +208,14 @@ My family for support, especially my mom.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 
-Since the first sequencing and assembly of the human genome~\cite{FirstHumanGenome} (first genome citation), this confluence of chemistry, general and molecular biology, genetics, and medicine bore a new field of computational biology --- and it continues to grow and present new challenges some of which stem from the sheer volume of the data and the complexity of the hypotheses it generates. Sequencing technologies have vastly improved since then sharply dropping the cost of sequencing and helping it become a commonplace tool in many labs and even hospitals. Advances in sequencing were followed by rapid development of other high-throughput techniques that aimed to capture interactions between proteins~\cite{ppiNetworks}, dependencies between metabolites and genes~\cite{gene2geneNetworks}, rates of gene transcription~\cite{RNA-seqTechnology}, and protein translation~\cite{riboseq}.
+% new methods, new large data. 
 
-These new data provided a first glimpse into how organisms operate on a molecular level on a scale of thousands of genes and proteins, but often the insights were hidden under layers of experimental noise and natural variation, hindered by large data volumes. Novel methods were developed for filtering, aggregating, and identifying structure in data: methods to automatically detect plausible protein complexes~\cite{ppiClustering} and groups of genes that act in concert~\cite{geneInteractionGroups}, to automatically infer function and annotate based on existing ontologies. Every method came with its own set of parameters and ways of accounting for noise. Solutions produced by these algorithms were not always stable or optimal and often other, alternative optimal or near-optimal solutions could be just as valid and informative as the single original solution.
+Since the first sequencing and assembly of the human genome~\cite{FirstHumanGenome} (first genome citation), this confluence of chemistry, general and molecular biology, genetics, and medicine bore a new field of computational biology --- and it continues to grow and present new challenges most of which stem from the sheer volume of the data and the number and complexity of the hypotheses it generates. Sequencing technologies have vastly improved since then sharply dropping the cost of sequencing and helping it become a commonplace tool in many labs and even hospitals. Advances in sequencing were followed by rapid development of other high-throughput techniques that aimed to capture interactions between proteins~\cite{ppiNetworks}, dependencies between metabolites and genes~\cite{gene2geneNetworks}, rates of gene transcription~\cite{RNA-seqTechnology}, and protein translation~\cite{riboseq}.
+
+% Noise, large volume, many alternative solutions -- ways to extract insights automatically and visualize at scale. Visualization as important as the methods that analyse the data -- one helps to generate hypothese and the other -- to test them.
+
+These new data provided a first glimpse into how organisms operate on a molecular level on a scale of thousands of genes and proteins, but often the insights were hidden under the layers of experimental noise and natural variation, hindered by large data volumes. When run on such data, analysis methods would produce solutions that were not necessarily stable or unique, and often, other alternative optimal and near-optimal solutions would be just as valid and informative as a solution produced with default settings. Alternative solutions are especially important to consider when operating on noisy data such as when looking to identify plausible protein complexes~\cite{ppiClustering} and groups of genes that act in concert~\cite{geneInteractionGroups}, to infer protein function and to annotate new data based on existing ontologies. We discuss approaches to automatically analyze and visualize such ensembles of solutions.
+ 
 
 \begin{figure}[ht]
   \centering
@@ -201,13 +224,18 @@ These new data provided a first glimpse into how organisms operate on a molecula
   \label{fig:intro:anscombe}
 \end{figure}
 
-Visualization is an important first step when working with a new set of data as it provides the means to assess the overall shape of the data, its distribution, and to detect outliers. Anscombe's quartet~\cite{anscombe} succinctly demonstrates the importance of plotting the data before analyzing it: four datasets have the same $x$ and $y$ mean and variance, Pearson's correlation and fit the same regression line, yet are strickingly different (Figure~\ref{fig:intro:anscombe}). Simiarly, complex high-dimensional biological data requires novel visualization approaches that provide an overview of the data along with more detailed and focused displays.
+% Visualization as important as the methods that analyse the data -- one helps to generate hypothese and the other -- to test them.
 
-Large data volumes resulting from high-throughput experiments present yet another challenge. To maintain interactivity and to provide useful insights, the software must offer ways to aggregate data and generate an overview without oversimplifying or obscuring the underlying patterns. Since manual inspection is infeasible for large data, the software should offser ways to extract meaningful higher-order motifs. Aggregate structure may speed up  computation as in functional compression XXX
+Visualization is an important first step when working with a new set of data as it provides the means to assess the overall shape of the data, its distribution, and to detect outliers. Anscombe's quartet~\cite{anscombe} succinctly demonstrates the importance of viewing the data before analyzing it: four datasets have the same $x$ and $y$ mean and variance, Pearson's correlation and fit the same regression line, yet are strickingly different (Figure~\ref{fig:intro:anscombe}). We see visualization as the means to generate new hypotheses that are then tested and validated using complrex algorithmic and statistical models.
+% Simiarly, complex high-dimensional biological data requires novel visualization approaches that provide an overview of the data along with more detailed and focused displays.
 
-XXX make more of an effort to make a transition from vis to algoirthms
 
-XXX introduce compression and problems
+% XXX large volume -- compression.
+
+Large data volumes resulting from high-throughput experiments present yet another, more fundamental challenge. Technical demands for storage and transmission of such data volumes hinders easy exchange of information and the ability to run complex analyses on the data. Traditional compression techniques alleviate the problem of data transfer, but require that data is fully decompressed to perform any analyses and may not exploit domain knowledge about the nature of the data and its potential uses to improve compression ratios. Later in this thesis, we investigate compression methods for one of the most abandunt data types in computational biology --- the nucleotide sequences.
+
+% Large data volumes resulting from high-throughput experiments present yet another challenge. To maintain interactivity and to provide useful insights, the software must offer ways to aggregate data and generate an overview without oversimplifying or obscuring the underlying patterns. Since manual inspection is infeasible for large data, the software should offser ways to extract meaningful higher-order motifs. Aggregate structure may speed up  computation as in functional compression XXX
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,6 +252,8 @@ XXX introduce compression and problems
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Major contributions}
+
+We outline the problems addressed in this thesis and the specific contributions made while researching these topics:
 
 \begin{itemize}
   \item \textbf{Summary and detailed visualizations for alternative classifications}
@@ -2157,23 +2187,27 @@ In this chapter, we explore compression techniques for collections of raw sequen
 
   Alignment files generated by the mapping sortware are stored in a popular SAM format~\cite{SamTools} and usually occupy orders of magnitude more space than the original sequencing reads themselves. A commonly used approach is to convert SAM files to its block-compressed equivalent, BAM, offers a significant improvement in the used disk space while offering the same set of analyses at a low computational cost. Later approaches improve the compression ratio by sacrificing the ability to run analyses without full decompression~\cite{Goby,Jones2012}, by turning to lossy compression, or by doing without certain sequence data~\cite{SlimGene,CRAM}. More recently, Hach \etal introduced a more efficient block-wise BAM/SAM compressor that allows for block-wise decompression while offering savings of up to 44\% over BAM~\cite{Sahinalp2015}.
 
-\section{Short overview of SAM format}
+\section{SAM format}
 
-  SAM file format was developed by XXX to represent sequence alginments in a consistent way. Alignments are represented by 11 mandatory fields and are tab-separated in the text file. An example of a SAM file format is:
+  SAM file format was developed as part of SAMtools~\cite{SamTools} to represent sequence alginments in a consistent way. Alignments are represented by 11 mandatory fields and are tab-separated in the text file. An example of a SAM file is:
 
-  \begin{quotation}
-  
-  SRR445718.19084080  272 10  60065 3 29S71M  * 0 0 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTACTTTGGTGCTCTTTATTTTGCGTATTTAAAACTATTAGATCGTGTGATTATATTTGACAGGTCTTAA  DDDDDDDDDDDDDDBBBDDDBDDDBDFFEHHHEJJIHJJIIGGJJIIGIJJJJJJJJIIJJJIFJJJJIJJIHIGJJJJJIJJJJJJHHHHHFFFFFCCC  MD:Z:71
+  % \begin{quotation}
+  \footnotesize
+  \begin{tabular}{l r r r r r r r r r r r}
+    \midrule
+    SRR445718.1 & 272 & 10 & 60065 & 3 & 29S71M & * & 0 & 0 & sequence & quality & MD:Z:71 \\
+    SRR445718.2 & 256 & 10 & 61200 & 3 & 1S99M & * & 0 & 0 & sequence &   quality & MD:Z:99 \\
+    SRR445718.3 & 16 & 10 & 61279 & 255 & 94M6S & * & 0 & 0 & sequence & quality & MD:Z:15A78 \\
+    SRR445718.4 & 256 & 10 & 61390 & 3 & 100M & * & 0 & 0 & sequence & quality & MD:Z:100 \\
+    SRR445718.5 & 272 & 10 & 61532 & 3 & 100M & * & 0 & 0 & sequence & quality & MD:Z:100 \\
+    \bottomrule
+  \end{tabular}
+  % \end{quotation}
+  %
+  \vspace{0.5em}
+  \normalsize
 
-SRR445718.17061305  256 10  61200 3 1S99M * 0 0 CCAGATGAGGCCTCACTCTGTCACCCAGGTTGGGGTGGAGTGGCACAGTCACAGCTCACTATAACCTCAAGCTCCTGGGCTCAAGTGATCCTGCCACCTC  CCCFFFFFHHHHHJJJIJIGIIJJJJGGGHIIIGJHIGHJGGHIIGIJIIJIIIIHHGHHFFFF>@DEECECDDA;@CDBDBDDDDDDD>CACCBDDDBB  MD:Z:99
-
-SRR445718.32144891  16  10  61279 255 94M6S * 0 0 TCAAGTGATCCTGCCCCCTCAGCCTCCTAAGTAGCTGGAACTACAGATGTGCACCGCCATGCCAGGCTTGTCTAACATTTTTATGTGTTGCTTCTCCAGT  *  MD:Z:15A78
-
-SRR445718.32510886  256 10  61390 3 100M  * 0 0 TTTTGGAGATTTCTGTCTTCATTCATGAGGGATAATAGTCTGCACTTTTATTTTCTTGTGATACTTTTGTCTGATTTGTTATCTGGGTAATACTGGCCTT  @CCFFFFFAFHHHJJIJJJJJJJJJJJJJJJHIJIIJJIIJJJJJJJJJHJJJJJJJJGIIIIJJJJJJEHIJJJHIIJIIGHHHHHHFFFFFFECDEDC  MD:Z:100
-
-SRR445718.25235646  272 10  61532 3 100M  * 0 0 TTTGTGAAGGATTGGTTATTCATTAAGTGTTTAATAGAATTCACTAGTGAAGCTATGTGAGCCAGGGCTAGACTGATGAAGAGTTTTCATTAGTCTAATC  BCAECEEEFFFFFHHHHHHJIIIHHFIJIEGGJIIIJIIIGGHJIJJJJJIHEGGIJJIJJJJJIHIJIGJIJIJJJJJJJJJJJJJHHHHHFFFFFCCC  MD:Z:100
-  \end{quotation}
-
+  where sequence field contains an actual aligned read data and quality field contains the Phred scores that came with that sequencing read. It is easy to see some of the redundancies in it right away: read IDs (the first column) between different alignments tend to be very similar, the alignment coordinates (columns 3 and 4) vary only slightly, columns 7, 8, and 9, encoding pair end information, may contain default values for the unpaired data, and so on.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Reference-based sequence and alignment compression}
