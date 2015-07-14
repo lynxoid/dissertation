@@ -120,9 +120,9 @@ Liz Marai, University of Illinois, Chicago
 % recent exciting developments that preclude the problem, making some new  things possible
 Advances in biological technology over the last decade allowed us to capture biologically meaningful data on a scale not possible before. Carefully designed experimental protocols now allow scientists to capture protein-protein interactions (PPI), dependencies between genes, their products, and metabolites for tens of thousands of targets at a time. At the same time, rapid evolution of sequencing technologies made whole genome and transcriptome analyses possible without compromising their accuracy.
 % the problem
-However, large amounts of data generated in these high-throughput biological experiments make data storage and transmission, as well as analyses and visualization of the data, and its high-level structure, difficult. 
+However, large amounts of data generated in these high-throughput biological experiments  make data storage and transmission, as well as analyses and visualization of the data, and its high-level structure, difficult. 
 % problem we focus on
-% In this dissertation, we consider the problem of data compression to alleviate storage and transmission burden and the problems of analysing and visualizing large structured data.
+% In this dissertation, we consider the problem of data compression to alleviate storage and transmission burden and the problems of analyzing and visualizing large structured data.
 % Significant advances and contribution to our understanding and knowledge.
 In this dissertation, we explore solutions to the data storage problem and suggest approaches to sequence and sequence alignment compression. Specifically, we consider a problem of identifying information shared across multiple related datasets and its applications to sequence compression. We formulate the problem of encoding the data given such shared information and provide an optimal algorithm for doing so. Further, we develop a functional compression scheme for sequence alignments that allows for fast computations on compressed sequence and modular data downloads. 
 % This dissertation discusses several analysis and visualization challenges in detail, and presents efficient and flexible solutions. 
@@ -212,7 +212,7 @@ My family for support, especially my mom.
 
 Since the first sequencing and assembly of the human genome~\cite{FirstHumanGenome} (first genome citation), this confluence of chemistry, general and molecular biology, genetics, and medicine bore a new field of computational biology --- and it continues to grow and present new challenges most of which stem from the sheer volume of the data and the number and complexity of the hypotheses it generates. Sequencing technologies have vastly improved since then sharply dropping the cost of sequencing and helping it become a commonplace tool in many labs and even hospitals. Advances in sequencing were followed by rapid development of other high-throughput techniques that aimed to capture interactions between proteins~\cite{ppiNetworks}, dependencies between metabolites and genes~\cite{gene2geneNetworks}, rates of gene transcription~\cite{RNA-seqTechnology}, and protein translation~\cite{riboseq}.
 
-% Noise, large volume, many alternative solutions -- ways to extract insights automatically and visualize at scale. Visualization as important as the methods that analyse the data -- one helps to generate hypothese and the other -- to test them.
+% Noise, large volume, many alternative solutions -- ways to extract insights automatically and visualize at scale. Visualization as important as the methods that analyze the data -- one helps to generate hypotheses and the other -- to test them.
 
 These new data provided a first glimpse into how organisms operate on a molecular level on a scale of thousands of genes and proteins, but often the insights were hidden under the layers of experimental noise and natural variation, hindered by large data volumes. When run on such data, analysis methods would produce solutions that were not necessarily stable or unique, and often, other alternative optimal and near-optimal solutions would be just as valid and informative as a solution produced with default settings. Alternative solutions are especially important to consider when operating on noisy data such as when looking to identify plausible protein complexes~\cite{ppiClustering} and groups of genes that act in concert~\cite{geneInteractionGroups}, to infer protein function and to annotate new data based on existing ontologies. We discuss approaches to automatically analyze and visualize such ensembles of solutions.
  
@@ -220,19 +220,19 @@ These new data provided a first glimpse into how organisms operate on a molecula
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\linewidth]{figures/anscombes_quartet}
-  \caption{\textbf{Anscombe's quartet.} Statistician F. Anscombe constructed these four data series to stress the importance of plotting the data before computing its summary statistics. These four sets of data points are indistringuishable when considering their $x$ and $y$ mean, variance, correlation, and linear regression, yet are strickingly different when visualized. Data from original paper, plots made in Keynote.}
+  \caption{\textbf{Anscombe's quartet.} Statistician F. Anscombe constructed these four data series to stress the importance of plotting the data before computing its summary statistics. These four sets of data points are indistinguishable when considering their $x$ and $y$ mean, variance, correlation, and linear regression, yet are strikingly different when visualized. Data from original paper, plots made in Keynote.}
   \label{fig:intro:anscombe}
 \end{figure}
 
 % Visualization as important as the methods that analyse the data -- one helps to generate hypothese and the other -- to test them.
 
-Visualization is an important first step when working with a new set of data as it provides the means to assess the overall shape of the data, its distribution, and to detect outliers. Anscombe's quartet~\cite{anscombe} succinctly demonstrates the importance of viewing the data before analyzing it: four datasets have the same $x$ and $y$ mean and variance, Pearson's correlation and fit the same regression line, yet are strickingly different (Figure~\ref{fig:intro:anscombe}). We see visualization as the means to generate new hypotheses that are then tested and validated using complrex algorithmic and statistical models.
+Visualization is an important first step when working with a new set of data as it provides the means to assess the overall shape of the data, its distribution, and to detect outliers. Anscombe's quartet~\cite{anscombe} succinctly demonstrates the importance of viewing the data before analyzing it: four datasets have the same $x$ and $y$ mean and variance, Pearson's correlation and fit the same regression line, yet are strikingly different (Figure~\ref{fig:intro:anscombe}). We see visualization as the means to generate new hypotheses that are then tested and validated using complex algorithmic and statistical models.
 % Simiarly, complex high-dimensional biological data requires novel visualization approaches that provide an overview of the data along with more detailed and focused displays.
 
 
 % XXX large volume -- compression.
 
-Large data volumes resulting from high-throughput experiments present yet another, more fundamental challenge. Technical demands for storage and transmission of such data volumes hinders easy exchange of information and the ability to run complex analyses on the data. Traditional compression techniques alleviate the problem of data transfer, but require that data is fully decompressed to perform any analyses and may not exploit domain knowledge about the nature of the data and its potential uses to improve compression ratios. Later in this thesis, we investigate compression methods for one of the most abandunt data types in computational biology --- the nucleotide sequences.
+Large data volumes resulting from high-throughput experiments present yet another, more fundamental challenge. Technical demands for storage and transmission of such data volumes hinders easy exchange of information and the ability to run complex analyses on the data. Traditional compression techniques alleviate the problem of data transfer, but require that data is fully decompressed to perform any analyses and may not exploit domain knowledge about the nature of the data and its potential uses to improve compression ratios. Later in this thesis, we investigate compression methods for one of the most abundant data types in computational biology --- the nucleotide sequences.
 
 % Large data volumes resulting from high-throughput experiments present yet another challenge. To maintain interactivity and to provide useful insights, the software must offer ways to aggregate data and generate an overview without oversimplifying or obscuring the underlying patterns. Since manual inspection is infeasible for large data, the software should offser ways to extract meaningful higher-order motifs. Aggregate structure may speed up  computation as in functional compression XXX
 
@@ -256,24 +256,26 @@ Large data volumes resulting from high-throughput experiments present yet anothe
 We outline the problems addressed in this thesis and the specific contributions made while researching these topics:
 
 \begin{itemize}
-  \item \textbf{Summary and detailed visualizations for alternative classifications}
+  \item \textbf{Visualization and inference of stable subsets in ensembles of classifications}
 
-  Coral XXX
+  We develop new and adapt existing visualizations useful for evaluation and comparison of collections of annotations derived on large noisy data through various classification strategies. We integrate these visualizations into a single application that allows to perform a variety of analyses on these classification results and automatically determines annotations that are most consistent across all sets of assigned labels. We use the tool to perform a detailed analysis of clusters of protein-protein interactions in \textit{A. thaliana} plant and identify robust cluster cores that are significantly enriched for Gene Ontology~\cite{GeneOntrology} terms.
 
   % \item \textbf{Augmented search in Sequence Read Archive (SRA)}
   % SHARQ
 
-  \item \textbf{Focused exploration in dynamic networks}
+  \item \textbf{Visual exploration of large dynamic networks}
 
-  Map of Jazz XXX
+  We propose an egocentric network view as the main visualization to use when  studying large graphs that change over time. We augment the view by developing node and edge glyphs that summarize the interactions taking place before and after the current point in time. We develop a node ordering algorithm that minimizes node occlusion and improves graph readability over the lifetime of the egonetwork. We implement our ideas in a web application centered around a graph of interactions between jazz musicians spanning a hundred years.
 
-  \item \textbf{Finding structure in chromatin conformation data}
+  \item \textbf{Identification of topological domains in the ensembles of chromatin contacts}
 
-  Armatus XXX
+  % From coral - Armatus XXX
+  We extend the algorithm for identifying robust subsets of annotations from our earlier work to the problem of finding densely packed areas of chromatin (\textit{topological domains}). Our algorithm is faster, requires less parameters, and generates domains that are significantly different from domains identified by existing methods, however, are more enriched for the chromatin markers associated with gene regulation. We obtain domains at different scales that allows us to evaluate, for the first time, the hierarchical structure of the chromatin.
 
-  \item \textbf{Compression methods for structured data}
+  \item \textbf{Compression methods for sequencing and alignment data}
 
-  Referee XXX
+  % Huffmer, Referee XXX
+  We propose novel ways to compress sequencing data using information shared across several related datasets and develop new algorithms for rapid compression of sequence alignments. We develop an infrastructure where related alignment data are separated into disjoint streams allowing for better compression within the stream. Additionally, separable streams  allow us to perform computations on parts of the data without fully reconstructing the original alignments speeding up certain analyses by orders of magnitude.
 
 \end{itemize}
 
@@ -288,7 +290,7 @@ We outline the problems addressed in this thesis and the specific contributions 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{Visualization approaches for large structured data}
+\part{Visualization approaches for biological data}
 
 
 
@@ -297,15 +299,16 @@ We outline the problems addressed in this thesis and the specific contributions 
 %% Coral --
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Interfaces for evaluation and comparison of classification results}
+\chapter{Interfaces for evaluation and comparison of ensembles of classification results}
+\label{chapter:coral}
 
   Clustering has become a standard analysis step for many types of biological data, \eg~interaction networks, gene expression, and metagenomic abundance. In practice, it is possible to obtain a large number of contradictory clusterings by varying which clustering algorithm is used, which data attributes are considered, how algorithmic parameters are set, and  which near-optimal clusterings are chosen. It is a difficult task to sift though such a large collection of varied clusterings to determine which clustering features are affected by parameter settings or are artifacts of particular algorithms and which represent meaningful patterns. Knowing which items are often clustered together helps to improve our understanding of the underlying data and to increase our confidence about generated modules.
 
-  In this chapter, we discuss the design decisions and the implementation of \Coral, an application for interactive exploration of ensembles of clusterings. We discuss how each visual component in \Coral tackles a specific question related to clustering comparison and provide examples of their use. We also show how \Coral could be used to visually and quantitatively compare clusterings with a ground truth clustering. 
+  In this chapter, we discuss the design decisions and the implementation of \Coral, an application for interactive exploration of ensembles of classification results and clusterings. We discuss how each visual component in \Coral tackles a specific question related to clustering comparison and provide examples of their use. We also show how \Coral could be used to visually and quantitatively compare clusterings with a ground truth clustering. 
 
   We showcase how to use \Coral on a collection of clusterings for a protein interaction network of \textit{Arabidopsis thaliana}. We find that the clusterings vary significantly and that few proteins are consistently co-clustered in all clusterings, and use \Coral's core identification to identify these consistent protein subgroups. Our case study shows that several clusterings should typically be considered when evaluating clusters of genes, proteins, or sequences, and Coral can be used to perform a comprehensive analysis of these clustering ensembles.
 
-  The work presented in this chapter has appeared as a publication in BMC Bioinformatics~\cite{Filippova2012} and was presented at ISMB XXX (year) as a poster. The software is available as a standalone Java application and can be downloaded from \url{https://github.com/lynxoid/coral}.
+  The work presented in this chapter has appeared as a publication in BMC Bioinformatics~\cite{Filippova2012} and was presented at ISMB 2012 as a poster. The software is available as a standalone Java application and can be downloaded from \url{https://github.com/lynxoid/coral}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background and related work}
@@ -313,9 +316,9 @@ We outline the problems addressed in this thesis and the specific contributions 
 
 
   Collections of protein interactions, gene expression vectors, metagenomic samples, and gene sequences containing thousands to hundreds-of-thousands of elements are now being analyzed routinely. 
-
-  XXX more detail on the size of the problem. 
-
+% 
+  % XXX more detail on the size of the problem. 
+% 
   Clustering is often used to condense such large datasets into an understandable form: it has been successfully used on protein-protein interaction (PPI) networks to discover protein complexes and predict protein function, \eg~\cite{Sharan2007}; on gene expression data to find patterns in gene regulation and essential cell processes, \eg~\cite{Ulitsky2010}; and on metagenomic samples to identify new species, compare them to existing clades, evaluate the diversity of a population, and suggest interdependencies between them~\cite{Chatterji2007, White2010}. In other words, clustering has become a ubiquitous part of analysis for large biological datasets.
 
   % Introduce the problem.
@@ -339,12 +342,10 @@ We outline the problems addressed in this thesis and the specific contributions 
   \end{figure}
 
 
-  In \Coral's design, we followed the visualization mantra coined by
-  Shneiderman~\cite{Shneiderman1996}: overview, zoom-and-filter,
-  details-on-demand. At the overview level, \Coral displays dataset statistics and highlights the most similar and dissimilar clusterings; at the mid-level, ``zoomed-in,'' analysis explains similarities between clusterings through module comparison; the low-level analysis compares co-clustering patterns at the level of individual data items: the genes, proteins, or sequences. The displays are coordinated~\cite{North2000} so selecting data in one of the views highlights the corresponding items in the other views (see Figure~\ref{fig:coral:overview}).
+  In \Coral's design, we followed the visualization mantra coined by Shneiderman~\cite{Shneiderman1996}: overview, zoom-and-filter, details-on-demand. At the overview level, \Coral displays dataset statistics and highlights the most similar and dissimilar clusterings; at the mid-level, ``zoomed-in,'' analysis explains similarities between clusterings through module comparison; the low-level analysis compares co-clustering patterns at the level of individual data items: the genes, proteins, or sequences. The displays are coordinated~\cite{North2000} so selecting data in one of the views highlights the corresponding items in the other views (see Figure~\ref{fig:coral:overview}).
 
 
-  Coral works with modules --- groups of items closely related to one another according to some metric or property. For example, modules can constitute a collection of genes that get co-expressed together or proteins forming a complex. A clustering is a collection of modules and usually is an output of a clustering algorithm. Users may also choose to group data according to attributes that come with the data such as cellular component or molecular function GO terms and use that partition as a clustering. Users may combine data from different experiemnts and across species so long as the data items that the user treats as homologous have the same IDs across the dataset.
+  Coral works with modules --- groups of items closely related to one another according to some metric or property. For example, modules can constitute a collection of genes that get co-expressed together or proteins forming a complex. A clustering is a collection of modules and usually is an output of a clustering algorithm. Users may also choose to group data according to attributes that come with the data such as cellular component or molecular function GO terms and use that partition as a clustering. Users may combine data from different experiments and across species so long as the data items that the user treats as homologous have the same IDs across the dataset.
 
 
 
@@ -382,7 +383,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   %% Subsection
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Clusterings similarity}
+  \subsection{Assessing similarity of clusterings}
   %
   % introduce ladder 
   \Coral computes similarity scores between all clusterings and visualizes the lower triangle of the similarity matrix in a ladder widget (Figure~\ref{fig:coral:ladder}). The ladder compactly displays similarity scores for every pair of clusterings in the ensemble allowing for precise comparisons. The ladder is color-coded as a heatmap with more intense blue cells corresponding to higher similarity scores and paler cells corresponding to low scores. Clicking a cell updates the contents of a module-to-module comparison widget (see next subsection).
@@ -412,10 +413,10 @@ We outline the problems addressed in this thesis and the specific contributions 
     \item Mirkin coefficient:
     %
     \[
-    M(K_i, K_j) = 2(b + c)
+    M(K_i, K_j) = 2(b + c),
     \]
     %
-    XXX -- is symmetric? Unbounded.
+    a symmetric, yet unbounded metric.
     % Mirkin coefficient is symmetric, but is not a metric.
 
     \item Rand index:
@@ -455,7 +456,7 @@ We outline the problems addressed in this thesis and the specific contributions 
     P(K_i,K_j) = \frac{ \sum_{m_k \in K_i} \argmax_{m_l \in K_j} |m_k \cap m_l| }{N},
     \]
     %
-    where $N$ is the number of clustered data items in $K_i$. For every module in $K_i$, purity index finds the moduling in $K_j$ that overlaps with $m_k$ the most therefore capturing the maximum amount of overlap between modules in $K_i$ and $K_j$. The index is not symmetric.
+    where $N$ is the number of clustered data items in $K_i$. For every module in $K_i$, purity index finds the module in $K_j$ that overlaps with $m_k$ the most therefore capturing the maximum amount of overlap between modules in $K_i$ and $K_j$. The index is not symmetric.
 
     \item Inverse purity index:
     %
@@ -463,7 +464,7 @@ We outline the problems addressed in this thesis and the specific contributions 
     IP(K_i,K_j) = \frac{ \sum_{m_l \in K_j} \argmax_{m_k \in K_i} |m_k \cap m_l| }{N},
     \]
     %
-    is similar to purity, but captures the maxmium amount of overlap as viewed from $K_j$'s perspective. The index is not symmetric.
+    is similar to purity, but captures the maximum amount of overlap as viewed from $K_j$'s perspective. The index is not symmetric.
 
     \item F-measure~\cite{Meila2003}:
     %
@@ -528,7 +529,7 @@ We outline the problems addressed in this thesis and the specific contributions 
     \centering
     \includegraphics[width=0.7\linewidth]{figures/coral_matrices}
     \caption{\textbf{Co-cluster matrices.} (a) A co-cluster matrix of three identical decompositions forms blocks on
-    the diagonal with only red cells indicating that all three clsuterings agreed
+    the diagonal with only red cells indicating that all three clusterings agreed
     (synthetic data). (b) Big modules were broken up into smaller modules to form
     new clusterings (four \texttt{Hybrid} decompositions from the Langfelder
     study~\cite{Langfelder2008}).}
@@ -553,7 +554,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   \newcommand{\Mplus}{$A^{+}$~}
 
   %\subsection*{co-cluster matrix}
-  \subsection{What other items are in the same module as a given item $u$?}
+  \subsection{Co-clustering patterns over all items}
 
   A single clustering assigns a data item $v$ to a module defining its \textit{cohort} --- a set of items in the same module as $v$. Knowing the item's module helps in assigning function to unknown proteins~\cite{Bader2003} and novel genes~\cite{Ulitsky2010}; knowing that the item's cohort is consistent across many clusterings increases the confidence of such predictions.
 
@@ -606,7 +607,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %\subsection*{Cores and periphery}
-  \subsection{Subset persistence across clusterings}
+  \subsection{Subsets of items with the most persistent annotations across clusterings}
   \label{sec:cores}
 
   Groups of items that end up in the same module across many clusterings are of a particular interest because they represent the robust subclusters in the data. We call these commonly co-clustered sets \textit{cores}. Items in cores form the most trustworthy modules and indicate particularly strong ties between data items, increasing, for example, the confidence in protein complex identification~\cite{Luo2009} and gene annotation~\cite{Saha}.
@@ -619,7 +620,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  \subsection{Persistence of ground-truth modules across clusterings}
+  \subsection{Persistence of ground truth modules across clusterings}
 
   When validating new protein complexes or co-expressed gene modules, users may want to see how well their results match ground-truth clusterings such as protein complexes from MIPS~\cite{Mewes2011}, or sets of co-regulated genes from RegulonDB~\cite{Gama-Castro2011}. In \Coral, users may designate a single clustering as a \textit{base} --- a set of trusted modules with which other clusterings are expected to agree. When in this mode, \Coral will only highlight those cells in the co-cluster matrix that are within the modules of the base and gray out all other non-zero matrix cells to bring users' attention to the clustering in question. Figure~\ref{fig:coral:base_clust} shows an example of a co-cluster matrix with the base set to be the \Athal modules reported in~\cite{Vidal2011}.
 
@@ -637,7 +638,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %\subsection*{Pairs table}
-  \subsection{In which clusterings do particular items co-cluster?}
+  \subsection{Co-clustering patterns of individual items}
   \label{sec:pairs_table}
 
   The co-cluster matrix displays the total number of times any two items were co-clustered, and the tooltips that appear after hovering over a matrix cell show a list of clusterings in which a given pair has been co-clustered. To facilitate sorting and search for particular item pairs, \Coral provides a companion table where each row represents a pair of data items and displays the number of times the items co-clustered along with the pair's \textit{signature}. The signature is a $k$-long vector where the $t^{th}$ element is 1 when both data items, say, proteins, have been placed in the same module in clustering $K_{t}$. If the pair's items were not in the same module in $K_{t}$, the $t^{th}$ element is set to 0.
@@ -677,7 +678,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   %% Identifying cores
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Identifying cores}
+  \subsection{Identifying persistent subsets}
   \label{sec:dense_sub}
 
   Given a reordered co-cluster matrix $A$, we want to find contiguous areas containing high co-cluster values (\textit{cores}). We rely on the notion of region density:
@@ -740,9 +741,9 @@ We outline the problems addressed in this thesis and the specific contributions 
   %% Subsection
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Ordering in parallel partitions}
+  \subsection{Minimizing crossovers in parallel partitions}
 
-  When ordering clustering bands in the parallel partitions plot, we would like to put similar clusterings next to each other and avoid putting two dissimilar clusterings vertically adjacent. The intuition for such a constraint is that if the two clusterings $K_{i}$ and $K_{i+1}$ share many similarities, the bands connecting individual items between the clusterings will only cross a few times making it easier to track module changes. We also need to order items within the bands in a way that puts items from the same module next to each other and does not allow items from other modules to interleave.
+  When ordering clustering bands in the parallel partitions plot, we would like to put similar clusterings next to each other and avoid putting two dissimilar clusterings vertically adjacent. The intuition for such a constraint is that if the two clusterings $K_{i}$ and $K_{i+1}$ share many similarities, the bands connecting individual items between the clusterings will only cross a few times making it easier to track modules across different levels of the visualization. We also need to order items within the bands in a way that puts items from the same module next to each other and does not allow items from other modules to interleave.
 
   % ordering bands
 
@@ -758,7 +759,7 @@ We outline the problems addressed in this thesis and the specific contributions 
   %
   where $i(u)$ is the index of a column in $A^{+}$ corresponding to the data item $u$. Modules that should be placed first in the clustering band would have the lowest rank, so we sort the modules in order of increasing $d$, and the module's position in the sorted array determines module's position in the clustering band.
 
-\section{Results and discussion}
+\section{Results}
 
   \subsection{Multiple classifications data}
   \label{sec:data}
@@ -869,7 +870,7 @@ We outline the problems addressed in this thesis and the specific contributions 
 
   \Coral has been used to analyze clusterings of up to 4115 items. The runtime varies with the number of clusterings, number of modules and data items per clustering, and the size of the modules. The startup operations --- parsing the input clusterings, computing dataset statistics and all-to-all clustering similarities, as well as rendering the views --- take from under a second to 11 seconds for clusterings from 33 to 4115 data items. Matrix reordering is the single biggest performance bottleneck for \Coral. Reordering the co-cluster matrix for 2376 \Athal proteins took, on average, 29 seconds when to reorder using the greedy heuristic and 70 seconds when to reorder using the Hungarian algorithm. However, both the greedy heuristic and the Hungarian algorithm find good orderings after very few iterations and the reordering only needs to be computed once before analysis. Solutions for LAP computed with the Hungarian algorithm improve with every iteration and usually converge on a good reordering fast.
 
-  \Coral offers a comprehensive array of visualizations that allow users to investigate modules from various viewpoints inlcuding several novel views. \Coral guides users from overview statistics implemented as familiar bar charts to detailed cluster-to-cluster comparison in a table. The ladder widget, a lower triangle of the comparison matrix, helps users pick the most similar (or dissimilar) pair of clusterings and to judge how similar clusterings in the dataset are overall. A color-coded co-cluster matrix shows how often any pair of items in the dataset have been placed in a module together. A novel adaptation of parallel coordinates, parallel partitions plot, makes tracking a group of items across clusterings easy with intuitive selection techniques. These views combined create a powerful tool for a comprehensive exploration of an ensemble of clusterings. \Coral can help users generate questions and hypotheses about the data that could be later definitively answered with the help of additional experiments.
+  \Coral offers a comprehensive array of visualizations that allow users to investigate modules from various viewpoints including several novel views. \Coral guides users from overview statistics implemented as familiar bar charts to detailed cluster-to-cluster comparison in a table. The ladder widget, a lower triangle of the comparison matrix, helps users pick the most similar (or dissimilar) pair of clusterings and to judge how similar clusterings in the dataset are overall. A color-coded co-cluster matrix shows how often any pair of items in the dataset have been placed in a module together. A novel adaptation of parallel coordinates, parallel partitions plot, makes tracking a group of items across clusterings easy with intuitive selection techniques. These views combined create a powerful tool for a comprehensive exploration of an ensemble of clusterings. \Coral can help users generate questions and hypotheses about the data that could be later definitively answered with the help of additional experiments.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -934,11 +935,9 @@ We outline the problems addressed in this thesis and the specific contributions 
 
 Relationships between people, cooperation between genes in a cell, co-dependence of species within an ecosystem are just a few examples of interactions that are often modeled as a network, however, the fact that these networks are dynamic is often ignored. Dynamic networks may change in several ways: a gene that was not expressed in the previous time step may turn on; two proteins may form a complex under certain conditions (or two people become friends); the amount of a gene product may increase as a result of an activated pathway; the strength of a relationship between two people may grow over time. These changes are equivalent to node and edge gain and loss and directly affect network topology; the changes in the amount of a gene product or strength of a relationship are equivalent to property changes on the nodes and edges, but do not affect the graph structure itself.
 
-The amount of information that changes between any two consequitive timepoints is often too great to comprehend even for small networks making visualization of such networks a challenging problem. We explore a setting in which the user focuses on a single node (e.g., a gene of interest) and its immediate neighborhood over time (ego-network). The main challenge is to maintain user's mental model of the ego-network between differnt time steps while allowing changes to propagate through the viusalization. We model the amount of ``influence'' shared between the main node and its peripheral connections at any given time and develop an algorithm that assigns unique positions to the peripheral nodes according to the amount of shared influence. We suggest novel widgets to inform the user of general patterns of interaction between the main node and its neighbors.
+The amount of information that changes between any two consecutive timepoints is often too great to comprehend even for small networks making visualization of such networks a challenging problem. We explore a setting in which the user focuses on a single node (e.g., a gene of interest) and its immediate neighborhood over time (ego-network). The main challenge is to maintain user's mental model of the ego-network between different time steps while allowing changes to propagate through the visualization. We model the amount of ``influence'' shared between the main node and its peripheral connections at any given time and develop an algorithm that assigns unique positions to the peripheral nodes according to the amount of shared influence. We suggest novel widgets to inform the user of general patterns of interaction between the main node and its neighbors.
 
-In this chapter, we discuss a new system for exploring, in an intuitive and interactive way, a large compendium of collaboration data between jazz musicians. The system consists of an easy-to-use web application that marries an ego-network view of collaborations with an interactive timeline.  We develop a new measure of collaboration strength that is used to highlight strong and weak collaborations in the network view. The ego-network is arranged using a novel algorithm for ordering nodes that avoids occlusion even when the network is frequently changing. We build the system around a large, unique, hand-curated data set of recorded jazz collaborations.
-
-XXX relate to biology here
+In this chapter, we discuss a new system for exploring, in an intuitive and interactive way, a large compendium of collaboration data between jazz musicians. The system consists of an easy-to-use web application that marries an ego-network view of collaborations with an interactive timeline.  We develop a new measure of collaboration strength that is used to highlight strong and weak collaborations in the network view. The ego-network is arranged using a novel algorithm for ordering nodes that avoids occlusion even when the network is frequently changing. We build the system around a large, unique, hand-curated data set of recorded jazz collaborations. The ideas we develop in this chapter are applied to a social network, but can be easily extended to other types of dynamic networks, in particular, those where the numerical attributes on nodes and edges change over time. One such example is the gene co-expression network where genes control the expression of other genes in the cell.
 
 The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippova2012moj}. The system can be accessed at \url{http://mapofjazz.com/socialcom}.
 
@@ -982,11 +981,11 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
   % related work: collaboration networks
   \subsection{Artist collaboration networks}
 
-  Artist collaboration networks have received their fair share of attention in social network analysis. The data on interactions among misicians is available in some databases~\cite{Gleiser2003,Pattuelli2012}, has been collected through surveys~\cite{Heckathorn2001a}, or assembled manually by processing the tapes of interviews with the artists~\cite{Pattuelli2011}. Due to difficulties in data collection, these sources cover only a few artists and lack temporal information about their collaborations. For example, Gleiser and colleagues~\cite{Gleiser2003} base their analysis on 198 bands that were active in 1912-1940. Heckathorn and Jeffri's survey reached out to 110 musicians in New Orleans, 264 in New York, and 300 in San Franscisco~\cite{Heckathorn2001a}, a small fraction of the estimated 33,000 jazz musicians living in New York.
+  Artist collaboration networks have received their fair share of attention in social network analysis. The data on interactions among musicians is available in some databases~\cite{Gleiser2003,Pattuelli2012}, has been collected through surveys~\cite{Heckathorn2001a}, or assembled manually by processing the tapes of interviews with the artists~\cite{Pattuelli2011}. Due to difficulties in data collection, these sources cover only a few artists and lack temporal information about their collaborations. For example, Gleiser and colleagues~\cite{Gleiser2003} base their analysis on 198 bands that were active in 1912-1940. Heckathorn and Jeffri's survey reached out to 110 musicians in New Orleans, 264 in New York, and 300 in San Franscisco~\cite{Heckathorn2001a}, a small fraction of the estimated 33,000 jazz musicians living in New York.
 
   Examples of applications supporting exploration of such networks are few. An online Classical Music Navigator~\cite{Smith1999} helps users expand their musical interests by suggesting composers who influenced or were influenced by a composer the users initially searched for. The Navigator offers a simple text and link interface. A visualization of Last.fm data~\cite{Bieh-Zimmert2011} allows one to compare two artists and their musical associations, but does not provide any intuition about collaborations between the two artists.
 
-  In this paper, we propose a way to quantify the strength of collaboration between two actors in the network based on the frequency and timing of the events in which they have both participated. We provide a visualization system that displays much of the data available in large discographies. In this network, nodes represent artists and edges connect artists who participated in the same recording session at some time. We visualize creative partnerships between musicians using an interactive egocentric network view that allows users to focus on an individual and observe large and small scale changes in collaborations (Fig.~\ref{fig:moj:overview}). We couple this network view with an interactive timeline that allows the user to see how the strength of ties changed over time. We also introduce a novel algorithm that arranges collaborator nodes around the central musician in a way that minimizes node occlusion and variation in node positions as the network view changes over time. This helps the users to maintain their mental map of evolving collaborations. We demonstrate the utility of this approach on an extensive hand-curated collection of jazz collaborations spanning almost a hundred years.
+  In this paper, we propose a way to quantify the strength of collaboration between two actors in the network based on the frequency and timing of the events in which they have both participated. We provide a visualization system that displays much of the data available in large discographies. In this network, nodes represent artists and edges connect artists who participated in the same recording session at some time. We visualize creative partnerships between musicians using an interactive egocentric network view that allows users to focus on an individual and observe large and small scale changes in collaborations (Figure~\ref{fig:moj:overview}). We couple this network view with an interactive timeline that allows the user to see how the strength of ties changed over time. We also introduce a novel algorithm that arranges collaborator nodes around the central musician in a way that minimizes node occlusion and variation in node positions as the network view changes over time. This helps the users to maintain their mental map of evolving collaborations. We demonstrate the utility of this approach on an extensive hand-curated collection of jazz collaborations spanning almost a hundred years.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dynamic network data}
@@ -1033,7 +1032,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
 
 
 
-  At the time of publication, the database contained information on 11824 musicians and a total of 13873 recording sessions (see Figure~\ref{fig:moj:fullnetwork} for an overview of the collaboration graph). The average number of people per recording session was 7.39 with the smallest sessions having just one performer, and the largest session having 72 people (not including the members of symphony orchestras). Network diameter (the longest among all shortest paths between all pairs of vertices) was equal to 8, and the average (\emph{characteristic}) shortest path was equal to 3.24. As with many social networks, very few musicians have a high number of connections, with an overall average node degree of 33.68 (see Fig.~\ref{tab:high_degree} for the top 5 artists by degree). However, the network does not pass the test for scale-freeness according to the test developed by Clauset et al.~\cite{Clauset2009b} suggesting that the network has evolved by processes other than the well-studied ``rich get richer"mechanism.
+  At the time of publication, the database contained information on 11824 musicians and a total of 13873 recording sessions (see Figure~\ref{fig:moj:fullnetwork} for an overview of the collaboration graph). The average number of people per recording session was 7.39 with the smallest sessions having just one performer, and the largest session having 72 people (not including the members of symphony orchestras). Network diameter (the longest among all shortest paths between all pairs of vertices) was equal to 8, and the average (\emph{characteristic}) shortest path was equal to 3.24. As with many social networks, very few musicians have a high number of connections, with an overall average node degree of 33.68 (see Figure~\ref{tab:high_degree} for the top 5 artists by degree). However, the network does not pass the test for scale-freeness according to the test developed by Clauset et al.~\cite{Clauset2009b} suggesting that the network has evolved by processes other than the well-studied ``rich get richer"mechanism.
 
 
 
@@ -1041,13 +1040,13 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
 \section{Interface design}
 
 
-  The Map of Jazz focuses on the dynamics within the collaboration networks of individual musicians. An egocentric network layout (Fig.~\ref{fig:moj:overview}) is coupled with an interactive timeline that allows users to navigate through various time periods and observe gradual changes in the person's collaboration network. The timeline is augmented with aggregate statistics, such as the number of people per sessions, to aid in navigation through time. In the network view, nodes representing collaborators are arranged around the central node in a manner that preserves nodes' relative positions across time and shows the relative strength of a tie between the main musician and his or her collaborator. Nodes and edges used in the traditional node-link network representation are extended to display the change in attribute values over time. Finally, the interactions between the currently displayed main musician's collaborators can be explored on demand by highlighting a node of interest which reveals its connections to other nodes in the neighborhood. The central artist can be selected by double-clicking on a performer's node or by entering a musician's name in a search box. To help users pick a starting point, the Map of Jazz offers a dropdown with 21 hand-picked sessions that stand out in jazz history.
+  The Map of Jazz focuses on the dynamics within the collaboration networks of individual musicians. An egocentric network layout (Figure~\ref{fig:moj:overview}) is coupled with an interactive timeline that allows users to navigate through various time periods and observe gradual changes in the person's collaboration network. The timeline is augmented with aggregate statistics, such as the number of people per sessions, to aid in navigation through time. In the network view, nodes representing collaborators are arranged around the central node in a manner that preserves nodes' relative positions across time and shows the relative strength of a tie between the main musician and his or her collaborator. Nodes and edges used in the traditional node-link network representation are extended to display the change in attribute values over time. Finally, the interactions between the currently displayed main musician's collaborators can be explored on demand by highlighting a node of interest which reveals its connections to other nodes in the neighborhood. The central artist can be selected by double-clicking on a performer's node or by entering a musician's name in a search box. To help users pick a starting point, the Map of Jazz offers a dropdown with 21 hand-picked sessions that stand out in jazz history.
 
 
   \begin{figure}[tb!]
     \centering
     \includegraphics[width=\linewidth]{figures/moj_overview.png}
-    \caption{\textbf{Overview of the Map of Jazz web application.} XXX more details}
+    \caption{\textbf{Overview of the Map of Jazz web application.}}
     \label{fig:moj:overview}
   \end{figure}
 
@@ -1083,7 +1082,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
   \textbf{Augmented timeline.} To aid users in focusing on a specific time period of interest, the Map of Jazz offers several basic metrics to be overlaid on top of the timeline. These include: 
   %
   \begin{itemize}
-    \item the number of collaborators per session, XXXX -- where is this displayed
+    \item the number of collaborators per session
     \item the number of unique musicians the person collaborated with up to this date,
     \item the Jaccard similarity between the members of the current session and the previous session.
   \end{itemize}
@@ -1136,9 +1135,9 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Egocentric network view}
 
-  An egocentric view allows the user to track the fluctuating interactions between a given musician and his or her peers over time. Using the timeline, users may select a time range of interest and focus on the collaborations between the main musician and his or her collaborators within that period. Only the collaborators that were involved in sessions that occurred during that time range will be shown. For every collaborator $v$, we compute the collaboration strength between the center musician $u$ and $v$ where $S$, the set of sessions considered in the collaboration strength function, equals the sessions that are currently visible on the timeline. The length of an edge connecting $u$ and $v$ is inversely proportional to the strength of the tie shared by the two artists, as measured by the collaboration strength function~\eqref{eqn:influence}. This causes the collaborators who record with the main musician $u$ often or have recorded with him or her recently to be placed closer to the center, while musicians who record with $u$ rarely or have only recorded with $u$ a long time ago are placed on the periphery (Fig.~\ref{fig:moj:overview}).
+  An egocentric view allows the user to track the fluctuating interactions between a given musician and his or her peers over time. Using the timeline, users may select a time range of interest and focus on the collaborations between the main musician and his or her collaborators within that period. Only the collaborators that were involved in sessions that occurred during that time range will be shown. For every collaborator $v$, we compute the collaboration strength between the center musician $u$ and $v$ where $S$, the set of sessions considered in the collaboration strength function, equals the sessions that are currently visible on the timeline. The length of an edge connecting $u$ and $v$ is inversely proportional to the strength of the tie shared by the two artists, as measured by the collaboration strength function~\eqref{eqn:influence}. This causes the collaborators who record with the main musician $u$ often or have recorded with him or her recently to be placed closer to the center, while musicians who record with $u$ rarely or have only recorded with $u$ a long time ago are placed on the periphery (Figure~\ref{fig:moj:overview}).
 
-  As users drag the timeline, the collaborators' nodes may move closer to the center or may drift away to the periphery as the set of sessions that is displayed changes. Nodes disappear from view when they are no longer involved in any session that is visible on the timeline, and new nodes appear when sessions containing them come into view on the timeline. To minimize the cognitive load on the users, the Map of Jazz preserves the angular positions for every collaborator node within the ego-network formed by a particular main musician. For every musician $u$, we assign a unique angular sector to every collaborator $v$ who has ever recorded with $u$ (Fig.~\ref{fig:moj:ordering}). Their trajectory, a straight line connected to the center, can be easily traced as collaborator nodes move to or from the center.
+  As users drag the timeline, the collaborators' nodes may move closer to the center or may drift away to the periphery as the set of sessions that is displayed changes. Nodes disappear from view when they are no longer involved in any session that is visible on the timeline, and new nodes appear when sessions containing them come into view on the timeline. To minimize the cognitive load on the users, the Map of Jazz preserves the angular positions for every collaborator node within the ego-network formed by a particular main musician. For every musician $u$, we assign a unique angular sector to every collaborator $v$ who has ever recorded with $u$ (Figure~\ref{fig:moj:ordering}). Their trajectory, a straight line connected to the center, can be easily traced as collaborator nodes move to or from the center.
 
   If care is not taken with the assignments of nodes to angular sectors, collaborators may crowd near the center if the main musician consistently played with the same set of people (i.e.\@ their band). To avoid this, we propose an ordering algorithm in Section~\ref{sec:moj:ordering} to arrange the collaborator nodes in a way that assigns dissimilar angles to collaborators with which the center node has had similar patterns of collaboration.
 
@@ -1197,7 +1196,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
     \label{fig:moj:ordering}
   \end{figure}
   %
-  To assign all $N$ collaborators to their angular positions, we iterate through the clusters in order of decreasing size.  For each cluster $C$, we assign a node in $C$ to the first empty sector and continue assigning $v \in C$ to empty sectors evenly around the circle at intervals of $\left\lfloor\frac{N}{|C|}\right\rfloor$ sectors.  If at any time the target sector is not empty, we search linearly clockwise for the next available sector and continue assigning the remaining nodes in $C$ starting from that sector (Fig.~\ref{fig:moj:ordering}). This heuristic --- similar to linear reprobing in a hash table --- attempts to ensure that the nodes belonging to the same cluster are spread out around the circle at equal intervals.
+  To assign all $N$ collaborators to their angular positions, we iterate through the clusters in order of decreasing size.  For each cluster $C$, we assign a node in $C$ to the first empty sector and continue assigning $v \in C$ to empty sectors evenly around the circle at intervals of $\left\lfloor\frac{N}{|C|}\right\rfloor$ sectors.  If at any time the target sector is not empty, we search linearly clockwise for the next available sector and continue assigning the remaining nodes in $C$ starting from that sector (Figure~\ref{fig:moj:ordering}). This heuristic --- similar to linear reprobing in a hash table --- attempts to ensure that the nodes belonging to the same cluster are spread out around the circle at equal intervals.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -1229,11 +1228,11 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
   \begin{figure}[ht]
     \centering
     \includegraphics[height=100px]{figures/node-glyph}
-    \caption{\textbf{Node glyph.} The radius of the inner-most circle of the node glyph is a function of the number of times the musician played in \emph{some} session in the past. We use square root as the function here since it results in noticable differences for small values and does not unexpectedly explode in size for high values. The middle circle (blue) represents the number of sessions the musician played with the main musician within the current time frame. The radius of the outer largest circle encodes the total number of sessions the musician played throughout his/her career with or without the main musician.}
+    \caption{\textbf{Node glyph.} The radius of the inner-most circle of the node glyph is a function of the number of times the musician played in \emph{some} session in the past. We use square root as the function here since it results in noticeable differences for small values and does not unexpectedly explode in size for high values. The middle circle (blue) represents the number of sessions the musician played with the main musician within the current time frame. The radius of the outer largest circle encodes the total number of sessions the musician played throughout his/her career with or without the main musician.}
     \label{fig:moj:node_glyphs}
   \end{figure}
 
-  Node glyphs (Fig.~\ref{fig:moj:node_glyphs}) consist of three concentric circles.
+  Node glyphs (Figure~\ref{fig:moj:node_glyphs}) consist of three concentric circles.
   The inner circle's radius is proportional to the square root of the count of
   sessions this musician played in the past, i.e. before the sessions currently
   visible on the timeline. The second circle's radius represents the square root
@@ -1247,7 +1246,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
   visible on the timeline. The radius of the outer circle, i.e. the square root of
   a total number of sessions recorded, does not change.
 
-  Edge glyphs encode information about the overall count of recording sessions in which both the main musician and the collaborator participated (Fig.~\ref{fig:moj:edge_glyphs} and~\ref{fig:moj:duke-ell}). Edges are colored in varying shades of gray with the inner edge representing collaborations in the ``past'' and its thickness proportional to the square root of the number of sessions he or she shared with the main musician in the past. The thickness of the middle part is a function of the square root of the number of sessions for that collaborator currently visible on the timeline. Finally, the total edge thickness represents the number of sessions the two musicians played together overall. As users interact with the timeline, the thickness of the inner edges may change depending on the number of shared sessions in the past or currently visible on the timeline; however, the total thickness of an edge would not change.
+  Edge glyphs encode information about the overall count of recording sessions in which both the main musician and the collaborator participated (Figure~\ref{fig:moj:edge_glyphs} and~\ref{fig:moj:duke-ell}). Edges are colored in varying shades of gray with the inner edge representing collaborations in the ``past'' and its thickness proportional to the square root of the number of sessions he or she shared with the main musician in the past. The thickness of the middle part is a function of the square root of the number of sessions for that collaborator currently visible on the timeline. Finally, the total edge thickness represents the number of sessions the two musicians played together overall. As users interact with the timeline, the thickness of the inner edges may change depending on the number of shared sessions in the past or currently visible on the timeline; however, the total thickness of an edge would not change.
 
   \begin{figure}[ht]
     \centering
@@ -1261,7 +1260,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
     \label{fig:moj:edge_glyphs}
   \end{figure}
 
-  Various combinations of node and edge thicknesses should alert the users to different modes of collaboration. A combination of a large peripheral node and a narrow edge connecting it to the center indicates that while the collaborator has played many sessions overall, they played very few with the main musician (for example, Don Redman in Fig.~\ref{fig:moj:duke-ell}). Further, if the node's inner ``past'' circle is large, such combination then indicates that the collaborator is an established musician who is sharing their skills with the up and coming musician at the center of the ego-network. On the contrary, if the inner ``past'' circle is small and the majority of sessions are in the ``future'', such behavior may indicate that the collaborator has joined the main musician briefly and later went on to form an active career of their own. A case where both the node and the edge are thick indicates that the two musicians have recorded many sessions together and, therefore, share a strong tie.
+  Various combinations of node and edge thicknesses should alert the users to different modes of collaboration. A combination of a large peripheral node and a narrow edge connecting it to the center indicates that while the collaborator has played many sessions overall, they played very few with the main musician (for example, Don Redman in Figure~\ref{fig:moj:duke-ell}). Further, if the node's inner ``past'' circle is large, such combination then indicates that the collaborator is an established musician who is sharing their skills with the up and coming musician at the center of the ego-network. On the contrary, if the inner ``past'' circle is small and the majority of sessions are in the ``future'', such behavior may indicate that the collaborator has joined the main musician briefly and later went on to form an active career of their own. A case where both the node and the edge are thick indicates that the two musicians have recorded many sessions together and, therefore, share a strong tie.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -1271,7 +1270,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
 
   \subsection{Exploring collaborators' connectivity}
 
-  An ego-network allows users to focus on the dynamics of a few collaborations at the expense of hiding all other topological information. Knowing which, if any, peripheral nodes collaborate with each other helps to understand the communities that form in the immediate neighborhood of the main musician. The Map of Jazz provides such details on demand: when users hover over a collaborator's node $v$, the Map renders additional edges that connect $v$ to the collaborators it shares with the central node (Fig.~\ref{fig:moj:young}). The thickness of the edges corresponds to the number of sessions the two musicians played in the past (including those they played with the main musician). When the edges connecting the main node and the performers on the periphery are thin indicating few collaborations, it would be noteworthy to see thick edges between those performers. Such a situation would imply that those artists form a strong community, or a band, outside of the main musician's neighborhood.
+  An ego-network allows users to focus on the dynamics of a few collaborations at the expense of hiding all other topological information. Knowing which, if any, peripheral nodes collaborate with each other helps to understand the communities that form in the immediate neighborhood of the main musician. The Map of Jazz provides such details on demand: when users hover over a collaborator's node $v$, the Map renders additional edges that connect $v$ to the collaborators it shares with the central node (Figure~\ref{fig:moj:young}). The thickness of the edges corresponds to the number of sessions the two musicians played in the past (including those they played with the main musician). When the edges connecting the main node and the performers on the periphery are thin indicating few collaborations, it would be noteworthy to see thick edges between those performers. Such a situation would imply that those artists form a strong community, or a band, outside of the main musician's neighborhood.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -1282,7 +1281,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
   %\section{Evaluation}
 \section{Example analysis with the Map of Jazz}
 
-  \textbf{Duke Ellington}'s career spanned more than half a century from the early twenties to his death in 1974. The first record on the Map's timeline dates back to July of 1923 with Ellington playing piano and Elmer Snowden as the band leader --- Ellington was yet to form his own band. Ellington's egonet for the period of 1923--1928 has several prominent performer nodes: Harry Carney, Otto Hardwick, Sonny Greer, Fred Guy,  Barney Bigard, Joe Nanton, and Wellman Braud (see Fig.~\ref{fig:moj:duke-ell}). The size of Harry Carney's node, for example, indicates that he participated in a significant number of recording sessions throughout his career (1487 sessions), and the thickness of the edge connecting him to Duke Ellington reveals that most of those sessions were recorded with Ellington (1480 sessions). The same holds for others in the list above: their careers were tightly knit with Ellington's.
+  \textbf{Duke Ellington}'s career spanned more than half a century from the early twenties to his death in 1974. The first record on the Map's timeline dates back to July of 1923 with Ellington playing piano and Elmer Snowden as the band leader --- Ellington was yet to form his own band. Ellington's egonet for the period of 1923--1928 has several prominent performer nodes: Harry Carney, Otto Hardwick, Sonny Greer, Fred Guy,  Barney Bigard, Joe Nanton, and Wellman Braud (see Figure~\ref{fig:moj:duke-ell}). The size of Harry Carney's node, for example, indicates that he participated in a significant number of recording sessions throughout his career (1487 sessions), and the thickness of the edge connecting him to Duke Ellington reveals that most of those sessions were recorded with Ellington (1480 sessions). The same holds for others in the list above: their careers were tightly knit with Ellington's.
 
 
   \begin{figure}[tb!]
@@ -1318,7 +1317,7 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion and Conclusions}
 
-  The Map of Jazz approaches the problem of dynamic graph visualization from a new angle: instead of tackling the hard problem of visualizing large graphs and tracking temporal changes on a global scale, the Map focuses on individual nodes and local changes that would have an immediate and personal effect. The Map of Jazz arranges related nodes into an ego-network with a single individual in the center surrounded by close neighbors who are placed according to the strength of their connection with the central node. Users can explore the dynamic properties of the network by dragging the time slider or zooming in on a particular era of interest. The ego-network adjusts the node positions according to the varying strength of their connection to the central node during that time. The appearance of nodes and edges updates as well to reflect the change in their attributes.
+  The Map of Jazz approaches the problem of dynamic graph visualization from a new angle: instead of tackling the problem of visualizing large graphs in general and tracking temporal changes on a global scale, the Map focuses on individual nodes and local changes that would have an immediate and personal effect. The Map of Jazz arranges related nodes into an ego-network with a single individual in the center surrounded by close neighbors who are placed according to the strength of their connection with the central node. Users can explore the dynamic properties of the network by dragging the time slider or zooming in on a particular era of interest. The ego-network adjusts the node positions according to the varying strength of their connection to the central node during that time. The appearance of nodes and edges updates as well to reflect the change in their attributes.
 
   We tailor our visualization to assist the exploration of a novel jazz collaboration network. In social interactions, the frequency and recency of interactions determine the strength of the collaboration between individuals. We propose and implement a collaboration strength function that takes into account both past and future interactions and helps quantify the strength of the relationship between the two musicians at any point in time.
 
@@ -1329,48 +1328,36 @@ The work discussed in this chapter was presented at SocialCom 2012~\cite{Filippo
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
-%%
-%%
-%% Part 2 -- high-level structure and compression
-%%
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{Inferring structure and its use in data compression}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Domains -- inferring high-level structure from DNA conformation data
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % algorithms for managing biological data
-\chapter{Identifying high-level structure in DNA conformation data}
+\chapter{Identifying topological domains in ensembles of chromosome contacts}
 
-XXX need transition here -- from coral to domains, i suppose
+% XXX need transition here -- from coral to domains, i suppose
 
+Recent high-throughput experiments on chromatin conformation capture (3C) and its variants provide indirect measurement of spatial proximity between genomically disjoint parts of folded nuclear DNA in living cells. These data have significantly advanced our understanding of the geometry of chromatin structure~\cite{Gibcus2013}, the relation between chromatin structure and the regulation of gene expression, nuclear organization, cancer translocations~\cite{Cavalli2013}, and copy number alterations in cancer~\cite{Fudenberg2011}. The experimental protocol starts with a cross-linking of chromatin using formaldehyde thus ensuring that parts of chromatin that are spatially close are affixed to each other. The bound chromatin is then isolated, and fragments of DNA protected by the chromatin extracted and ligated. After a series of amplifications, these DNA fragments are mapped to a reference genome and their abundance quantified across the whole population of cells participating in the experiment~\cite{Dekker3c}. In this way, 3C data is an aggregate of multiple observations of chromatin contacts over many cells and is similar to the classification data analyzed in Coral (Chapter~\ref{chapter:coral}). 
 
-Recent chromatin conformation capture (3C) experiments provide indirect measurement of spatial proximity between genomically disjoint parts of folded nuclear DNA. A prominent feature of 3C experimental results are genomically contiguous regions of dense 3C interactions --- the so-called topological domains --- that affect accessibility of certain regions of DNA and are associated with long-range gene regulation. These megabase-sized topological domains are similar across cell types and are conserved across species. Topological domains are strongly correlated with a number of chromatin markers and have been included in a number of analyses since their discovery. However, visual analyses suggests that functionally-relevant domains may exist at multiple length scales. We adapt the core finding algorithm discussed in the ealier chapter (Coral) to identify novel domain structures.
+A prominent feature of 3C experimental results are genomically contiguous regions of dense 3C interactions --- the so-called \textit{topological domains} --- that affect accessibility of certain regions of DNA and are associated with long-range gene regulation. These megabase-sized topological domains are persistent across cell types and are conserved across species~\cite{Dixon2012}. Topological domains are strongly correlated with a number of chromatin markers and have been included in a number of analyses since their discovery~\cite{Hou2012,Kolbl2012,Lin2012}, additionally, they were found to serve as a skeleton for the placement of many functional elements of the genome~\cite{Bickmore2013a,Tanay2013}. However, a simple visual analysis of the interaction data suggests that functionally-relevant domains may exist at multiple length scales and may overlap with domains from other solutions indicating the existence of multiple optimal structures. To find these alternative domains, we exploit the similarity of the 3C interaction data to the data represented in the co-cluster matrix in Coral (Chapter~\ref{chapter:coral}) and adapt the core finding algorithm discussed in Section~\ref{sec:dense_sub} to identify novel domain structures.
 
+% (from intro) We extend the algorithm for identifying robust subsets of annotations from our ear- lier work to the problem of finding densly packed areas of chromatin (topological domains). 
 
-% XXX tie visualization to structure -- example of the matrix and cores and what lead to domains?
-
-% necessity of validation -- random shuffling of the domains
-
-% XXX significance of domains -- ``pioneering'', used in deconvolution
+Our algorithm is fast, requires fewer parameters than existing methods, and is able to capture topological domains at different resolutions. It generates domains that are similar, yet significantly different from domains identified by existing methods. These domains are smaller, capture more of the high-frequency chromatin interactions, and are more enriched for the chromatin markers associated with gene regulation. The ability to obtain domains at different scales allows us to evaluate and quantify the extent of the hierarchical structure of the chromatin for the first time~\cite{ArmatusAMB}.
 
 
 % We introduce a new and efficient algorithm that is able to capture persistent domains across various resolutions by adjusting a single scale parameter. The identified novel domains are substantially different from domains reported previously and are highly enriched for insulating factor CTCF binding and histone modfications at the boundaries.
 
-The work described in this chapter has been presented at Workshop for Algorithms in Bioinformatics 2013 (WABI)~\cite{Filippova2013} and was extended to extract alternative optimal and near-optimal solutions. Further, this ensemble of solutions was used to quantify the strength of hierarchical organisation between domains at different resolutions~\cite{ArmatusAMB}. The algorithms are implemented in software Armatus which could be downloaded from \url{https://github.com/kingsfordgroup/armatus}.
+The work described in this chapter has been presented at Workshop for Algorithms in Bioinformatics 2013 (WABI)~\cite{Filippova2013} and was extended to extract alternative optimal and near-optimal solutions. Further, this ensemble of solutions was used to quantify the strength of hierarchical organization between domains at different resolutions~\cite{ArmatusAMB}. The algorithms are implemented in software Armatus which could be downloaded from \url{https://github.com/kingsfordgroup/armatus}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background and related work}
 
   \subsection{Chromosome conformation data}
 
-  Chromatin interactions obtained from a variety of recent experimental techniques in chromosome conformation capture (3C)~\cite{DeWit2012} have resulted in significant advances in our understanding of the geometry of chromatin structure~\cite{Gibcus2013}, its relation to the regulation of gene expression, nuclear organization, cancer translocations~\cite{Cavalli2013}, and copy number alterations in cancer~\cite{Fudenberg2011}.  Of these advances, the recent discovery of dense, contiguous regions of chromatin termed \emph{topological domains}~\cite{Dixon2012} has resulted in the incorporation of domains into many subsequent analyses~\cite{Hou2012,Kolbl2012,Lin2012} due to the fact that they are persistent across cell types, conserved across species, and serve as a skeleton for the placement of many functional elements of the genome~\cite{Bickmore2013a,Tanay2013}.
+  % Chromatin interactions obtained from a variety of recent experimental techniques in chromosome conformation capture (3C)~\cite{DeWit2012} have resulted in significant advances in our understanding of the geometry of chromatin structure~\cite{Gibcus2013}, its relation to the regulation of gene expression, nuclear organization, cancer translocations~\cite{Cavalli2013}, and copy number alterations in cancer~\cite{Fudenberg2011}.  
+
+  % Of these advances, the recent discovery of dense, contiguous regions of chromatin termed \emph{topological domains}~\cite{Dixon2012} has resulted in the incorporation of domains into many subsequent analyses~\cite{Hou2012,Kolbl2012,Lin2012} due to the fact that they are persistent across cell types, conserved across species, and serve as a skeleton for the placement of many functional elements of the genome~\cite{Bickmore2013a,Tanay2013}.
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1385,12 +1372,12 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \end{figure}
 
 
-  3C experiments result in matrices of counts that represent the frequency of cross-linking between restriction fragments of DNA that are spatially near one another (see Figure~\ref{armatus:heatmap} for an example matrix). The original identification of domains in Dixon et al.~\cite{Dixon2012} employed a Hidden Markov Model (HMM) on these interaction matrices to identify regions initiated by significant downstream chromatin interactions and terminated by a sequence of significant upstream interactions.  A defining characteristic of the domains resulting from their analysis is that higher frequency 3C interactions tend to occur within domains as opposed to across domain. This aspect of domains is also reflected in the block-diagonal structure of 3C interaction matrices as shown in Fig.~\ref{armatus:heatmap}. In this sense, domains can be interpreted as contiguous genomic regions that self-interact frequently and are more spatially compact than their surrounding regions.
+  3C experiments result in matrices of counts that represent the frequency of cross-linking between restriction fragments of DNA that are spatially near one another (see Figure~\ref{armatus:heatmap} for an example matrix). $X$ and $Y$ axes represent a genomic coordinate along a single chromosome (although a later HI-C protocol~\cite{HiCProtocol} is able capture interactions across chromosomes as well), and a single point in the matrix represents a number of times two corresponding DNA fragments were found to interact. The original identification of domains in Dixon et al.~\cite{Dixon2012} employed a Hidden Markov Model (HMM) on these interaction matrices to identify regions initiated by significant downstream chromatin interactions and terminated by a sequence of significant upstream interactions.  A defining characteristic of the domains resulting from their analysis is that higher frequency 3C interactions tend to occur within domains as opposed to across domains. This aspect of domains is also reflected in the block-diagonal structure of 3C interaction matrices as shown in Figure~\ref{armatus:heatmap}. In this sense, domains can be interpreted as contiguous genomic regions that self-interact frequently and are more spatially compact than their surrounding regions.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Topological domains and their significance}
 
-  However, the single collection of megabase-sized domains may not be the only topologically and functionally relevant collection of domains. On closer inspection of the block-diagonal matrix structure in Fig.~\ref{armatus:heatmap}, it becomes clear that there are alternative contiguous regions of the chromosome that self-interact frequently and are likely more spatially compact than their surrounding regions (dotted lines).  Some of these regions appear to be completely nested within others, suggesting a hierarchy of compact regions along the chromosome, while others appear to overlap each other. These observations suggest that functionally-relevant chromosomal domains may exist at multiple scales.
+  However, the single collection of megabase-sized domains may not be the only topologically and functionally relevant collection of domains. On closer inspection of the block-diagonal matrix structure in Figure~\ref{armatus:heatmap}, it becomes clear that there are alternative contiguous regions of the chromosome that self-interact frequently and are likely more spatially compact than their surrounding regions (dotted lines).  Some of these regions appear to be completely nested within others, suggesting a hierarchy of compact regions along the chromosome, while others appear to overlap each other. These observations suggest that functionally-relevant chromosomal domains may exist at multiple scales.
 
   We introduce a new algorithm to efficiently identify topological domains in 3C interaction matrices for a given domain-length scaling factor $\gamma$. Our results suggest that there exist a handful of characteristic resolutions across which domains are similar. Based on this finding, we identify a consensus set of domains that persist across various resolutions. We find that domains discovered by our algorithm are dense and cover interactions of higher frequency than inter-domain interactions. Additionally, we show that inter-domain regions within the consensus domain set are highly enriched with insulator factor CTCF and histone modification marks. We argue that our straightforward approach retains the essence of the more complex multi-parameter HMM introduced in~\cite{Dixon2012} while allowing for the flexibility to identify biologically relevant domains at various scales.
 
@@ -1508,27 +1495,55 @@ The work described in this chapter has been presented at Workshop for Algorithms
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Ability to identify densely interacting domains across scales}
 
+  
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % inter-intra dist plot; disributions of sizes
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \begin{figure}[t]
-    \begin{center}
-    \subfigure[Domain size vs. frequency]{
-      \includegraphics[width=0.45\linewidth]{figures/imr90-inter-intra-all-chromos}
-      \label{subfig:size-freq}
-    }
-    \subfigure[Mean frequency distr.]{
-      \includegraphics[width=0.45\linewidth]{figures/mean-freq-distr}
-      \label{subfig:freq-distr}
-    }
-    \caption{~\subref{subfig:size-freq} XXX make plots bigger, separate into 2 figures. Our algorithm discovers domains with mean frequency value for inter- and intra-domain interactions (solid lines) at or better than that of Dixon et al.\@ domains (dotted lines). Each solid line represents domains at different resolution $\gamma$ in human fibroblast cells. \subref{subfig:freq-distr}~Multiscale domains identified in human fibroblast cells by our dynamic program tend to have higher mean frequency than those of Dixon et al.
-    (distributions are plotted after outliers $> \mu+4\sigma$ were removed).}
+  % \begin{figure}[t]
+  %   \begin{center}
+  %   \subfigure[Domain size vs. frequency]{
+  %     \includegraphics[width=0.45\linewidth]{figures/imr90-inter-intra-all-chromos}
+  %     \label{subfig:size-freq}
+  %   }
+  %   \subfigure[Mean frequency distr.]{
+  %     \includegraphics[width=0.45\linewidth]{figures/mean-freq-distr}
+  %     \label{subfig:freq-distr}
+  %   }
+  %   \caption{~\subref{subfig:size-freq}  \subref{subfig:freq-distr}~Multiscale domains identified in human fibroblast cells by our dynamic program tend to have higher mean frequency than those of Dixon et al.
+  %   (distributions are plotted after outliers $> \mu+4\sigma$ were removed).}
 
-    \label{fig:mi_jacc}
-    \end{center}
+  %   \label{fig:mi_jacc}
+  %   \end{center}
+  % \end{figure}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % inter-intra dist plot
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{figure}[ht!]
+      \centering
+    % \subfigure[Domain size vs. frequency]{
+      \includegraphics[width=0.6\linewidth]{figures/imr90-inter-intra-all-chromos}
+      \caption{\textbf{Domain size vs. frequency.} Our algorithm discovers domains with mean frequency value for inter- and intra-domain interactions (solid lines) at or better than that of Dixon et al.\@ domains (dotted lines). Each solid line represents domains at different resolution $\gamma$ in human fibroblast cells.}
+      \label{fig:armatus:size-freq}
+    % }
   \end{figure}
 
-  Multiresolution domains successfully capture high frequency interactions and leave interactions of lower mean frequency outside of the domains. We compute the mean interaction frequency for all intra- and inter-domain interactions at various genomic lengths and plot the distribution of means for multiple resolutions (Fig.~\ref{subfig:size-freq}). The mean intra-domain interaction frequency (blue) is consistently higher (up to two times) than the mean frequency for interactions that cross domains (red). Compared to the domains reported by Dixon et al., our domains tend to aggregate interactions of higher mean frequency, especially at larger $\gamma$. The distribution of mean intra-domain frequencies for Dixon et al.\@ is skewed more to the left than that of the multiscale domains (Fig.~\ref{subfig:freq-distr}). This difference can be partially explained by the fact that multiscale domains on average are smaller in size ($\mu=0.2$Mb, $\sigma=1.2$Mb) than domains reported by Dixon et al.\@ ($\mu=1.2$Mb, $\sigma=0.9$Mb).
+
+  Multiresolution domains successfully capture high frequency interactions and leave interactions of lower mean frequency outside of the domains. We compute the mean interaction frequency for all intra- and inter-domain interactions at various genomic lengths and plot the distribution of means for multiple resolutions (Figure~\ref{fig:armatus:size-freq}). The mean intra-domain interaction frequency (blue) is consistently and up to two times higher than the mean frequency for cross-domain interactions (red). Compared to the domains reported by Dixon et al., our domains tend to aggregate interactions of higher mean frequency, especially at larger $\gamma$. The distribution of mean intra-domain frequencies for Dixon et al.\@ is skewed more to the left than that of the multiscale domains (Figure~\ref{fig:armatus:freq-distr}). This difference can be partially explained by the fact that multiscale domains on average are smaller in size ($\mu=0.2$Mb, $\sigma=1.2$Mb) than domains reported by Dixon et al.\@ ($\mu=1.2$Mb, $\sigma=0.9$Mb).
+
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % disributions of domain sizes
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{figure}[ht]
+    \centering
+    % \subfigure[Domain size vs. frequency]{
+      \includegraphics[width=0.6\linewidth]{figures/mean-freq-distr}
+      \caption{\textbf{Mean frequency of interactions captured by domains.} Multiscale domains identified in human fibroblast cells by our dynamic program tend to have higher mean frequency than those of Dixon et al. (distributions were plotted after outliers $> \mu+4\sigma$ were removed).}
+      \label{fig:armatus:freq-distr}
+  \end{figure}
+
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1536,7 +1551,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \subsection{Domain persistence across scales}
 
-  Domain sets across resolutions share significant similarities, even as the distribution of domains and their sizes begin to change (Fig.~\ref{fig:dom_size}). The patterns of similarity are particularly obvious if we plot the domains at various resolutions (Fig.~\ref{subfig:multiresDomains}): many domains identified by our algorithm persist at several resolutions and are aggregated into larger domains at smaller $\gamma$, suggesting a hierarchical domain structure. The stability of these domains across resolutions indicates that the underlying chromosomal structure is dense within these domains and that these domains interact with the rest of the chromosome at a much lower frequency.
+  Domain sets across resolutions share significant similarities, even as the distribution of domains and their sizes begin to change (Figure~\ref{fig:dom_size}). The patterns of similarity are particularly obvious if we plot the domains at various resolutions (Figure~\ref{fig:armatus:domains_line_plot}): many domains identified by our algorithm persist at several resolutions and are aggregated into larger domains at smaller $\gamma$, suggesting a hierarchical domain structure. The stability of these domains across resolutions indicates that the underlying chromosomal structure is dense within these domains and that these domains interact with the rest of the chromosome at a much lower frequency.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Domain sizes over all resolutions, jaccard/overlap/vi between us and b.r.
@@ -1557,32 +1572,75 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \end{figure}
 
 
-  A pairwise comparison of domain configurations displays regions of stability across multiple resolutions (Fig.~\ref{subfig:multiresVI}). We use the variation of information (VI)~\cite{Meila2003}, a metric for comparing two sets of clusters, to compute the distance between two sets of domains. To capture the similarities between two domain sets $D$ and $D'$ and the inter-domain regions induced by the domains, we construct new derivate sets $C$ and $C'$ where $C$ contains all domains $d \in D$ as well as all inter-domain regions ($C'$ is computed similarly). To compute entropy $H(C) = \sum_{c_i  \in C} p_i \log p_i$, we define the probability of seeing each interval in $C$ as $p_i = (b_i - a_i) / L$ where $L$ is the number of nucleotides from the start of the leftmost domain to the end of the rightmost domain in the set $D \cup D'$. When computing the mutual information $I(C, C') = \sum_{c_i \in C} \sum_{c'_j \in C'} p_{ij} \log[ p_{ij} / (p_i p_j) ]$ between two sets of intervals $C$ and $C'$, we define the joint probability $p_{ij}$ to be $| [a_i, b_i] \cap [a_j, b_j] | / L$.
-  We then compute variation of information on these two new sets: $VI(C, C') =  H(C) + H(C') - 2I(C, C')$ where $H(\cdot)$ is entropy and $I(\cdot, \cdot)$ is mutual information. Chromosome 1, for example, has three visually pronounced groups of resolutions within which domain sets tend to be more similar than across ($\gamma = $[0.00-0.20], [0.25-0.70], and [0.75-1.00] --- see Fig.~\ref{subfig:multiresVI}).
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Domains at different resolutions as a line plot
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \begin{figure}[t]
-    \begin{center}
-    \subfigure[domains across resolutions]{
-      \includegraphics[width=0.55\linewidth]{figures/domains_long_chr1}
-      \label{subfig:multiresDomains}
-    }
-    \subfigure[VI across resolutions]{
-      \includegraphics[width=0.366\linewidth]{figures/vi_chr1}
-      \label{subfig:multiresVI}
-    }
-    \end{center}
-    \caption{~\subref{subfig:multiresDomains} Domains identified by our algorithm (black) are smaller at higher resolutions and merge to form larger domains at $\gamma$ close to 0. Visual inspection shows qualitative differences between consensus domains (red) and domains reported by Dixon et al. (green). Data shown for the first 4Mb of chromosome 1.~\subref{subfig:multiresVI} Variation of information for domains identified by our algorithm across different resolutions for chromosome 1 in human fibroblast cells.}
-    \label{fig:domains_line}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/domains_long_chr1}
+    \caption{\textbf{Domains compared across resolutions.} Domains identified by our algorithm (black) are smaller at higher resolutions and merge to form larger domains at $\gamma$ close to 0. Visual inspection shows qualitative differences between consensus Armatus domains (red) and domains reported by Dixon et al. (green). Data shown for the first 4Mb of chromosome 1.}
+    \label{fig:armatus:domains_line_plot}
+  \end{figure}
+
+
+  A pairwise comparison of domain configurations displays regions of stability across multiple resolutions (Figure~\ref{fig:armatus:domains_vi}). We use the variation of information (VI)~\cite{Meila2003}, a metric for comparing two sets of clusters, to compute the distance between two sets of domains. To capture the similarities between two domain sets $D$ and $D'$ and the inter-domain regions induced by the domains, we construct new derivate sets $C$ and $C'$ where $C$ contains all domains $d \in D$ as well as all inter-domain regions ($C'$ is computed similarly). To compute entropy of a set of domains $H(C) = \sum_{c_i  \in C} p_i \log p_i$, we define the probability of seeing each interval in $C$ as:
+  %
+  \[
+    p_i = (b_i - a_i) / L,
+  \]
+  %
+  where $L$ is the number of nucleotides from the start of the leftmost domain to the end of the rightmost domain in the set $D \cup D'$. When computing the mutual information between two sets of intervals $C$ and $C'$:
+  %
+  \[
+    I(C, C') = \sum_{c_i \in C} \sum_{c'_j \in C'} p_{ij} \log[ p_{ij} / (p_i p_j) ],
+  \]
+  %
+  we define the joint probability $p_{ij}$ to be:
+  %
+  \[
+    p_{ij} = | [a_i, b_i] \cap [a_j, b_j] | / L.
+  \]
+  %
+  We then compute variation of information on these two new sets: $VI(C, C') =  H(C) + H(C') - 2I(C, C')$ where $H(\cdot)$ is entropy and $I(\cdot, \cdot)$ is mutual information. Chromosome 1, for example, has three visually pronounced groups of resolutions within which domain sets tend to be more similar than across ($\gamma = $[0.00-0.20], [0.25-0.70], and [0.75-1.00] --- see Figure~\ref{fig:armatus:domains_vi}).
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Domains at different resolutions as a line plot
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % \begin{figure}[t]
+  %   \begin{center}
+  %   \subfigure[domains across resolutions]{
+  %     \includegraphics[width=0.55\linewidth]{figures/domains_long_chr1}
+  %     \label{fig:armatus:domains_line_plot}
+  %   }
+  %   \subfigure[VI across resolutions]{
+  %     \includegraphics[width=0.366\linewidth]{figures/vi_chr1}
+  %     \label{fig:armatus:domains_vi}
+  %   }
+  %   \end{center}
+  %   \caption{~\subref{fig:armatus:domains_line_plot} Domains identified by our algorithm (black) are smaller at higher resolutions and merge to form larger domains at $\gamma$ close to 0. Visual inspection shows qualitative differences between consensus domains (red) and domains reported by Dixon et al. (green). Data shown for the first 4Mb of chromosome 1.~\subref{fig:armatus:domains_vi} Variation of information for domains identified by our algorithm across different resolutions for chromosome 1 in human fibroblast cells.}
+  %   \label{fig:domains_line}
+  % \end{figure}
+
+  
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % VI for domains at different resolutions
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/vi_chr1}
+    \caption{\textbf{Variation of information for Armatus domains across resolutions.}}
+    \label{fig:armatus:domains_vi}
   \end{figure}
 
 
   \subsection{Comparison with the previously identified set of domains in Dixon et al.}
 
-  \begin{figure}[t!]
+  \begin{figure}[ht]
     \begin{center}
       \includegraphics[width=.9\linewidth]{figures/UsVsBingVI}
     \end{center}
@@ -1590,11 +1648,11 @@ The work described in this chapter has been presented at Workshop for Algorithms
     \label{fig:consensus_agreement}
   \end{figure}
 
-  At higher resolutions, domains identified by our algorithm are smaller than those reported by Dixon et al. (Fig.~\ref{subfig:sizeCount}). As the resolution parameter decreases to 0.0, the average size of the domains increases  (see Fig.~\ref{fig:dom_size} for results for chromosome 1 on the IMR90 human fibroblast cells). As domains expand to cover more and more of the chromosome, the similarity to the domains identified by Dixon et al.~\cite{Dixon2012} also increases (Fig.~\ref{subfig:dixonSim}). We calculate the Jaccard similarity between two sets of domains $D$ and $D'$ as $J(D, D') = N_{11} / (N_{11} + N_{01} + N_{10})$ where the quantities $N_{11}$, $N_{01}$, and $N_{10}$ are the number of 3C fragments that are in a domain in both sets $D$ and $D'$, the number of fragments that are in a domain in $D'$, but not in $D$, and the number of fragments that are in a domain in $D$, but not $D'$, respectively (light blue in Fig.~\ref{subfig:dixonSim}). The composition of the domains, however, is different as is captured by the variation of information (red in Fig.~\ref{subfig:dixonSim}). Overall, we identify domains that cover similar regions of the chromosome (Fig.~\ref{fig:mi_jacc}), yet differ in their size distribution and genomic positions.
+  At higher resolutions, domains identified by our algorithm are smaller than those reported by Dixon et al. (Figure~\ref{subfig:sizeCount}). As the resolution parameter decreases to 0.0, the average size of the domains increases  (see Figure~\ref{fig:dom_size} for results for chromosome 1 on the IMR90 human fibroblast cells). As domains expand to cover more and more of the chromosome, the similarity to the domains identified by Dixon et al.~\cite{Dixon2012} also increases (Figure~\ref{subfig:dixonSim}). We calculate the Jaccard similarity between two sets of domains $D$ and $D'$ as $J(D, D') = N_{11} / (N_{11} + N_{01} + N_{10})$ where the quantities $N_{11}$, $N_{01}$, and $N_{10}$ are the number of 3C fragments that are in a domain in both sets $D$ and $D'$, the number of fragments that are in a domain in $D'$, but not in $D$, and the number of fragments that are in a domain in $D$, but not $D'$, respectively (light blue in Figure~\ref{subfig:dixonSim}). The composition of the domains, however, is different as is captured by the variation of information (red in Fig.~\ref{subfig:dixonSim}). Overall, we identify domains that cover similar regions of the chromosome (Figures~\ref{fig:armatus:size-freq},~\ref{fig:armatus:freq-distr}), yet differ in their size distribution and genomic positions.
 
   We use the algorithm described in section~\ref{consensusalg} to obtain a consensus set of domains $D_c$ persistent across resolutions. We construct the set $\Gamma$ by defining the range of our scale parameter to be $[0, \gamma_\textrm{max}]$ and incrementing $\gamma$ in steps of 0.05. In order to more directly compare with previous results, we set $\gamma_{\max}=0.5$ for human and $0.25$ for mouse since these are the scales at which the maximum domain sizes in Dixon et al.'s sets match the maximum domain sizes in our sets.
 
-  Our consensus domain set agrees with the Dixon et al. domains better than with a randomized set of domains adhering to the same domain and non-domain length distributions (Fig.~\ref{fig:consensus_agreement}). Our primary motivation in comparing to randomized sets of domains is to provide a baseline that we can use to contrast our set of domains with Dixon et al. Comparing to a set of random domains also helps to verify that our observations are due to the observed sequence of domains and not the distribution of domain lengths. To shuffle Dixon's domains, we record the length of every domain and non-domain region, and then shuffle these lengths to obtain a randomized order of domains and non-domains across the chromosome.  The fact that variation of information is lower between consensus domains and domains reported by Dixon et al. demonstrates that, though the approaches find substantially different sets of topological domains, they still agree significantly more than one would expect by chance.
+  Our consensus domain set agrees with the Dixon et al. domains better than with a randomized set of domains adhering to the same domain and non-domain length distributions (Figure~\ref{fig:consensus_agreement}). Our primary motivation in comparing to randomized sets of domains is to provide a baseline that we can use to contrast our set of domains with Dixon et al. Comparing to a set of random domains also helps to verify that our observations are due to the observed sequence of domains and not the distribution of domain lengths. To shuffle Dixon's domains, we record the length of every domain and non-domain region, and then shuffle these lengths to obtain a randomized order of domains and non-domains across the chromosome.  The fact that variation of information is lower between consensus domains and domains reported by Dixon et al. demonstrates that, though the approaches find substantially different sets of topological domains, they still agree significantly more than one would expect by chance.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -1669,7 +1727,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
 
 \section{Discussion and Conclusions}
 
-  In this chapter, we introduce an algorithm to identify topological domains in chromatin using interaction matrices from recent high-throughput chromosome conformation capture experiments.  Our algorithm produces domains that display much higher interaction frequencies within the domains than in-between domains (Fig.~\ref{fig:mi_jacc}) and for which the boundaries between these domains exhibit substantial enrichment for several known insulator and barrier-like elements (Fig.~\ref{fig:enrichment}).  To identify these domains, we use a multiscale approach which finds domains at various size scales.  %To obtain a single set of domains from this rich ensemble, e extract a non-overlapping set of consensus domains that are most persistent across multiple length scales.
+  In this chapter, we introduce an algorithm to identify topological domains in chromatin using interaction matrices from recent high-throughput chromosome conformation capture experiments.  Our algorithm produces domains that display much higher interaction frequencies within the domains than in-between domains (Figure~\ref{fig:armatus:freq-distr}) and for which the boundaries between these domains exhibit substantial enrichment for several known insulator and barrier-like elements (Figure~\ref{fig:enrichment}).  To identify these domains, we use a multiscale approach which finds domains at various size scales.  %To obtain a single set of domains from this rich ensemble, e extract a non-overlapping set of consensus domains that are most persistent across multiple length scales.
   We define a consensus set to be a set of domains that persist across multiple resolutions and give an efficient algorithm that finds such a set optimally.
 
   % -- Practical running time
@@ -1679,6 +1737,23 @@ The work described in this chapter has been presented at Workshop for Algorithms
   Our method is particularly appealing in that it requires only a single user-specified parameter $\gamma_{\text{max}}$. It uses a score function that encodes the quality of putative domains in an intuitive manner based on their local density of interactions.  Variations of the scoring function in~(\ref{quality}), for example, by median centering rather than mean centering, can be explored to test the robustness of the enrichments described here. For our experiments, the parameter $\gamma_{\max}$ was set based on the maximum domain sizes observed in Dixon et. al's experiments so that we could easily compare our domains to theirs.  This parameter can also be set intrinsically from properties of the Hi-C interaction matrices.  For example, we observe similar enrichments in both human and mouse when we set $\gamma_{\max}$ to be the smallest $\gamma \in \Gamma$ such that the median domain size is $>$80kbp (two consecutive Hi-C fragments at a resolution of 40kbp). This is a reasonable assumption since domains consisting of just one or two fragments do not capture higher-order spatial relationships (e.g. triad closure) and interaction frequencies between adjacent fragments are likely large by chance~\cite{LiebAid2009}.  We also compared the fraction of the genome covered by domains identified by Dixon et al. vs. the domains obtained from our method at various resolutions.  Dixon et al.'s domains cover 85\% of the genome while our sets tend to cover less of the genome ($\approx$ 65\% for a resolution which results in the same number of domains as those of Dixon et al.).  The fact that our domain boundaries are more enriched for CTCF sites indicates that our smaller, more dense domains may be more desirable from the perspective of genome function.
 
   The dense, functionally-enriched domains discovered by our algorithm provide strong evidence that alternative chromatin domains exist and that a single length scale is insufficient to capture the hierarchical and overlapping domain structure visible in heat maps of 3C interaction matrices. Our method explicitly incorporates the desirable properties of domain density and persistence across scales into objectives that maximize each and uncovers a new view of domain organization in mammalian genomes that warrants further investigation.
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%
+%% Part 2 -- high-level structure and compression
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Compression approaches for sequencing and alignment data}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1732,7 +1807,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{De novo sequence compression with shared dictionaries}
 
-XXX: intro is a duplicate of the reference-based chapter's intro
+% XXX: intro is a duplicate of the reference-based chapter's intro
 
 
 Previous chapters address visualization and analysis challenges presented by data that has already been processed: networks constructed from raw data, annotations, and quantified abundances of histone modifications. However, as we go back to the tasks involving raw data, the data size and complexity increase to the extent that not only visualization, but even storage, dissemination, and basic analysis of such data become a computational challenge. For example, chromosome conformation data for a human chromosome 1 in the embryonic stem cell fits on disk withing 134Mb, however, to separate data for a single chromosome researchers had to merge and align sequencing data from several replicates that adds up to almost 70Gb. 
@@ -1788,7 +1863,7 @@ In the area of sequence compression, two prevalent approaches exist: the \textit
       \end{tabular}
       \label{fig:compression:reordered}
     }
-    \caption{\textbf{Performance of command-line compression tools on sequencing reads.} Reordering the reads improves reads compression by up to XXX times. Sizes shown are in megabytes.}
+    \caption{\textbf{Performance of command-line compression tools on sequencing reads.} Reordering the reads improves reads compression by up to 6 times. Sizes shown are in megabytes.}
     \label{tab:compression:clt}
   \end{table}
 
@@ -1804,13 +1879,13 @@ In the area of sequence compression, two prevalent approaches exist: the \textit
     % XXX what if trained the grammar on the genome, then used the learned grammar to compress reads for that organism?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Using information shared across sets of sequencing reads}
+\section{Building a dictionary of information shared across sets of sequencing reads}
 
   % additional definitions
   \newcommand{\seq}{\mathcal{S}\xspace}
   \newcommand{\compseq}{\widetilde{\mathcal{S}}\xspace}
 
-  XXX what is shared informations.
+  % XXX what is shared informations.
   
 
   We investigated compression methods that relied on a paradigm of \textit{shared information}. For example, given multiple human RNA-seq datasets $\mathcal{ S}_1, \mathcal{ S}_2, \ldots$, the information encoded in the sequencing reads of each $\mathcal{ S}_i$ is highly redundant across all $\mathcal{S}_i$.  These datasets would only differ due to genomic variations between individuals and the number of copies for the expressed genes, however, most of the sequence data would be repeated. We seek a method that can identify and efficiently compress data shared across multiple datasets. When a large genomic center distributes compressed data $\mathcal{\widetilde S}_i$, the dictionary $D$ of information shared among all $\mathcal{S}_i$ need only be downloaded once and its cost would be amortized over multiple transmissions of $\mathcal{\widetilde S}_1$, $\mathcal{\widetilde S}_2$, \ldots.
@@ -1828,7 +1903,7 @@ Huffman coding~\cite{Huffman1952} is a lossless data compression technique that 
 Usually, Huffman coding is applied to compress natural text where the codes are built for individual letters of an alphabet or words. Here, we propose to use kmers as input symbols for Huffman coding.
 
 Since Huffman codes assume that symbols $d_i$ do not overlap, we count non-overlapping kmers of length $k$ to encode sequence $\seq$. Kmer counting produces a distribution $\mathcal{F} = \{(f_1, d_1), (f_2, d_2), \ldots \}$ where $f_i \in \mathbb{N}$ represents the number of times a kmer $d_i$ was seen in $\seq$. We then generate Huffman codes $C = \{ c_i | d_i \in D \}$ based on $\mathcal{F}$ and substitute kmers $d_i$ in $\seq$ with their corresponding binary codes $c_i$. 
-This approach was able to reduce the file size to a factor of 1/7th of the original size and, in certain instances, even outperformed state of the art tools (see Fig.~\ref{fig:denovocompr:varyK}).
+This approach was able to reduce the file size to a factor of 1/7th of the original size and, in certain instances, even outperformed state of the art tools (see Figure~\ref{fig:denovocompr:varyK}).
 
 
   \subsection{Building dictionaries to maximize coverage}
@@ -2085,7 +2160,7 @@ Bit tree stores the input sequences in their alphabetic order, so the associated
           SRR445718 & RNA-seq, oocyte & 32943665& 101 & 32051874 & 246196849 & 81345492 \\
           \bottomrule
       \end{tabular}
-      \caption{\textbf{Number of kmers shared between human RNA-seq experiments and annotated human transcriptome.} Here, $D$ is the set of kmers counted on the corresponding dataset, $T$ -- kmers from the transcriptome. Transcriptome XXX version had a total of 115mln kmers.}
+      \caption{\textbf{Number of kmers shared between human RNA-seq experiments and annotated human transcriptome.} Here, $D$ is the set of kmers counted on the corresponding dataset, $T$ -- kmers from the transcriptome. The transcriptome had a total of 115mln kmers.}
       \label{tab:denovo:transciptome_overlap}
     \end{table}
 
@@ -2166,7 +2241,20 @@ Bit tree stores the input sequences in their alphabetic order, so the associated
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Using a reference sequence for read and sequence alignment compression}
 
-XXX this intro is a duplicate of the de novo chapter intro
+\textit{De novo} compression is invaluable when compressing reads that come from organisms that are not yet well studied and may not have a reference genome as well as for the reads that come from a mixed environment or a genome with high rates of mutations, such as cancer cell genomes or metagenomic reads. However, when an organism has a well-established genome, a reference-based compression might be preferable. Encoding a sequence relative to a reference sequence relies on knowing the coordinate of the sequence being compressed and locations of differences, if any, from the reference at that location. This could be achieved through mapping the reads using any number of available methods, some of which are able to align tens of millions of reads in under ten minutes~\cite{Dobin2012}. 
+
+% A recently introduced idea of pseudo-alignments
+
+We discuss the ideas and implementation of a reference-based compression tool, \refer, that is able to compress sequence down to 0.06 bits per base (as opposed to 2 bits per base in a classic 2-bit sequence encoding). We provide experimental evidence that \refer can outperform state-of-the-art tools on a variety of datasets at different error rates and depth of coverage. Additionally, we introduce a streaming clustering algorithm for quality values compression that exploits the base-to-base similarity in quality values as well as similarity across different vectors of values.
+
+% - separable streams allows for independent downloads of the most pertinent information
+% - also allow for more efficient compression of information within a stream 
+
+Our main contribution is the notion of separable streams of data. \refer groups sequence and alignment data into separate streams that allows for more efficient compression due to increased data homogeneity within the stream. The streams of different kinds of data are independent and can be downloaded and reconstructed independently. Most importantly, due to the stream's smaller size and simple structure, \refer allows for operations on the sequence data stream that are orders of magnitude faster than equivalent commands in the commnly used package \texttt{samtools} 
+
+% (sequence only though? can we do the same w/ qualities?)
+
+% XXX this intro is a duplicate of the de novo chapter intro
 
 
 In this chapter, we explore compression techniques for collections of raw sequences as well as highly structure sequence alignment data. The work presented in this chapter was submitted for publication~\cite{Referee_draft} and Referee, the software implementing the ideas, is available for download at \url{https://github.com/Kingsford-Group/referee}.
@@ -2187,6 +2275,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
 
   Alignment files generated by the mapping sortware are stored in a popular SAM format~\cite{SamTools} and usually occupy orders of magnitude more space than the original sequencing reads themselves. A commonly used approach is to convert SAM files to its block-compressed equivalent, BAM, offers a significant improvement in the used disk space while offering the same set of analyses at a low computational cost. Later approaches improve the compression ratio by sacrificing the ability to run analyses without full decompression~\cite{Goby,Jones2012}, by turning to lossy compression, or by doing without certain sequence data~\cite{SlimGene,CRAM}. More recently, Hach \etal introduced a more efficient block-wise BAM/SAM compressor that allows for block-wise decompression while offering savings of up to 44\% over BAM~\cite{Sahinalp2015}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{SAM format}
 
   SAM file format was developed as part of SAMtools~\cite{SamTools} to represent sequence alginments in a consistent way. Alignments are represented by 11 mandatory fields and are tab-separated in the text file. An example of a SAM file is:
@@ -2207,7 +2296,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   \vspace{0.5em}
   \normalsize
 
-  where sequence field contains an actual aligned read data and quality field contains the Phred scores that came with that sequencing read. It is easy to see some of the redundancies in it right away: read IDs (the first column) between different alignments tend to be very similar, the alignment coordinates (columns 3 and 4) vary only slightly, columns 7, 8, and 9, encoding pair end information, may contain default values for the unpaired data, and so on.
+  where sequence field contains an actual aligned read data and quality field contains the Phred scores that came with that sequencing read. It is easy to see some of the redundancies in it right away: read IDs (the first column) between different alignments tend to be very similar, the alignment coordinates (columns 3 and 4) vary only slightly, columns 7, 8, and 9, encoding pair end information, may contain default values for the unpaired data, and so on. When alignments are compressed ``horizontally'', i.e.\@~as they apprear in the text file, the information about similarity within columns is ignored. However, one can immediately see that values within the same column are highly repetitive making ``vertical'' direction of compression appealing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Reference-based sequence and alignment compression}
@@ -2315,6 +2404,48 @@ In this chapter, we explore compression techniques for collections of raw sequen
 
   To avoid forming too many clusters with a long tailed distribution of sizes, we interrupt the algorithm after scanning through the first $200000$ quality vectors (where the size of this set is an input parameter and can be adjusted for different size datasets) and only retain the clusters that contain at least $5\%$ of the vectors seen so far. Clusters that were formed during this bootstrap stage are used to separate all of the following vectors. Finally, we record the order in which quality vectors arrive into a separate data stream ensuring that we can match quality vectors to their corresponding alignments during decompression.
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Indexing for random access and partial decompression}
+  \label{sec:referee:random_access}
+
+  \refer uses blockwise \texttt{plzip} as the downstream compressor which provides a foundation for \refer's random access infrastructure. Data compressed with \texttt{lzip} is divided into blocks of binary data each of which can be decompressed independently. Every block has a header containing version information and a trailer that stores an integer for the size of the block, an integer for the size of decompressed data, and a field used to validate data integrity (see Figure~\ref{fig:referee:block_struct}). \refer records the genomic coordinates spanning each block and the number of the alignments seen up to that block in a special index.
+  %
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Blocks and indexing
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/block_struct}
+    \caption{\textbf{Block structure for the compressed data.} The trailer for each block contains a field used to verify data integrity (i), the size of the decompressed data (ii), and, as its last integer (iii), the size of the compressed block (iii). Each block has a genomic interval associated with it that gets recorded in an index.}
+    \label{fig:referee:block_struct}
+  \end{figure}
+  %
+  % index file mapping between the blocks and genomic coordinates
+  % interval trees for every chromosome/transcript to be able to easily locate the needed block
+  When decompressing the data, \refer first traverses the compressed stream and, for each block, reads its size as recorded in the block's trailer and calculates its offset relative to the beginning of the stream. \refer then reads the index file and, for each separate stream and a reference string, builds an interval tree that maps genomic coordinate intervals to the corresponding blocks of compressed data.
+
+  When quering for data on chromosome $C$ within a $[x_1, x_2]$ interval, \refer first locates the interval tree within the stream of offsets that is associated with chromosome $C$ and then enqueues all blocks of compressed offsets blocks that overlap the $[x_1, x_2]$ interval. The enqueued blocks may span an interval $[y_1, y_2]$ that contains $[x_1, x_2]$ completely and  $y_1 <= x_1$ and $x_2 <= y_2$, however, if the interval tree contains no data at $x1$, the initial coordinate $y_1$ may be greater than $x_1$. We then repeat the operation for all other streams required by the user (sequencing edits, read identifiers, etc.). Since the streams are independent and are compressed separately from each other, there is no guarantee that the block queue for edits or read identifiers will start at the same genomic coordinate as the queue of offset blocks. \refer synchronizes all streams to the $x_1$ coordinate and starts decompressing the alignments in order.
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Stream dependency
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\linewidth]{figures/streams_dependency}
+    \caption{\textbf{Dependencies between data streams.} All of the streams depend on the stream of offset data and rely on it to be able to properly compute how many items to skip before begining to decompress data within a compressed block}
+    \label{fig:referee:stream_depend}
+  \end{figure}
+
+  % currently only supports queries on a single chromosome
+  % To allow for random access and partial decompression, \refer builds an index that maps every
+  % XXX how does Referee reconstruct reads w/o reconstructing the alignments?
+
+  \refer decompression depends on knowing how many alignments were compressed before any given block. Decompression of any field requires that offsets stream is available to correclty calculate the number of alignments to skip until the begining of interval $[x_1, x_2]$ (see Figure~\ref{fig:referee:stream_depend}).
+
+  % \subsection{Calculating sequencing depth and error rate}
+
+  % We implement two common sequencing operations: depth and error rate estimation procedures. To calculate the depth, the average number of reads aligned over all covered bases, we scan through all offsets and keep track of the last $r$ bases, the  where $r$ is the read length.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -2356,7 +2487,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   % XXX --- need to write this whole thing
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Reference-based compression performance}
+  \subsection{Compression performance on sequence}
 
 
   % XXX talking about sequence -- possibly move to sequence section
@@ -2367,7 +2498,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   % results in the table generated based on run-seq-improvements.sh script
   % use python/parse_seq_logs.py to generate the table
   \begin{table*}[ht!]
-    \caption{\textbf{\refer performance.}\refer can compress sequence very efficiently down to 0.03 bits per base (bpb). Sequence sizes are shown in Megabytes.}
+    \caption{\textbf{\refer performance.}\refer can compress sequence very efficiently down to 0.06 bits per base (bpb). Sequence sizes are shown in Megabytes.}
     \label{tab:seq-compression}
     \centering
     \begin{tabular}{l r r r r}
@@ -2513,22 +2644,44 @@ In this chapter, we explore compression techniques for collections of raw sequen
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Operations on separate streams and random access}
+  \subsection{Separable streams and random access}
 
   % XXX discuss stream separability; partial decompression/random access. operations can be done on offsets alone; offests and edits. Expect sequence to be of most interest.
 
-  XXX explain how separable streams benefit the user
+  % XXX explain how separable streams benefit the user
 
-  XXX explain random access to sequence thanks to the separable streams and indexes
+  Dividing similar data into separate data streams allows \refer to compress data more efficiently due to increased data homogeneity. To highlight efficiency of encoding data in separate streams, we performed the following experiments: for every alignment in the SAM file, we extracted columns for reference identifier (RNAME), offset (POS), CIGAR and MD strings and compressed them using a command-line tool. We then grouped reference identifiers with offset column in one file and CIGARs with MD strings in a separate file and compressed these two files using a command-line tool. Lastly, we applied \refer encoding to the four columns and report the summary size of all resulting streams. Data required to encode clipped regions was computer separately and added to each experiment's total size (20.79Mb and 13.37Mb for the \texttt{SRR445718} and \texttt{SRR1294122} correspondingly). Results are summarized in Table~\ref{referee:table:progressive_enc}: compressing the four columns that completely describe the sequence introduces a 6--8 times improvement over 2-bit encoding and \refer improves that ratio to 10--12 range.
 
-  Separability of data streams in \refer allows for field-specific analyses that are order of magnitudes faster than comparable tasks done with, e.g. \texttt{samtools}~\cite{SamTools}. A common task such as computing a dataset's sequencing depth involves going through all alignments recording number of reads aligned to any covered base. \texttt{samtools depth} takes about 19 minutes to compute depth for a modestly sized \texttt{SRR445718} dataset and over 48 minutes for \texttt{K562} while \refer accomplishes that same task in 8 and 44 seconds correspondingly. The difference is explained by the fact that \texttt{samtools} has to scan through all of alignment data, including data unrelated to depth calculation, while \refer accomplishes the same task by  having to go through compressed offsets (about 5\% of the compressed data).
+  \begin{table}
+    \centering
+    \begin{tabular}{l r r r r r }
+      \toprule
+      File & Bases & 2bit & SAM/4 & SAM/2+2 & \refer \\
+      \midrule
+      % % plzip -- includes clipped regions
+      % SRR445718   & 3,422,790,818 & 855,697,705   & 140,098,256 & 85,257,945\\
+      % % plzip
+      % SRR1294122  & 4,343,436,421 & 1,085,859,106 & 143,307,769 &  88,170,914 \\
+      % plzip -- includes clipped regions
+      SRR445718   & 3,422,790,818 & 815.06 & 133.61 & 104.00 & 86.94 \\
+      % plzip
+      SRR1294122  & 4,343,436,421 & 1035.56 & 136.67 & 103.77 & 85.22 \\
+      \bottomrule
+    \end{tabular}
+    \caption{\textbf{Progressive compression improvements when compressing sequence-related fields.} Compressed with \texttt{plzip}. SAM/4 represents the size of RNAME, POS, CIGAR, and MD string in a column format, compressed. SAM/2+2 represents the total size of RNAME, POS columns compressed along with CIGAR, MD string columns compressed.. Unaligned sequences were not included in the analysis; sizes are reported in Mb, unless otherwise indicated.}
+    \label{referee:table:progressive_enc}
+  \end{table}
 
-  XXX how does Refereee reconstruct reads w/o reconstructing the alignments?
+  In addition to improved compression, streams can be downloaded separately since they are largerly independent of each other. For most sequence analyses, the user would only need to download the offsets stream (see Figure~\ref{fig:referee:stream_depend} for a scheme of dependencies). Subsection~\ref{sec:referee:random_access} goes over the organisation of the streams and indexes in detail.
 
-  Likewise, \refer format allows one to quickly reconstruct aligned reads originally embedded in SAM file (an equivalent of \texttt{samtools faidx} command) without ever reconstructing the alignments fully. Users can specify a genomic region of interest and \refer can reconstruct alignments from that genomic region without decompressing the whole dataset. The index that \refer constructs to enable partial decompression is lightweights: for example, to index all data blocks for \texttt{NA12878}, \refer uses 1.2Mb which can be further compressed down to 233Kb --- a size negligible when compared to the size of the data itself.
+  Finally, the reduced size of sequence stream and its simple organization allow to perform certain sequence-focused analyses orders of magnitude faster than comparable tasks done with, e.g. \texttt{samtools}~\cite{SamTools}. A common task such as computing a dataset's sequencing depth involves going through all alignments while recording the number of reads aligned to any covered base. \texttt{samtools depth} takes about 19 minutes to compute depth for a modestly sized \texttt{SRR445718} dataset and over 48 minutes for \texttt{K562} while \refer accomplishes that same task in 8 and 44 seconds correspondingly. The difference is explained by the fact that \texttt{samtools} has to scan through all of alignment data, including data unrelated to depth calculation, while \refer accomplishes the same task by  having to go through compressed offsets (about 5\% of the compressed data).
 
-  % XXX index for NA128 -- 1.2 Mb
+  
+  Likewise, \refer format allows one to quickly reconstruct aligned reads originally embedded in SAM file (an equivalent of \texttt{samtools faidx} command) without ever reconstructing the alignments fully. Users can specify a genomic region of interest and \refer can reconstruct alignments from that genomic region without decompressing the whole dataset. The index that \refer constructs to enable partial decompression is lightweight: for example, to index all data blocks for \texttt{NA12878}, \refer uses 1.2Mb which can be further compressed down to 233Kb --- a size negligible when compared to the size of the data itself.
 
+  % XXX compare to Deez's random access speeds 
+
+  % / time to perform certain analyses
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2538,9 +2691,9 @@ In this chapter, we explore compression techniques for collections of raw sequen
 
   \refer is fast and only requires on the order of 1.5Gb of RAM to run making it usable on even smaller machines (see Table~\ref{tab:runtimes}). \refer streams through the alignments in a sequential fashion only keeping intermediate information in memory before it is passed on to \texttt{lzlib}. \refer launches several threads that each invoke \texttt{lzlib} operations on a single block of data at a time making use of modern multithreading architectures. \refer will run faster if given more processing power, however, \refer can reach a saturation point where data blocks prepared by \refer are compressed at a faster rate than the new blocks are being produced.
 
-  XXX add timing information for when only compressing sequence
+  % XXX add timing information for when only compressing sequence
 
-  XXX how is referee parallelized
+  % XXX how is referee parallelized
 
   % XXX does it scale up linearly w/ \# CPUs, memory?
 
@@ -2588,10 +2741,10 @@ In this chapter, we explore compression techniques for collections of raw sequen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion and Conclusions}
 
-We present a novel approach for efficient compression and storage of the  alignment information that enables certain computational analyses without ever having to decompress the data fully. \refer operates by separating related streams of data and encoding them individually achieving better compression rates for each stream. \refer is competitive in speed and performance to other state of the art tools that employ more complex compression schemes~\cite{Sahinalp2015,Jones2012}. We show that \refer can compress alignment data down to $1/10^{th}$ of its original SAM file size. When focusing on alignments that retain only sequence data (i.e. stripped of extraneous information like read identifiers), \refer can compress it in a lossless manner 2 to 9 times better than the competing methods (see Table~\ref{tab:seq-compression}). \refer's efficient encoding of mapping locations and sequence variation makes it robust to increasing error rates (Figure~\ref{fig:referee:depth-error}). Coupled with the fact that modern alignment tools can successfully map millions of sequencing reads in minutes, \refer becomes an appealing choice in sequence compression, especially for the rapidly growing body of RNA-seq and WGS datasets for the model organisms for which well-annotated reference genomes are available.
+We present a novel approach for efficient compression and storage of the  alignment information that enables certain computational analyses without ever having to decompress the data fully. \refer operates by separating related streams of data and encoding them individually thus achieving better compression rates on each stream. \refer is competitive in speed and performance to other state of the art tools that employ more complex compression schemes~\cite{Sahinalp2015,Jones2012}. We show that \refer can compress alignment data down to $1/10^{th}$ of its original SAM file size. When focusing only on sequence data (i.e. stripped of extraneous information like read identifiers), \refer can compress it in a lossless manner 2 to 9 times better than the competing methods (see Table~\ref{tab:seq-compression}). \refer's efficient encoding of mapping locations and sequence variation makes it robust to increasing error rates (Figure~\ref{fig:referee:depth-error}). Coupled with the fact that modern alignment tools can successfully map millions of sequencing reads in minutes, \refer becomes an appealing choice in sequence compression, especially for the rapidly growing body of RNA-seq and WGS datasets for the model organisms for which well-annotated reference genomes are available.
 
 
-Many analyses relying on the alignment information do not require original read identifiers or unaligned reads focusing instead on the sequence that aligned successfully. In such cases, being able to download only the data one needs may significantly reduce the download size. \refer separates data streams into distinct compressed files and only requires a subset of them to reconstruct the original SAM/BAM data. Read identifies, quality values, optional SAM fields and all of the unaligned reads can be skipped; that means a reduction of download size by 84-93\% (see Figure~\ref{fig:fields}).
+Many analyses relying on the alignment information do not require original read identifiers or unaligned reads focusing instead on the sequence that aligned successfully. In such cases, being able to download only the data one needs may significantly reduce the download size. \refer separates data streams into distinct compressed files and only requires a subset of them to reconstruct the original SAM/BAM data. Read identifiers, quality values, optional SAM fields and all of the unaligned reads can be skipped, reducing the download size by 84-93\% (see Figure~\ref{fig:fields}).
 
 % Modular design: requires only essential fields: offsets, mapping flags, edits+clipped regions. Can skip: read ids, qualities, opt. fields, unaligned reads.
 
@@ -2605,7 +2758,7 @@ Many analyses relying on the alignment information do not require original read 
 % XXX: merging sequence?
 
 
-\refer is written in C++ and is available on GitHub (\url{https://github.com/Kingsford-Group/referee}).
+% \refer is written in C++ and is available on GitHub (\url{https://github.com/Kingsford-Group/referee}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -2614,7 +2767,13 @@ Many analyses relying on the alignment information do not require original read 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Discussion and Conclusions}
 
-XXX
+XXX go over projects
+
+highlight contributions
+
+project potential impact
+
+ooutline some future developments for each contribution?
 
 % \appendix
 % \include{appendix}
