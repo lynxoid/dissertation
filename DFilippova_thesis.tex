@@ -1644,7 +1644,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
     \begin{center}
       \includegraphics[width=.9\linewidth]{figures/UsVsBingVI}
     \end{center}
-    \caption{\textbf{Comparison of Dixon et al.'s domain set} with the multiscale consensus set for chromosomes 1--22 ($x$-axis). We used the variation of information (VI) ($y$-axis) to compute distances between domain sets for the multiscale consensus set vs. Dixon et al (blue dots) and the multiscale consensus vs. randomly shuffled domains (red diamonds).}
+    \caption{\textbf{Comparison of Dixon et al.'s domain set} with the multiscale consensus set for chromosomes 1--22 ($x$-axis). We used the variation of information (VI) ($y$-axis) to compute distances between domain sets for the multiscale consensus set vs. Dixon et al. (blue dots) and the multiscale consensus vs. randomly shuffled domains (red diamonds).}
     \label{fig:consensus_agreement}
   \end{figure}
 
@@ -1723,7 +1723,7 @@ The work described in this chapter has been presented at Workshop for Algorithms
   % \vspace{-25px}
 
   We also observe that, when compared with the domain boundaries predicted by Dixon et al., our boundaries more often contain insulator or barrier-like elements (see Table~\ref{tab:differentalEnrichment}). Specifically, we normalize for the fact that we identify approximately twice as many domains as Dixon et al., and generally observe a two-fold enrichment in the fraction of boundaries containing
-  peaks for CTCF markers. This suggests that structural boundaries identifed by our method are more closely tied to functional sites which serve as barriers to long-range regulation. We also observe a depletion of insulator CTCF elements within our domains when compared to the domains of Dixon et al.  This observation is consistent with the assumption that transcriptional regulation is more active within spatially proximate domains since there are fewer elements blocking regulation within these domains.  Table~\ref{tab:differentalEnrichment} also shows similar patterns for histone modifications which suggests that our domain boundaries are enriched for functional markers of gene regulation.
+  peaks for CTCF markers. This suggests that structural boundaries identified by our method are more closely tied to functional sites which serve as barriers to long-range regulation. We also observe a depletion of insulator CTCF elements within our domains when compared to the domains of Dixon et al.  This observation is consistent with the assumption that transcriptional regulation is more active within spatially proximate domains since there are fewer elements blocking regulation within these domains.  Table~\ref{tab:differentalEnrichment} also shows similar patterns for histone modifications which suggests that our domain boundaries are enriched for functional markers of gene regulation.
 
 \section{Discussion and Conclusions}
 
@@ -1814,7 +1814,7 @@ Previous chapters address visualization and analysis challenges presented by dat
 % The amount of sequencing data stored in the Short Read Archive (SRA) is 775337Gb and growing~\cite{SRA}. 
 Large sequencing data warehouses, e.g. Sequence Read Archive (SRA)~\cite{SRA}, and labs with modest computational resources alike face these computational challenges due to the explosion in the amount of generated sequencing data.
 
-Commonplace compression tools like gzip that is based on Lempel-Ziv original paper~\cite{LempelZiv77}, and bzip2 that leverages Burrow-Wheeler transform~\cite{BWTransform} are used often to compress large read datasets, however, they do not exploit the specific nature of sequencing reads: its small alphabet, highly repetitive subsequences, higher error rates when compared to natural language, reverse comlpimentarity, and the fact that sequence may originate from a well-annotated known genome. SRA data format is commonly used to store FASTQ files which include the reads themselves and additional base quality information, however, even the most naive compression methods easily outperform this compression technique~\cite{SeqSqueeze}.
+Commonplace compression tools like gzip that is based on Lempel-Ziv original paper~\cite{LempelZiv77}, and bzip2 that leverages Burrow-Wheeler transform~\cite{BWTransform} are used often to compress large read datasets, however, they do not exploit the specific nature of sequencing reads: its small alphabet, highly repetitive subsequences, higher error rates when compared to natural language, reverse complementarity, and the fact that sequence may originate from a well-annotated known genome. SRA data format is commonly used to store FASTQ files which include the reads themselves and additional base quality information, however, even the most naive compression methods easily outperform this compression technique~\cite{SeqSqueeze}.
 
 XXX what we discuss in this chapter
 
@@ -1890,7 +1890,7 @@ In the area of sequence compression, two prevalent approaches exist: the \textit
 
   We investigated compression methods that relied on a paradigm of \textit{shared information}. For example, given multiple human RNA-seq datasets $\mathcal{ S}_1, \mathcal{ S}_2, \ldots$, the information encoded in the sequencing reads of each $\mathcal{ S}_i$ is highly redundant across all $\mathcal{S}_i$.  These datasets would only differ due to genomic variations between individuals and the number of copies for the expressed genes, however, most of the sequence data would be repeated. We seek a method that can identify and efficiently compress data shared across multiple datasets. When a large genomic center distributes compressed data $\mathcal{\widetilde S}_i$, the dictionary $D$ of information shared among all $\mathcal{S}_i$ need only be downloaded once and its cost would be amortized over multiple transmissions of $\mathcal{\widetilde S}_1$, $\mathcal{\widetilde S}_2$, \ldots.
 
-  Given the input datasets $\mathcal{ S}_1, \mathcal{ S}_2, \ldots$, we seek such dictionary $D$ that compression ratio $(\sum_i |\compseq_i| + D) / \sum_i |\seq_i|$ is minimized over multiple transmissions of the compressed sequences $\compseq_i$. Alternatively, we may want to construct multiple dictionaries $D_1, \ldots, D_\delta$ such that for each $\seq_i$, parts of the original sequence are best compressed by one of these dicitonaries $D_j$. We will then seek a collection of dictionaries $D_1, \ldots, D_\delta$ and amatching function $f(\seq_i \to D_j)$ such that the compression ratio $(\sum_i |\compseq_i| + \sum_j D_j) / \sum_i |\seq_i|$ is minimized and the function $f(D_j) \to s$ efficiently maps parts of the original sequence $\seq_i$ to dictionary $D_j$ that would provide the best compression.
+  Given the input datasets $\mathcal{ S}_1, \mathcal{ S}_2, \ldots$, we seek such dictionary $D$ that compression ratio $(\sum_i |\compseq_i| + D) / \sum_i |\seq_i|$ is minimized over multiple transmissions of the compressed sequences $\compseq_i$. Alternatively, we may want to construct multiple dictionaries $D_1, \ldots, D_\delta$ such that for each $\seq_i$, parts of the original sequence are best compressed by one of these dictionaries $D_j$. We will then seek a collection of dictionaries $D_1, \ldots, D_\delta$ and a matching function $f(\seq_i \to D_j)$ such that the compression ratio $(\sum_i |\compseq_i| + \sum_j D_j) / \sum_i |\seq_i|$ is minimized and the function $f(D_j) \to s$ efficiently maps parts of the original sequence $\seq_i$ to dictionary $D_j$ that would provide the best compression.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Building efficient kmer-based dictionaries}
@@ -1917,15 +1917,15 @@ This approach was able to reduce the file size to a factor of 1/7th of the origi
     \label{fig:denovocompr:varyK}
   \end{figure}
 
-  We evaluate this strategy on three diverse datasets: human RNA-seq (SRR635193), \textit{P. aeruginosa} RNA-seq (SRR519063), and whole genome sequenceing of the same bacterium (see Figure~\ref{fig:denovocompr:varyK}). We observe that as $k$ increases, naive dictionary encoding improves and even outperformes the competing tools in two cases.
+  We evaluate this strategy on three diverse datasets: human RNA-seq (SRR635193), \textit{P. aeruginosa} RNA-seq (SRR519063), and whole genome sequencing of the same bacterium (see Figure~\ref{fig:denovocompr:varyK}). We observe that as $k$ increases, naive dictionary encoding improves and even outperformes the competing tools in two cases.
 
   % XXX find dictionary sizes.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Buliding dictionaries to maximize entropy}
+  \subsection{Building dictionaries to maximize entropy}
   % \subsection{Selecting kmers based on their frequencies in the de Bruijn graph}
 
-  XXX discuss entropy mearues
+  XXX discuss entropy measures
 
   Counting non-overlapping kmers in $\seq$ produces a frequency distribution $\mathcal{F}$ that is a good indicator of which kmers will occur more frequently and thus, should have a shorter code in order to achieve better compression. However, it is conceivable that instead of counting kmers starting at $k, 2k, 3k, \ldots, mk$ nucleotides, it may be beneficial to consider kmer occurrences that are not necessarily aligned with $k, 2k, 3k, \ldots$ boundaries. Allowing arbitrarily placed kmers may introduce subsequences in $\seq$ that are not covered by any kmer of length $k$ (``holes''), however, if we allow $|d_i| \leq k$, then we can cover the whole $\seq$ using variable length kmers. We will call a decomposition of $\seq$ into $d_i$s a \textit{parse} $P$ and will require that:
   %
@@ -1948,7 +1948,7 @@ This approach was able to reduce the file size to a factor of 1/7th of the origi
     D_{2,4} &= \{GATC: 5, GA: 1, TCAA: 1, TC: 1\}
   \end{align*}
   %
-  Encoding the string using a dicitonary $D_2$ of non-overlapping 2-mers results in $\compseq = 0010000111010010011001$ 21 bits long. If we consider a set of non-overlapping 4-mers $D_4$, we 
+  Encoding the string using a dictionary $D_2$ of non-overlapping 2-mers results in $\compseq = 0010000111010010011001$ 21 bits long. If we consider a set of non-overlapping 4-mers $D_4$, we 
   % obtain Huffman codes $\{ GATC=00, GAGA=10, TCTC=01, AAGA=111, TCGA=110\}$ resulting in a 
   can compress the string down to 16 bits. However, \texttt{GATC} occurs 5 times within the string. By selecting \texttt{GATC} as one of the 4-mers and adding \texttt{TCAA}, \texttt{GA} and \texttt{TC} to the dictionary $D_{2,4}$, we are able to compress $\seq$ down to 13 bits while satisfying the covering constraint. This example shows that there are instances when mixing kmers of different lengths and selecting kmers at positions other than those that align with the $k$-induced boundaries may result in a better compression.
 
@@ -1984,7 +1984,7 @@ This approach was able to reduce the file size to a factor of 1/7th of the origi
    \label{algo:greedy}
   \end{algorithm}
   %
-  Unlike the dictionary built to cover the whole input string $\seq$, building a dictionary by preferentially selecting high-frequency kmers does not guarantee that words in $D$ will cover $\seq$. In the worst case, kmers could be selected in a way that any two kmers are separated by $(k-1)$ nucleotides (\ie~``holes'') resulting in less that $|\seq| / 2$ being covered. It is feasible that such adversarial string could be contructed, however, given that DNA sequence has a limited alphabet and its kmer distribution is highly skewed, we expect the words from such dictionary to cover most of the string. Our preliminary tests using a variant of Alg.~\ref{algo:greedy} show that kmers in the dictionary will usually cover over $80\%$ of $\seq$.
+  Unlike the dictionary built to cover the whole input string $\seq$, building a dictionary by preferentially selecting high-frequency kmers does not guarantee that words in $D$ will cover $\seq$. In the worst case, kmers could be selected in a way that any two kmers are separated by $(k-1)$ nucleotides (\ie~``holes'') resulting in less that $|\seq| / 2$ being covered. It is feasible that such adversarial string could be constructed, however, given that DNA sequence has a limited alphabet and its kmer distribution is highly skewed, we expect the words from such dictionary to cover most of the string. Our preliminary tests using a variant of Alg.~\ref{algo:greedy} show that kmers in the dictionary will usually cover over $80\%$ of $\seq$.
 
   \subsection{Building a shared dictionary across multiple datasets}
 
