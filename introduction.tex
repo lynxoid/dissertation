@@ -14,11 +14,7 @@ One such high-throughput technique used gene expression as an indicator of the p
 
 % % clustering PPI -- gives us functional annotations. clustering gives ambiguous results
 
-However, identifying such groups of proteins is a non-trivial task. 
-% 1. np-hard
-Computationally, the problem of finding a decomposition of a network into disjoint groups of nodes that maximize some objective is hard~\cite{ModularityNPhard}, even if the network is sparse and scale-free~\cite{XXX}.
-% 2. varying results
-Circumventing the problem's computational hardness, scientists developed many heuristic approaches to cluster PPIs and biological networks in general. XXX approach 1. XXX approach 2. XXX approach. Strikingly, protein sets recovered by one algorithm differ in size, number, and composition from protein sets suggested by other algorithms~\cite{blah}. To futher complicate the matters, it has been shown that even a single algorithm may produce different, equally good results: a study by Navlakha et al~\cite{SaketModularity} modified the popular modularity clustering algorithm to force it to generate all optimal and near-optimal solutions on a small network of social interactions in a karate club, and showed that XXX. Q: How should scientists decide which predicted protein complexes are real?
+However, identifying such groups of proteins is a non-trivial task. Computationally, the problem of finding a decomposition of a network into disjoint groups of nodes that maximize some objective is hard~\cite{ModularityNPhard}, even if the network is sparse and scale-free~\cite{XXX}. Circumventing the problem's computational hardness, scientists developed many heuristic approaches to cluster PPIs and biological networks in general. XXX approach 1. XXX approach 2. XXX approach. Strikingly, protein sets recovered by one algorithm differ in size, number, and composition from protein sets suggested by other algorithms~\cite{blah}. To futher complicate the matters, it has been shown that even a single algorithm may produce different, equally good results: a study by Navlakha et al~\cite{SaketModularity} modified the popular modularity clustering algorithm to force it to generate all optimal and near-optimal solutions on a small network of social interactions in a karate club, and showed that XXX. Q: How should scientists decide which predicted protein complexes are real?
 
 In fact, neither of these clusterings is wrong and neither of them offers a comprehensive analysis of the network. Each clustering algorithm and its results offer a unique summary of the data from a different perspective. When comparing results of nine (XXX) different algorithms for PPI complexes in \textit{Arabidopsis thaliana}, we observe that a large core component of the network (XXX nodes) is recovered by all nine algorithms, even though individual results suggested that the core must appear alongside many other proteins (see Chapter~\ref{chapter:coral}). To allow systematic analysis of multiple alternative clustering results, we developed an analysis and visualization tool Coral that guides users from entry-level overview statistics to in-depth comparisons of co-clustering behavior for individual proteins under different clustering regimes. We discuss metrics for comparing such clustering results and present a workflow that allows to systematically investigate proposed complexes. To aid in selection of the groups of proteins that are consistently placed in the same clsuter, we present an approach that finds the most consistently clustered groups of nodes and demonstrate the effectiveness and the need for such an approach by analyzing the protein-protein interaction network of a model organism \textit{A. thaliana}.
 
@@ -50,13 +46,9 @@ We developed a visualization approach that focuses on local neighborhoods around
 
 Large data volumes resulting from high-throughput experiments present yet another, more fundamental challenge. Technical demands for storage and transmission of such data volumes hinder easy exchange of information and the ability to run complex analyses on the data. Traditional compression techniques alleviate the problem of data transfer, but require that data is fully decompressed to perform any analyses and may not exploit domain knowledge about the nature of the data and the way data is going to be used to improve compression ratios. Later in this thesis, we investigate compression methods for one of the most abundant data types in computational biology --- the nucleotide sequences.
 
-% data vis is important
+%  both numerical analyses and vis are important
 
-XXX both numerical analyses and vis are important
-
-This underlines the need for visualization when working with data. A single solution may be persuasive unless you see/or somehow else familiarize yourself w/ the whol space of solutions. Visualization relies on human intutition to help see that.
-
-XXX add more of a bridge into visualization -- numerical analysis alone may be misleading. visualization can speed up hypothesis generation and testing -- citation? to insight faster than considering some of the standard. in this thesis, we consider visualization as a means to observe network dynamics over time and to analyse alternative solutions -- areas where coming up with a hypothesis is a complex task.
+This underlines the need for visualization when working with data. A single solution may be persuasive unless you see/or somehow else familiarize yourself w/ the whole space of solutions. Visualization relies on human intutition to help see that. numerical analysis alone may be misleading. visualization can speed up hypothesis generation and testing -- citation? to insight faster than considering some of the standard metrics. in this thesis, we consider visualization as a means to observe network dynamics over time and to analyse alternative solutions -- areas where coming up with a hypothesis is a complex task.
 
 %%
 %% Anscombe's quartet 
@@ -70,3 +62,39 @@ XXX add more of a bridge into visualization -- numerical analysis alone may be m
 
 
 Visualization is an important first step when working with a new set of data as it provides the means to assess the overall shape of the data, its distribution, and to detect outliers. Anscombe's quartet~\cite{anscombe} succinctly demonstrates the importance of viewing the data before analyzing it: four datasets have the same $x$ and $y$ mean and variance, Pearson's correlation and fit the same regression line, yet are strikingly different (Figure~\ref{fig:intro:anscombe}). We see visualization as the means to generate new hypotheses that are then tested and validated through domain-specific algorithms and statistical models.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Major contributions}
+
+We outline the problems addressed in this thesis and the specific contributions made while researching these topics:
+
+\begin{itemize}
+  \item \textbf{Visualization and inference of stable subsets in ensembles of classifications}
+
+  We develop new and adapt existing visualizations useful for evaluation and comparison of collections of annotations derived from large datasets through various classification and clustering strategies. We integrate these visualizations into a single comprehensive application that allows to perform a variety of analyses on these classification results. We develop algorithms that reorder data in a way that exposes patterns and helps to identify prominent substructures more easily. Our novel algorithm for core finding automatically extracts annotations that are most consistent across all sets of assigned labels. We use our tool to perform a detailed analysis of clusters of protein-protein interactions in \textit{A. thaliana} plant and identify robust cluster cores that are significantly enriched for Gene Ontology~\cite{GeneOntology} terms and can be used in downstream analyses with greater confidence than clusters generated by a single algorithm.
+
+  % \item \textbf{Augmented search in Sequence Read Archive (SRA)}
+  % SHARQ
+
+  \item \textbf{Visual exploration of large dynamic networks}
+
+  We propose an egocentric network view as the main visualization to use when  studying large graphs that change over time. We augment the view by developing node and edge glyphs that summarize the interactions taking place before and after the current point in time. We develop a node ordering algorithm that minimizes node occlusion and improves graph readability over the lifetime of the egonetwork. We implement our ideas in a web application centered around a graph of interactions between jazz musicians spanning a hundred years.
+
+  \item \textbf{Identification of topological domains in the ensembles of chromatin contacts}
+
+  % From coral - Armatus XXX
+  We extend the algorithm for identifying robust subsets of annotations from our earlier work to the problem of finding densely packed areas of chromatin (\textit{topological domains}). Our algorithm is faster, requires less parameters, and generates domains that are significantly different from domains identified by existing methods, however, are biologically significant and are more enriched for the chromatin markers associated with gene regulation. Our algorithm scales well with the increasing data resolution providing an opportunity to study genome folding and organisation in cell in fine detail. Additionally, we are able to capture domains at different length scales that allows us to evaluate, for the first time, the hierarchical structure of the chromatin.
+
+  \item \textbf{Compression methods for sequencing and alignment data}
+
+  % Huffmer, Referee XXX
+  We propose novel ways to compress sequencing data using information shared across several related datasets and develop new algorithms for rapid compression of sequence alignments. We achieve up to 8 times better compression rates than other state of the art tools on the sequencing data, provide significant savings in space for other data types, and outperform state of the art tools on all but one dataset overall. We propose a novel infrastructure where related alignment data are separated into disjoint streams allowing for better compression of data within the stream. These separable data streams allow us to download and use data streams independently of each other furhter reducing download sizes. Our modular organisation of data allows us to perform computations on compressed data directly without fully reconstructing the original alignments thus speeding up common sequence analyses by orders of magnitude.
+
+\end{itemize}
+
+Taken together, these advancements make it easier to operate on large biological data starting with the task of data storage and dissemination to hypothesis generation and identification of robust substructures.
