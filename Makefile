@@ -5,6 +5,9 @@ all:
 	pdflatex DFilippova_thesis
 	pdflatex DFilippova_thesis
 
+intro:
+	pdflatex separate_introduction
+	
 quick:
 	pdflatex DFilippova_thesis
 clean:
