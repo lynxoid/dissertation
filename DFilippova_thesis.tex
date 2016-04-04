@@ -813,55 +813,7 @@ Finally, I want to extend the heartfelt thanks to my immediate and extended fami
 
   \Coral offers a comprehensive array of visualizations that allow users to investigate modules from various viewpoints including several novel views. \Coral guides users from overview statistics implemented as familiar bar charts to detailed cluster-to-cluster comparison in a table. The ladder widget, a lower triangle of the comparison matrix, helps users pick the most similar (or dissimilar) pair of clusterings and to judge how similar clusterings in the dataset are overall. A color-coded co-cluster matrix shows how often any pair of items in the dataset have been placed in a module together. A novel adaptation of parallel coordinates, parallel partitions plot, makes tracking a group of items across clusterings easy with intuitive selection techniques. These views combined create a powerful tool for a comprehensive exploration of an ensemble of clusterings. \Coral can help users generate questions and hypotheses about the data that could be later definitively answered with the help of additional experiments.
 
-  XXX: Liz Marai --- provide some discussion of user evaluation
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
-%% SHARQ -- search for SRA metadata
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \chapter{Augmenting search for high-throughput sequencing metadata}
-
-% XXX merge into Coral chapter
-
-% SHARQ is available at http://sharq.compbio.cs.cmu.edu/.
-
-% SHARQ~\cite{SHARQwebsite}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Background}
-
-% The Sequence Read Archive (SRA)~\cite{kodama2012sequence} is a central resource for high-throughput sequencing data produced by a variety of sequencing technologies. As part of an international effort to make data generated using public funds accessible to researchers and the rest of the world, SRA's goal is to maintain the data and make is easily searchable to aid in reproducibility efforts and allow for new discoveries. The database contains nearly 2000 terabases of open access data of which recent human RNA-seq expression amounts to about 10\%. RNA-seq is a way to gauge the expression of genes and individual isoforms and holds a lot of promise XXX as a fast and inexpensive genetic diagnostic tool XXX any citation?. Sample comparisons between and across tissue and cell types are essential for establishing the common baselines, however, the manual annotations of tissue and cell types for experiments submitted to the SRA are often inconsistent or completely missing. The variability of submissions to SRA and the lack of any consistent vocabulary for cell and tissue types results in searches through the existing tools (through web interface or database) to miss relevant experiments and to return false positives.
-
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Annotation for tissue and cell types}
-
-% XXX
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Interface}
-
-% \begin{figure}[ht]
-%   \includegraphics[width=\linewidth]{figures/sharq-ui.png}
-%   \caption{\textbf{Overview of SHARQ interface.} The interface offers a variety of controls to search by multiple tissues, cell types, read length, or date of submission. Text search (not shown) scans through the PubMed abstracts and other text fields describing each sequencing run.}
-%   \label{fig:sharq:interface}
-% \end{figure}
-
-% SHARQ is implemented as an lightweight web-based interactive tool using open source Javascript packages \texttt{crossfilter}~\cite{crossfilter} and \texttt{dc.js}~\cite{dcjs} (Figure~\ref{fig:sharq-ui}). It offers a way to quickly assess metadata for thousands of records and use visual cues to narrow the search down to a set of sequencing runs of interest. Users can start by selecting several tissue types, then refine the search by specifying  specific cell types or by restricting their search to runs that have a particular read length. Additionally, users can provide a date range that dictates the date of initial submission to SRA. As a special case, the user may choose to only focus on data associated with cancers or data associated with non-differentiated cells, since these samples may originate from any tissue. In addition to selecting parameters of interest, users may search across all text fields, such as study summaries, including tissue and cell type annotations. For example, searching for `blood' will bring select all sequencing runs that were annotated as coming from blood as all other runs that have a mention of `blood' in their annotations, title, abstracts, and summaries.\\
-
-% Once users are satisfied with their query, they can download all matching sequencing run IDs in a single file for further processing --- these could be used, for example, for a batch download through SRA Toolkit \cite{leinonen2010sequence}. Alternatively, users can download full records for the matched runs that include FTP links for direct download.\\
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Discussion and conclusions}
-
-% XXX
-
-
-
+  \Coral has been evaluated informally through interviews with experts who used it to analyze bacterial species co-location patterns and to study network modules over time. Interpretation of the co-cluster matrix presented some difficulties; however, other views of the data were more readily understood. Coral did not scale well to the size of one of the metagenomic datasets that contained more than 10,000 elements. A more careful observational study would be more informative and provide a stronger indication as to which parts of Coral's workflow need further refinement.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1429,13 +1381,6 @@ The work described in this chapter has been presented at Workshop for Algorithms
   For human fibroblast cells, we used CTCF binding sites from~\cite{Kim2007}.
   For mouse embryonic cell CTCF binding sites and chromatin modification marks, we used data by Shen et al.~\cite{Shen2012}.
 
-  % List of parameters required by Dixon et al.
-  % \begin{itemize}
-  % \item 2MB upstream/downstream boundary
-  % \item 1-20 mixtures of gaussians
-  % \item Median posterior probabilities $\geq 0.99$, at least 80kbp
-  % \end{itemize}
-
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Dense domains
@@ -1443,25 +1388,6 @@ The work described in this chapter has been presented at Workshop for Algorithms
   \subsection{Ability to identify densely interacting domains across scales}
 
   
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  % inter-intra dist plot; disributions of sizes
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  % \begin{figure}[t]
-  %   \begin{center}
-  %   \subfigure[Domain size vs. frequency]{
-  %     \includegraphics[width=0.45\linewidth]{figures/imr90-inter-intra-all-chromos}
-  %     \label{subfig:size-freq}
-  %   }
-  %   \subfigure[Mean frequency distr.]{
-  %     \includegraphics[width=0.45\linewidth]{figures/mean-freq-distr}
-  %     \label{subfig:freq-distr}
-  %   }
-  %   \caption{~\subref{subfig:size-freq}  \subref{subfig:freq-distr}~Multiscale domains identified in human fibroblast cells by our dynamic program tend to have higher mean frequency than those of Dixon et al.
-  %   (distributions are plotted after outliers $> \mu+4\sigma$ were removed).}
-
-  %   \label{fig:mi_jacc}
-  %   \end{center}
-  % \end{figure}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % inter-intra dist plot
@@ -1616,29 +1542,6 @@ The work described in this chapter has been presented at Workshop for Algorithms
   %
   \begin{center}
   \includegraphics[width=0.73\textwidth]{figures/fig6_combined_rotated}
-  % \subfigure[IMR90: CTCF]{
-  % \includegraphics[width=2.1in]{IMR90_CTCF_Ours}
-  % \includegraphics[width=2.1in]{IMR90_CTCF_Bingy}
-  % \label{fig:CTCF}
-  % }
-  % %
-  % \subfigure[mESC: CTCF]{
-  % \includegraphics[width=2.1in]{mESC_CTCF_Ours}
-  % \includegraphics[width=2.1in]{mESC_CTCF_Bingy}
-  % \label{fig:mESC_CTCF}
-  % }
-  % %
-  % \subfigure[mESC: H3K4me3]{
-  % \includegraphics[width=2.1in]{mESC_H3K4me3_Ours}
-  % \includegraphics[width=2.1in]{mESC_H3K4me3_Bingy}
-  % \label{fig:H3K4me3}
-  % }
-  % %
-  % \subfigure[mESC: H3K27AC]{
-  % \includegraphics[width=2.1in]{mESC_H3K27AC_Ours}
-  % \includegraphics[width=2.1in]{mESC_H3K27AC_Bingy}
-  % \label{fig:H3K27AC}
-  % }
   \caption{\textbf{Enrichment of binding CTCF binding} (a) in IMR90 and (b) in mESC and histone modifications (c), (d) in mESC around domain boundaries for our consensus set of persistent domains (left, blue), and for those identified by Dixon et al. (right, blue).  Green lines represent the presence of CTCF at the midpoint of the topological domains.}
   \label{fig:enrichment}
   \end{center}
@@ -1777,7 +1680,7 @@ The amount of sequencing data stored in the Sequence Read Archive (SRA) is curre
 
 In the area of sequence compression, two prevalent approaches exist: the \textit{reference-based} (discussed in the next chapter) and \textit{reference-free}, or \textit{de novo}, methods. \textit{De novo} compression operates on raw sequencing reads, FASTA, or FASTQ files as input and focuses on ways to compress sequence~\cite{Mince,PathEncode,Rozov2014}, quality values~\cite{SeqSqueeze,KmerQuals,JaninQuals}, or both~\cite{GSQZ,Sahinalp2012}. 
 % to address Russell's later comment on why seq compression is different from qual compression
-Sequence and quality value compression are usually addressed separately due to inherent differences between the two types of data: while reads capture a non-random sequence of nucleotides with its repretitive regions, homologs, variations between coding and non-coding regions, the quality values encode the state of the sequencing machine as it was at the time of observing these nucleotides which results in different alphabets for the two data sources and different substring distributions. In this chapter, we focus on sequence compression exclusively and consider quality values compression in the later sections.
+Sequence and quality value compression are usually addressed separately due to inherent differences between the two types of data: while reads capture a non-random sequence of nucleotides with its repetitive regions, homologs, variations between coding and non-coding regions, the quality values encode the state of the sequencing machine as it was at the time of observing these nucleotides which results in different alphabets for the two data sources and different substring distributions. In this chapter, we focus on sequence compression exclusively and consider quality values compression in the later sections.
 
 Tools like SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} take the approach of grouping the reads based on their similarity allowing the downstream general-purpose compression tools to build better dictionary encodings. Rozov \etal~\cite{Rozov2014} and recent work by Kingsford and Patro~\cite{PathEncode} use an available reference sequence to inform their compression algorithm without explicitly aligning reads to it. Quip~\cite{Jones2012} takes a step closer to reference-based approach by creating contigs from a subset of data and encoding the rest of the reads relative to that lightweight assembly. De novo compression tools compress sequence down to 3-10\% of its original size at reasonable speeds~\cite{Deorowicz2013}, however, most tools require that the dataset is completely decompressed before it could be used for downstream analyses.
 
@@ -1821,17 +1724,6 @@ Tools like SCALCE~\cite{Sahinalp2012} and Mince~\cite{Mince} take the approach o
   \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Applying grammar-based sequence encoding to reads}
-
-    % -- can compress similar genomes against each other (\cite{reference})
-
-    % -- suggests there might be a grammar describing sequence
-
-    % -- used grammar finder on concatenated reads -- results not promising. grammar size XXXX, compressed size XXX
-
-    % XXX what if trained the grammar on the genome, then used the learned grammar to compress reads for that organism?
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Building a dictionary of information shared across sets of sequencing reads}
 
   % additional definitions
@@ -1852,7 +1744,7 @@ We assume that original sequence $\seq$ is a concatenation of reads $\seq = \{s_
 % Kmer composition can be seen as a footprint of a specific collection of reads: distribution of 24-mers for RNA-seq dataset is qualitatively different from a distribution of 24-mers for a DNA dataset; kmers can be used to distinguish between coding and non-coding DNA~\cite{genes}... 
 Certain kmers tend appear much more frequently in $\seq$ making a distribution of kmer occurrences highly skewed and amenable to efficient entropy-based encodings, \eg~with Huffman codes.
 
-Huffman coding~\cite{Huffman1952} is a lossless data compression technique that assigns shorter codes to symbols with higher frequency and guarantees that codes are prefix-free (no codeword is a prefix of some other codeword) allowing for unambigous decoding. 
+Huffman coding~\cite{Huffman1952} is a lossless data compression technique that assigns shorter codes to symbols with higher frequency and guarantees that codes are prefix-free (no codeword is a prefix of some other codeword) allowing for unambiguous decoding. 
 Usually, Huffman coding is applied to compress natural text where the codes are built for individual letters of an alphabet or words. Here, we propose to use kmers as input symbols for Huffman coding.
 
 Since Huffman codes assume that symbols $d_i$ do not overlap, we only consider non-overlapping kmers for inclusion in the dictionary. Kmer counting produces a distribution $\mathcal{F} = \{(f_1, d_1), (f_2, d_2), \ldots \}$ where $f_i \in \mathbb{N}$ represents the number of times a kmer $d_i$ was seen in $\seq$. We then generate Huffman codes $C = \{ c_i | d_i \in D \}$ based on $\mathcal{F}$ and substitute kmers $d_i$ in $\seq$ with their corresponding binary codes $c_i$. This dictionary construction procedure guarantees that every base in $\seq$ is covered by a kmer in $D$ and ensures that $D$ is optimal for a given ordering of reads in $\seq$.
@@ -1977,7 +1869,7 @@ Since Huffman codes assume that symbols $d_i$ do not overlap, we only consider n
 
   There are two challenges to using a dictionary $D$ created by the above scheme when compressing a new string $\seq$. First, there may be many parses of $\seq$ into substrings from $D$ some of which are better than others, and, second, $\seq$ may contain substrings that cannot be covered by $D$. We propose a dynamic programming approach to solv the problem of multiple possible parses and suggest two ways of handling novel substrings of $\seq$.
 
-  More specifically, to handle parts of $\seq$ not covered by $D$ (so-called ``holes''), we insert an special escape symbol $\esc$ symbol into $D$ and assign it relatively high frequency $f_{\esc}$ that we estimate from the experimental data. To encode a substring $h \in \seq$ that can not be covered by $D$, we write out a Huffman code for $\esc$, followed by the length of $h$, followed by the two-bit encoding of $h$. Using $\esc$ code allows to unambigously differentiate a two-bit encoded substring from a Huffman code for a substring in $D$.
+  More specifically, to handle parts of $\seq$ not covered by $D$ (so-called ``holes''), we insert an special escape symbol $\esc$ symbol into $D$ and assign it relatively high frequency $f_{\esc}$ that we estimate from the experimental data. To encode a substring $h \in \seq$ that can not be covered by $D$, we write out a Huffman code for $\esc$, followed by the length of $h$, followed by the two-bit encoding of $h$. Using $\esc$ code allows to unambiguously differentiate a two-bit encoded substring from a Huffman code for a substring in $D$.
 
   When a substring $h$ has a string $d_i \in D$ such that Hamming distance between $h$ and $d_i$ is one (a substitution), it may be beneficial to use the Huffman code for $d_i$ in combination with a short edit script to encode $h$. To distinguish between two-bit encoded substrings and substrings with edit scripts, we introduce a second escape symbol $\escremap$. When encoding $h$, we write out a binary code for $\escremap$, followed by the $c_i = D[d_i]$, followed by $\lceil \log_2 k \rceil$ bits describing the position $1 \leq p \leq k$ of the substitution, followed by two bits encoding the character in $h$ in position $p$.
 
@@ -2034,7 +1926,7 @@ Since Huffman codes assume that symbols $d_i$ do not overlap, we only consider n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Compressing the dictionary for transmission}
 
-To encode the dictionary, we only need to efficiently encode kmers and frequencies associated with them, and the Huffmer codes can be restored unambiguosly on the receiver's side. A straighforward way of encoding the kmers is to write out their two-bit representations along with frequencies. However, a bit tree~\cite{PathEncode} is a more efficient way of encoding strings of the same length. Bit tree performs significantly better than general-purpose compression tools when used on kmer sequences and is orders of magnitude better than the commonly used 2-bit encoding (Table~\ref{fig:denovo:bittree}). Bit tree achieves compression ratios as low as 0.09 bits per kmer ($k=10$). Unlike bloom filters which are used commonly to hold sets of kmers, the bit tree can reconstruct the original kmer set.
+To encode the dictionary, we only need to efficiently encode kmers and frequencies associated with them, and the Huffmer codes can be restored unambiguously on the receiver's side. A straightforward way of encoding the kmers is to write out their two-bit representations along with frequencies. However, a bit tree~\cite{PathEncode} is a more efficient way of encoding strings of the same length. Bit tree performs significantly better than general-purpose compression tools when used on kmer sequences and is orders of magnitude better than the commonly used 2-bit encoding (Table~\ref{fig:denovo:bittree}). Bit tree achieves compression ratios as low as 0.09 bits per kmer ($k=10$). Unlike bloom filters which are used commonly to hold sets of kmers, the bit tree can reconstruct the original kmer set.
 
 To compare bit tree to common-purpose compressors, we counted canonical kmers at different lengths $k = 10, \ldots, 24$ on a human RNA-seq sample (SRA run ID \texttt{SRR037452}), and then compressed kmer sequences using \texttt{plzip} (Table~\ref{fig:denovo:bittree}). We then used bit tree on the same set of kmer sequences. Additionally, we compared results to a bit tree post-compressed with \texttt{plzip} --- when many kmers share a common prefix, the tree binary representation would be highly self-similar and may benefit from downstream compression. Indeed, for dense kmers sets at $k=10$ and $k=12$ that contained $50\%$ and $48\%$ of the total possible number of kmers ($4^k$), post-processing step improved the compression ratio from $36.6$ and $42.7$ to $949.0$ and $373.6$ respectively.
 
@@ -2214,7 +2106,7 @@ Bit tree stores the input sequences in their alphabetic order, so the associated
 
   \subsubsection{Using grammar as shared information for de novo sequence compression}
 
-  Sequences of nucleotides are in no way a random sequence of four characters. Huffman coding exploits this fact by assigning frequently appearing kmers shorter codes. However, it is conceivable that higher-order organization exists within the sequence, akin to a language grammar. Our initial experiments with Sequitur~\cite{Sequitur}, a compression algorithm based on inferring grammars in text, show that a grammar-based approach is competitive with specialized sequence compression tools like SCALCE~\cite{Sahinalp2012}. Changes to Sequitur's algorithm, such as only considering subsequences of a given minimum length $k$, may further improve its performance. However, sequencing errors have to be explicitly taken into account since they will not adhere to the grammar learned on a reference genome or a different set of reads. Additionally, a grammar learned on one set of reads (or on a reference genome) would have to be able to handle the fact that read boudaries may be different in another read set and the rules learned originally may cross these boundaries. Lastly, sequencing reads may not be drawn from a reference genome uniformly at random, but are sampled preferentially from certain genomic regions (consider non-uniformity of RNA-seq read data, for example). The following tests would help decide whether a grammar-based compression can be successfully used on sequencing reads:
+  Sequences of nucleotides are in no way a random sequence of four characters. Huffman coding exploits this fact by assigning frequently appearing kmers shorter codes. However, it is conceivable that higher-order organization exists within the sequence, akin to a language grammar. Our initial experiments with Sequitur~\cite{Sequitur}, a compression algorithm based on inferring grammars in text, show that a grammar-based approach is competitive with specialized sequence compression tools like SCALCE~\cite{Sahinalp2012}. Changes to Sequitur's algorithm, such as only considering subsequences of a given minimum length $k$, may further improve its performance. However, sequencing errors have to be explicitly taken into account since they will not adhere to the grammar learned on a reference genome or a different set of reads. Additionally, a grammar learned on one set of reads (or on a reference genome) would have to be able to handle the fact that read boundaries may be different in another read set and the rules learned originally may cross these boundaries. Lastly, sequencing reads may not be drawn from a reference genome uniformly at random, but are sampled preferentially from certain genomic regions (consider non-uniformity of RNA-seq read data, for example). The following tests would help decide whether a grammar-based compression can be successfully used on sequencing reads:
   %
   \begin{enumerate}
     \item \textbf{Read length effect.} Learn a grammar $G$ on a long reference sequence $\seq$. Randomly sample reads of length $l$ from $\seq$. Evaluate performance of the Sequitur's grammar-based compression technique for reads at different $l$. Our hypothesis is that the algorithm would perform better on longer reads and may result in little to no benefit over the competing tools for shorter sequences (say, 30bp).
@@ -2296,7 +2188,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   \normalsize
   %
   \noindent
-  where sequence field contains an actual aligned read data and quality field contains the Phred scores that came with that sequencing read. It is easy to see some of the redundancies in it right away: read IDs (the first column) between different alignments tend to be very similar, the alignment coordinates (columns 3 and 4) vary only slightly, columns 7, 8, and 9, encoding pair end information, may contain default values for the unpaired data, and so on. When alignments are compressed ``horizontally'', i.e.\@~as they apprear in the text file, the information about similarity within columns is ignored. However, one can immediately see that values within the same column are highly repetitive making ``vertical'' direction of compression appealing.
+  where sequence field contains an actual aligned read data and quality field contains the Phred scores that came with that sequencing read. It is easy to see some of the redundancies in it right away: read IDs (the first column) between different alignments tend to be very similar, the alignment coordinates (columns 3 and 4) vary only slightly, columns 7, 8, and 9, encoding pair end information, may contain default values for the unpaired data, and so on. When alignments are compressed ``horizontally'', i.e.\@~as they appear in the text file, the information about similarity within columns is ignored. However, one can immediately see that values within the same column are highly repetitive making ``vertical'' direction of compression appealing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Reference-based sequence and alignment compression}
@@ -2424,7 +2316,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   % interval trees for every chromosome/transcript to be able to easily locate the needed block
   When decompressing the data, \refer first traverses the compressed stream and, for each block, reads its size as recorded in the block's trailer and calculates its offset relative to the beginning of the stream. \refer then reads the index file and, for each separate stream and a reference string, builds an interval tree that maps genomic coordinate intervals to the corresponding blocks of compressed data.
 
-  When quering for data on chromosome $C$ within a $[x_1, x_2]$ interval, \refer first locates the interval tree within the stream of offsets that is associated with chromosome $C$ and then enqueues all blocks of compressed offsets blocks that overlap the $[x_1, x_2]$ interval. The enqueued blocks may span an interval $[y_1, y_2]$ that contains $[x_1, x_2]$ completely and  $y_1 <= x_1$ and $x_2 <= y_2$, however, if the interval tree contains no data at $x1$, the initial coordinate $y_1$ may be greater than $x_1$. We then repeat the operation for all other streams required by the user (sequencing edits, read identifiers, etc.). Since the streams are independent and are compressed separately from each other, there is no guarantee that the block queue for edits or read identifiers will start at the same genomic coordinate as the queue of offset blocks. \refer synchronizes all streams to the $x_1$ coordinate and starts decompressing the alignments in order.
+  When querying for data on chromosome $C$ within a $[x_1, x_2]$ interval, \refer first locates the interval tree within the stream of offsets that is associated with chromosome $C$ and then enqueues all blocks of compressed offsets blocks that overlap the $[x_1, x_2]$ interval. The enqueued blocks may span an interval $[y_1, y_2]$ that contains $[x_1, x_2]$ completely and  $y_1 <= x_1$ and $x_2 <= y_2$, however, if the interval tree contains no data at $x1$, the initial coordinate $y_1$ may be greater than $x_1$. We then repeat the operation for all other streams required by the user (sequencing edits, read identifiers, etc.). Since the streams are independent and are compressed separately from each other, there is no guarantee that the block queue for edits or read identifiers will start at the same genomic coordinate as the queue of offset blocks. \refer synchronizes all streams to the $x_1$ coordinate and starts decompressing the alignments in order.
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2441,7 +2333,7 @@ In this chapter, we explore compression techniques for collections of raw sequen
   % To allow for random access and partial decompression, \refer builds an index that maps every
   % XXX how does Referee reconstruct reads w/o reconstructing the alignments?
 
-  \refer decompression depends on knowing how many alignments were compressed before any given block. Decompression of any field requires that offsets stream is available to correclty calculate the number of alignments to skip until the begining of interval $[x_1, x_2]$ (see Figure~\ref{fig:referee:stream_depend}).
+  \refer decompression depends on knowing how many alignments were compressed before any given block. Decompression of any field requires that offsets stream is available to correctly calculate the number of alignments to skip until the beginning of interval $[x_1, x_2]$ (see Figure~\ref{fig:referee:stream_depend}).
 
   % \subsection{Calculating sequencing depth and error rate}
 
@@ -2769,7 +2661,7 @@ Many analyses relying on the alignment information do not require original read 
 
 % XXX go over projects
 
-In this dissertation, we present algorithmic and visualization challenges that arise when storing, trasmitting, and interpreting high-throughput biological data. We explore a variety of datasets from protein-protein interaction networks to dynamic networks of relationships between individuals to sequencing data. The tools developed to address these challenges allow one to operate on these data more efficiently, guiding attention towards potential insights, and can be used beyond their intended applications to biological data.
+In this dissertation, we present algorithmic and visualization challenges that arise when storing, transmitting, and interpreting high-throughput biological data. We explore a variety of datasets from protein-protein interaction networks to dynamic networks of relationships between individuals to sequencing data. The tools developed to address these challenges allow one to operate on these data more efficiently, guiding attention towards potential insights, and can be used beyond their intended applications to biological data.
 
 In Part~\ref{part:vis}, we focus on visualization tasks for large complex biological data and address several specific problems. We develop targeted views that allow to explore multiple clusterings of a PPI network at a high-level, to seamlessly narrow down a set of proteins of interest and study such sets in greater detail within the context of a single application. To automatically extract insights, we designed an algorithm that identified subsets, or \textit{cores}, of proteins for which the annotations persisted across multiple annotation schemes. 
 % why was coral important? limitations, future work?
@@ -2777,11 +2669,11 @@ Our analysis of the \textit{A. thaliana} protein-protein interaction network sug
 % map of jazz -- kinda in passing
 Separately, we explored a setting where network data was changing over time. We propose to focus on visualizing the local structure with an option of viewing more of the network data. We developed a novel layout that allowed to observe the egonetwork over several timepoints while minimizing amount of unnecessary changes between consecutive timesteps. Our work has implications for longitudinal analyses of dynamic networks.
 
-We extended the core finding algorithm to chromatin conformation data to identify persistent subsets of interactions representing \textit{topological domains} --- robust 3-dimensional structures within nucleus of living cells. Topological domains have been implicated in long-range gene regulation, appear to be significant building blocks in genome packing and affect DNA accessibility. Our algorithm finds optimal solutions to the problem and has since been extended to explore the space of alternative optimal and near-optimal solutions. Its ability to extract domains at different resolutions have provided first quantitative evidence that nuclear chromatin is organised in a hierarchical fashion.
+We extended the core finding algorithm to chromatin conformation data to identify persistent subsets of interactions representing \textit{topological domains} --- robust 3-dimensional structures within nucleus of living cells. Topological domains have been implicated in long-range gene regulation, appear to be significant building blocks in genome packing and affect DNA accessibility. Our algorithm finds optimal solutions to the problem and has since been extended to explore the space of alternative optimal and near-optimal solutions. Its ability to extract domains at different resolutions have provided first quantitative evidence that nuclear chromatin is organized in a hierarchical fashion.
 
 
 
-In Part~\ref{part:compress}, we develop new strategies and algorithms for sequence and alignment data compression. We define a general problem of extracting information shared between sequencing datasets originating from the same species, environment, or experiment. We proposed to use such shared information to compress files within a single collection of related data. We consider a set of most frequently occuring kmers as one such example of shared information and develop algorithms for efficiently derive such kmer sets given an input sequence (or sequences). Separately, we consider a problem of optimally encoding a sequence given such collection of kmers and their compressed representations. We observe that kmer sets are too diverse to produce a succinct shared data structure, even when they originate from the sequencing reads derived on the same species and using the same experimental protocol. However, the same reads successfully map to the common reference genome, which suggests that reference is a better example of shared information. We are able to achieve better compression for datasets with varying sequencing error rates. We improve state-of-the-art compression ratios for reference-based compression tools and provide an implementation of our method that allows for random access to original data without fully decompressing the original, which allows us to compute sequence-specific analyses orders of magnitude faster than on the original data with an added benefit of modular downloads and direct computation on the compressed data.
+In Part~\ref{part:compress}, we develop new strategies and algorithms for sequence and alignment data compression. We define a general problem of extracting information shared between sequencing datasets originating from the same species, environment, or experiment. We proposed to use such shared information to compress files within a single collection of related data. We consider a set of most frequently occurring kmers as one such example of shared information and develop algorithms for efficiently derive such kmer sets given an input sequence (or sequences). Separately, we consider a problem of optimally encoding a sequence given such collection of kmers and their compressed representations. We observe that kmer sets are too diverse to produce a succinct shared data structure, even when they originate from the sequencing reads derived on the same species and using the same experimental protocol. However, the same reads successfully map to the common reference genome, which suggests that reference is a better example of shared information. We are able to achieve better compression for datasets with varying sequencing error rates. We improve state-of-the-art compression ratios for reference-based compression tools and provide an implementation of our method that allows for random access to original data without fully decompressing the original, which allows us to compute sequence-specific analyses orders of magnitude faster than on the original data with an added benefit of modular downloads and direct computation on the compressed data.
 
 % XXX Russell -- does it matter how good the alignments are? for instance, if you're seuqencing an organism that has no reference genome but you have a homology, are you better off doing reference-based compression to the homology or just reference-free? Answer: can discuss in the limitations.
 
@@ -2813,9 +2705,9 @@ In Part~\ref{part:compress}, we develop new strategies and algorithms for sequen
 In chapter~\ref{chapter:mapofjazz}, we used a social network to discuss visualization strategies for dynamic networks, however, the same strategies could be used to track changes in gene-gene interactions~\cite{GeneKnockouts} over a period of time or changes in a microbial gut ecosystem over a course of treatments. Our assumption that a local view is preferable to the global overview of the changing network can be tested by conducting a usability study in a controlled environment where users are asked to perform a series of tasks testing their ability to extract insights using a local view such as a Map of Jazz versus a global view such as Net EvViz~\cite{Khurana2011}. One would have to take into account network size, degree distribution, number of timepoints and the time span, as well as amount of change the network undergoes between any two consecutive time points.
 % We conjecture that for some tasks, such as assessing overall changes for a single node and its neighborhood, Map of Jazz will be easier to 
 
-Map of Jazz focuses user's attention on temporal changes in a subnetwork, however, locally observed changes may not be fully reflective of the global dynamics. While node and edge widgets provide a degree of information about a global state of the network, the user has to consider other tools to study network-wide changes. An extention to the ``hops'' view that would progressively show more of the ego-network would give users the power to control the amount of network information they want to see.
+Map of Jazz focuses user's attention on temporal changes in a subnetwork, however, locally observed changes may not be fully reflective of the global dynamics. While node and edge widgets provide a degree of information about a global state of the network, the user has to consider other tools to study network-wide changes. An extension to the ``hops'' view that would progressively show more of the ego-network would give users the power to control the amount of network information they want to see.
 
-Our formulation for identification of topological domains in chromatin considers domains at different scales separately and does not make any assumptions about its hierarchical nature. The hierarchy is strongly suggested by our findings when analysing alternative optimal and near-optimal solutions~\cite{ArmatusAMB} and by the earlier light microscopy observations of chromosome territories~\cite{Cremer2010}. Incorporating the assumption that domains form a hierarchy directly into the objective will allow to sample from most probable nested structures. Such approach may result in domains sets that are more stable across cell types and could allow for a more principled hierarchy comparisons across species.
+Our formulation for identification of topological domains in chromatin considers domains at different scales separately and does not make any assumptions about its hierarchical nature. The hierarchy is strongly suggested by our findings when analyzing alternative optimal and near-optimal solutions~\cite{ArmatusAMB} and by the earlier light microscopy observations of chromosome territories~\cite{Cremer2010}. Incorporating the assumption that domains form a hierarchy directly into the objective will allow to sample from most probable nested structures. Such approach may result in domains sets that are more stable across cell types and could allow for a more principled hierarchy comparisons across species.
 
 Our initial version of functional compression using a reference sequence allows for efficient computations on the sequence stream. Exposing an API to the sequence stream would encourage a broader adoption of our proposed  framework and might result in new sequence computations being developed using \refer's paradigm. Our performance on sequence compression has implications for large-scale sequence analyses: given 2 Petabases of human RNA-seq experiments, the current number of bases in SRA, \refer could compress it down to 48 Terabases (assuming an average compression ratio of 0.29 bpb) allowing one to store all of the data and to run analyses on a single machine.
 
