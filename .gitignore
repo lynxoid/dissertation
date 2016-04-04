@@ -1,0 +1,10 @@
+*.toc
+*.sty
+*.log
+*.out
+*.aux
+*.bbl
+*.blg
+*.brf
+*.lot
+*.lof

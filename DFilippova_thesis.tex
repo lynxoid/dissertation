@@ -793,7 +793,7 @@ Finally, I want to extend the heartfelt thanks to my immediate and extended fami
 
   % cores for A. thals
 
-  The dynamic program for identifying cores found 249 areas in the \Athal network in which proteins co-clustered more often than could be expected by chance, with the largest core containing 215 proteins and with the average number of proteins per core of 10.38 proteins. Most cores, including the largest core, had low cohesion values indicating that the proteins forming the cores had many connections to proteins outside of the cores (see Figure~\ref{fig:coral:big_matrix}). This finding is correlated with the fact that the clusterings did not agree in general and only small sets of proteins were consistently clustered together across the ensemble.
+  The dynamic program for identifying cores found 249 subsets in the \Athal network in which proteins co-clustered more often than could be expected by chance, with the largest core containing 215 proteins and with the average number of proteins per core of 10.38 proteins. Most cores, including the largest core, had low cohesion values indicating that the proteins forming the cores had many connections to proteins outside of the cores (see Figure~\ref{fig:coral:big_matrix}). This finding is correlated with the fact that the clusterings did not agree in general and only small sets of proteins were consistently clustered together across the ensemble.
 
   % base clustering
 
@@ -2239,6 +2239,7 @@ Bit tree stores the input sequences in their alphabetic order, so the associated
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Using a reference sequence for read and sequence alignment compression}
+\label{chapter:referee}
 
 \textit{De novo} compression is invaluable when compressing reads that come from organisms that are not yet well studied and may not have a reference genome as well as for the reads that come from a mixed environment or a genome with high rates of mutations, such as cancer genomes or metagenomic samples. However, when an organism has a well-established genome, a reference-based compression might be preferable. Encoding a sequence relative to a reference sequence relies on knowing the coordinate of the sequence being compressed and locations of differences, if any, from the reference at that location. This could be achieved through mapping the reads using any number of available methods, some of which are able to align tens of millions of reads in under ten minutes~\cite{DobinSTAR}. 
 
